@@ -1,0 +1,16 @@
+/* .card vient du global */
+h2 { margin: 0 0 12px; }
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+
+  /* inputs/btn sont stylés globalement */
+}
+.connected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.error { color: var(--danger); margin-top: 8px; }

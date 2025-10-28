@@ -1,0 +1,71 @@
+:host {
+  display: block;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.header {
+  padding: 14px 0 18px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(var(--bg), var(--bg));
+
+  .title {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 0.2px;
+
+    span {
+      font-weight: 500;
+      opacity: 0.75;
+      margin-left: 8px;
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    /* Bouton pill compact */
+    .btn--logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    /* Icône + via mask */
+    .ic {
+      inline-size: 24px;
+      block-size: 24px;
+    }
+    .ic-logout {
+      background: currentColor;
+      mask: url("/icons/logout.svg") center/contain no-repeat;
+      -webkit-mask: url("/icons/logout.svg") center/contain no-repeat;
+    }
+  }
+}
+
+/* zone centrale qui accueille la watchlist (qui gère son scroll) */
+.content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  background: transparent;
+}

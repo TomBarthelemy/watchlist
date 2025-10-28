@@ -1,0 +1,216 @@
+:host {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.wl {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* form simple */
+.form {
+  display: grid;
+  grid-template-columns: 1.6fr 0.7fr auto;
+  gap: 10px;
+  align-items: center;
+
+  /* Bouton pill compact */
+  .btn--add {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    white-space: nowrap;
+    justify-self: start;
+  }
+
+  /* Icône + via mask */
+  .ic {
+    inline-size: 24px;
+    block-size: 24px;
+  }
+  .ic-plus {
+    background: currentColor;
+    mask: url("/icons/add.svg") center/contain no-repeat;
+    -webkit-mask: url("/icons/add.svg") center/contain no-repeat;
+  }
+}
+
+/* Séparateur subtil */
+.section-sep {
+  height: 1px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  opacity: 0.6;
+}
+
+/* toolbar fixe */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.sort {
+  min-width: 200px;
+}
+
+/* zone scrollable */
+.list-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+ul.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--surface-gradient, var(--surface));
+  background: var(--surface-gradient);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
+  color: var(--text);
+  border-radius: var(--radius-lg);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.list li:hover {
+  background: var(--surface-gradient-weak);
+}
+.list li.seen {
+  opacity: 0.7;
+}
+
+.left,
+.right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.left {
+  .title {
+    display: inline-block;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  /* --- Bouton icône YouTube --- */
+  .btn--youtube-icon {
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+    inline-size: 28px;
+    block-size: 28px;
+    border-radius: 50%;
+    position: relative;
+
+    /* Masque SVG (icône YouTube) */
+    background: var(--primary);
+    mask: url("/icons/youtube.svg") center/contain no-repeat;
+    -webkit-mask: url("/icons/youtube.svg") center/contain no-repeat;
+
+    /* légère ombre subtile */
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--primary) 30%, transparent);
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 0.9;
+      background: var(--secondary);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+
+    /* Si tu veux un effet visuel au focus (accessibilité) */
+    &:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--primary) 60%, transparent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.right {
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+      color: var(--text);
+    }
+  }
+
+  .btn--danger-icon {
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+  }
+
+  .icon-trash {
+    inline-size: 24px;
+    block-size: 24px;
+    background: var(--danger);
+    mask: url("/icons/trash.svg") center/contain no-repeat;
+    -webkit-mask: url("/icons/trash.svg") center/contain no-repeat;
+  }
+
+  .btn--danger-icon:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* footer non scrollable */
+.stats {
+  flex: 0 0 auto;
+  opacity: 0.7;
+  font-size: var(--fs-lg);
+  margin: auto;
+}
+.loading {
+  opacity: 0.7;
+}
+
+/* Responsive : empile le formulaire sous ~720px */
+@media (max-width: 720px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+  .btn--add {
+    justify-self: end;
+  }
+}

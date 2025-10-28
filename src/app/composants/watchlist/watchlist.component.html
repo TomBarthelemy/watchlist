@@ -1,0 +1,96 @@
+<div class="wl">
+  <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
+    <input placeholder="Titre…" formControlName="title" maxlength="100" />
+    <select formControlName="category" aria-label="Catégorie">
+      <option>Film</option>
+      <option>Série</option>
+      <option>Animé</option>
+    </select>
+    <button
+      type="submit"
+      class="btn btn--primary btn--add"
+      [disabled]="form.invalid"
+    >
+      Ajouter
+      <span class="ic ic-plus" aria-hidden="true"></span>
+    </button>
+  </form>
+
+  <div class="section-sep" role="separator" aria-hidden="true"></div>
+
+  <div class="toolbar">
+    <select class="filter" [formControl]="filterCtrl" aria-label="Filtrer par">
+      <option value="Tout">Tout</option>
+      <option value="Film">Film</option>
+      <option value="Série">Série</option>
+      <option value="Animé">Animé</option>
+      <option value="A_voir">À voir</option>
+      <option value="Vus">Vus</option>
+    </select>
+
+    <select class="sort" [formControl]="sortCtrl" aria-label="Trier par">
+      <option value="title_asc">Titre A → Z</option>
+      <option value="title_desc">Titre Z → A</option>
+      <option value="created_desc">Ajoutés récemment</option>
+      <option value="created_asc">Plus anciens</option>
+    </select>
+  </div>
+
+  <div *ngIf="supa.loading()" class="loading">Chargement…</div>
+
+  <!-- Only this box scrolls -->
+  <div class="list-scroll">
+    <ul class="list">
+      <li *ngFor="let item of sorted()" [class.seen]="item.seen">
+        <div class="left">
+          <strong class="title" [title]="item.title">
+            {{
+              item.title.length > 50
+                ? (item.title | slice : 0 : 50) + "…"
+                : item.title
+            }}
+          </strong>
+          <span
+            class="badge"
+            [ngClass]="{
+              'badge--film': item.category === 'Film',
+              'badge--serie': item.category === 'Série',
+              'badge--anime': item.category === 'Animé'
+            }"
+          >
+            {{ item.category }}
+          </span>
+          <a
+            *ngIf="item.trailer_url"
+            [attr.href]="item.trailer_url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn--youtube-icon"
+            title="Voir le trailer sur YouTube"
+            aria-label="Voir le trailer sur YouTube"
+          ></a>
+        </div>
+        <div class="right">
+          <span *ngIf="item.seen_at"
+            >Vu le {{ formatDate(item.seen_at) }} •
+          </span>
+
+          <mat-slide-toggle
+            class="toggle"
+            [checked]="item.seen"
+            (change)="toggle(item)"
+            color="secondary"
+          >
+            <span> Vu ?</span>
+          </mat-slide-toggle>
+          <button class="btn btn--danger-icon" (click)="remove(item.id)">
+            <span class="icon-trash" aria-hidden="true"></span>
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Always visible; not inside the scroller -->
+  <footer class="stats">{{ seenCount() }} / {{ total() }} vus</footer>
+</div>

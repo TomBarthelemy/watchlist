@@ -1,1 +1,252 @@
-/* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* ========= THEME (pastel / gradient) ========= */
+:root {
+  /* gradient d’arrière-plan page */
+  --bg-start: #d5d0ff; /* lavande pâle inspirée du fond dark */
+  --bg-end: #f3c7ff; /* rose-lila clair */
+  --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+
+  /* surfaces & texte */
+  --surface: #ffffff;
+  --surface-2: #f7f8fc; /* léger bleu-gris froid */
+  --surface-gradient: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
+    color-mix(in oklab, var(--surface) 90%, var(--bg-end) 50%)
+  );
+  --surface-gradient-weak: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface) 80%, var(--bg-start) 60%),
+    color-mix(in oklab, var(--surface) 80%, var(--secondary-weak) 60%)
+  );
+
+  --text: #1f1d33; /* violet-gris foncé pour rester dans la gamme */
+  --muted: #747a92; /* gris bleuté doux */
+
+  /* brand & sémantique */
+  --primary: #8b7dff; /* lavande lumineuse */
+  --primary-weak: #eceaff; /* fond pastel assorti */
+  --secondary: #4dc9ff; /* cyan clair, cohérent avec le secondary dark */
+  --secondary-weak: #e6f8ff; /* bleu très pâle */
+
+  --success: #42c9b8; /* teal clair (écho au teal glacé du dark) */
+  --danger: #f77fa3; /* rose-corail doux */
+
+  /* tags catégories (pastel harmonisé) */
+  --tag-film-bg: #eceaff; /* lavande pâle */
+  --tag-film-fg: #4a3ecc; /* violet moyen */
+  --tag-serie-bg: #f7e1ef; /* rosé froid */
+  --tag-serie-fg: #a04374; /* framboise douce */
+  --tag-anime-bg: #f5f1d1; /* jaune lunaire adouci */
+  --tag-anime-fg: #8b7a3c; /* doré clair désaturé */
+
+  /* élévation & arrondis */
+  --shadow: 0 12px 32px rgba(40, 32, 70, 0.12);
+  --shadow-soft: 0 6px 18px rgba(40, 32, 70, 0.08);
+  --radius-xl: 20px;
+  --radius-lg: 14px;
+  --radius-md: 10px;
+
+  /* tailles */
+  --space: 12px;
+  --space-lg: 16px;
+
+  /* typographie (échelle rapide) */
+  --fs-xxl: clamp(28px, 4.5vw, 48px); /* gros titre “Watchlist” */
+  --fs-xl: 28px;
+  --fs-lg: 18px;
+  --fs-md: 16px;
+  --fs-sm: 13px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-start: #221f35;
+    --bg-end: #3a2740;
+    --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+
+    --surface: #26213b;
+    --surface-2: #312a4a;
+
+    --surface-gradient: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
+      color-mix(in oklab, var(--surface) 90%, var(--bg-end) 50%)
+    );
+    --surface-gradient-weak: linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--surface) 80%, var(--bg-start) 60%),
+      color-mix(in oklab, var(--surface) 80%, var(--secondary-weak) 60%)
+    );
+
+    --text: #eef0f7;
+    --muted: #b1b7c9;
+
+    --primary: #a996ff; /* lavande lumineuse */
+    --primary-weak: #4a3e66; /* violet-gris sourd */
+    --secondary: #7ad4ff; /* cyan froid lunaire */
+    --secondary-weak: #2a3e4e; /* bleu-gris profond */
+
+    --success: #58d7c7; /* teal glacé, plus cohérent que vert pur */
+    --danger: #ff8aa8; /* rose-corail froid, lisible sur violet */
+
+    --tag-film-bg: #2e355e;
+    --tag-film-fg: #c6ceff;
+    --tag-serie-bg: #4d3340; /* bordeaux froid au lieu de brun */
+    --tag-serie-fg: #ffd0e0;
+    --tag-anime-bg: #3b3750; /* violet sourd */
+    --tag-anime-fg: #efe6a6; /* doré adouci */
+
+    --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+    --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* ========= BASE ========= */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg); /* <- gradient */
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter,
+    Helvetica, Arial, "Noto Sans", sans-serif;
+}
+
+/* Liens */
+a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a:hover {
+  opacity: 0.9;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  padding: var(--space-lg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+/* Buttons */
+button {
+  font: inherit;
+}
+.btn {
+  border: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: transform 0.08s ease, opacity 0.15s, box-shadow 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-soft);
+  &:active {
+    transform: translateY(1px);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+    box-shadow: none;
+  }
+}
+.btn--primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn--secondary {
+  background: var(--secondary);
+  color: #0c2a19;
+} /* vert lisible */
+.btn--danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn--ghost {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Inputs */
+input,
+select {
+  background: var(--surface-gradient, var(--surface));
+  padding: 12px 14px;
+  background: var(--surface-gradient);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
+  color: var(--text);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+input::placeholder {
+  color: var(--muted);
+}
+input:focus,
+select:focus {
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+input.invalid,
+select.invalid {
+  border-color: #ff7675;
+}
+
+/* Badges (catégories) */
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  box-shadow: var(--shadow-soft);
+}
+.badge--film {
+  background: var(--tag-film-bg);
+  color: var(--tag-film-fg);
+}
+.badge--serie {
+  background: var(--tag-serie-bg);
+  color: var(--tag-serie-fg);
+}
+.badge--anime {
+  background: var(--tag-anime-bg);
+  color: var(--tag-anime-fg);
+}
+
+/* Chips présence */
+.chips {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  margin-inline: 3px;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-soft);
+}
+.chip--self {
+  color: var(--primary);
+  background: var(--primary-weak);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+}
+.chip--other {
+  color: var(--secondary);
+  background: var(--secondary-weak);
+  border-color: color-mix(in srgb, var(--secondary) 35%, transparent);
+}

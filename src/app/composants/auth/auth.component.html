@@ -1,0 +1,25 @@
+<div class="card">
+  <!-- login uniquement -->
+    <h2>Connexion</h2>
+    <form class="form" [formGroup]="form" (ngSubmit)="onLogin()">
+      <input
+        type="email"
+        placeholder="you@example.com"
+        formControlName="email"
+        autocomplete="email"
+        [class.invalid]="form.controls.email.invalid && (form.controls.email.dirty || form.controls.email.touched)" />
+
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        formControlName="password"
+        autocomplete="current-password"
+        [class.invalid]="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)" />
+
+      <button type="submit" [disabled]="form.invalid || busy()">
+        {{ busy() ? 'Connexion…' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+</div>

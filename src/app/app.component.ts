@@ -1,13 +1,28 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, effect } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { AuthComponent } from './composants/auth/auth.component';
+import { WatchlistComponent } from './composants/watchlist/watchlist.component';
+import { SupaService } from './services/supa.service';
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [CommonModule, NgIf, AuthComponent, WatchlistComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'watchlist';
+  constructor(public supa: SupaService) {
+    // Recharge la liste dès qu’un user est connecté
+  effect(() => {
+    if (this.supa.user()) {
+      this.supa.loadItems();   // va écrire dans des signals
+    }
+  }, { allowSignalWrites: true });
+  }
+
+  signOut() {
+    this.supa.signOut();
+  }
 }
