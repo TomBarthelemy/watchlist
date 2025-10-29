@@ -5,8 +5,9 @@ on:
     branches: [ master ]
 
 permissions:
-  contents: write   
-  pages: write    
+  contents: write
+  pages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,13 +16,28 @@ jobs:
       APP_BASE: /watchlist/
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npm run build -- --configuration production --base-href "${{ env.APP_BASE }}"
-      - run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build Angular app
+        run: |
+          rm -rf dist
+          npm run build -- --configuration production \
+            --base-href "${{ env.APP_BASE }}" \
+            --deploy-url "${{ env.APP_BASE }}"
+
+      - name: Add 404.html (SPA fallback)
+        run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
+
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
