@@ -6,7 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 
 async function loadConfig(): Promise<AppConfig> {
-  const res = await fetch('/app-config.json', { cache: 'no-cache' });
+  const res = await fetch('app-config.json', { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Cannot load app-config.json (${res.status})`);
   return await res.json();
 }
