@@ -38,11 +38,10 @@ jobs:
       - name: SPA fallback (404.html)
         run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
 
-      - name: Rewrite asset URLs in generated CSS for GitHub Pages
+      - name: Rewrite asset URLs for GitHub Pages (/ → /watchlist/)
         run: |
-          find dist/watchlist/browser -type f -name "*.css" -print0 \
-            | xargs -0 sed -i 's,url(/assets/,url(/watchlist/assets/,g'
-
+          find dist/watchlist/browser -type f \( -name "*.css" -o -name "*.js" -o -name "*.html" \) -print0 \
+            | xargs -0 sed -i 's/\/assets\//\/watchlist\/assets\//g'
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
