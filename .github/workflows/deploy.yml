@@ -35,8 +35,13 @@ jobs:
             --base-href "${{ env.APP_BASE }}" \
             --deploy-url "${{ env.APP_BASE }}"
 
-      - name: Add 404.html (SPA fallback)
+      - name: SPA fallback (404.html)
         run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
+
+      - name: Rewrite asset URLs in generated CSS for GitHub Pages
+        run: |
+          find dist/watchlist/browser -type f -name "*.css" -print0 \
+            | xargs -0 sed -i 's,url(/assets/,url(/watchlist/assets/,g'
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
