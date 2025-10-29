@@ -6,22 +6,9 @@ import {
   type User,
 } from '@supabase/supabase-js';
 import { APP_CONFIG } from '../app-config';
-
-type OnlineUser = { id: string; name: string; isSelf: boolean };
-
-export type Category = 'Film' | 'Série' | 'Animé';
-
-export interface Item {
-  id: string;
-  list_id: string;
-  title: string;
-  category: Category;
-  trailer_url?: string | null;
-  seen: boolean;
-  seen_at?: string | null;
-  proposed_by: string; // user uuid
-  created_at: string;
-}
+import { Category } from '../types/item-category.type';
+import { Item } from '../models/item.model';
+import { OnlineUser } from '../models/online-user.model';
 
 @Injectable({ providedIn: 'root' })
 export class SupaService {

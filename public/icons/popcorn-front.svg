@@ -1,0 +1,37 @@
+<!-- src/assets/illustrations/popcorn-front.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="86" viewBox="0 0 160 86">
+  <defs>
+    <linearGradient id="pg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe7b0"></stop>
+      <stop offset="1" stop-color="#ffd78b"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Rangée 1 (avant) -->
+  <g>
+    <circle cx="14" cy="62" r="14" fill="url(#pg2)"></circle>
+    <circle cx="36" cy="63" r="13" fill="url(#pg2)"></circle>
+    <circle cx="58" cy="61" r="14" fill="url(#pg2)"></circle>
+    <circle cx="82" cy="64" r="13" fill="url(#pg2)"></circle>
+    <circle cx="105" cy="62" r="15" fill="url(#pg2)"></circle>
+    <circle cx="130" cy="63" r="13" fill="url(#pg2)"></circle>
+    <circle cx="148" cy="62" r="12" fill="url(#pg2)"></circle>
+  </g>
+
+  <!-- Rangée 2 (devant + un peu plus haute) -->
+  <g>
+    <circle cx="24" cy="52" r="12" fill="url(#pg2)"></circle>
+    <circle cx="46" cy="50" r="11" fill="url(#pg2)"></circle>
+    <circle cx="69" cy="53" r="12" fill="url(#pg2)"></circle>
+    <circle cx="92" cy="51" r="11" fill="url(#pg2)"></circle>
+    <circle cx="116" cy="54" r="12" fill="url(#pg2)"></circle>
+    <circle cx="138" cy="51" r="11" fill="url(#pg2)"></circle>
+  </g>
+
+  <!-- petits reflets -->
+  <g opacity=".22" fill="#fff">
+    <circle cx="36" cy="56" r="5"></circle>
+    <circle cx="82" cy="57" r="5"></circle>
+    <circle cx="130" cy="56" r="5"></circle>
+  </g>
+</svg>

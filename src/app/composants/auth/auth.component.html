@@ -1,25 +1,40 @@
-<div class="card">
-  <!-- login uniquement -->
-    <h2>Connexion</h2>
-    <form class="form" [formGroup]="form" (ngSubmit)="onLogin()">
+<div class="auth-box card">
+  <h2 class="auth-title">Connexion</h2>
+  <p class="auth-sub">Entre ton email et ton mot de passe.</p>
+
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="onLogin()">
+    <label class="field">
+      <span class="field__label">Email</span>
       <input
         type="email"
-        placeholder="you@example.com"
         formControlName="email"
-        autocomplete="email"
-        [class.invalid]="form.controls.email.invalid && (form.controls.email.dirty || form.controls.email.touched)" />
+        name="email"
+        placeholder="you@example.com"
+        inputmode="email"
+        autocomplete="username"
+        autocapitalize="off"
+        spellcheck="false"
+        autofocus
+        [class.invalid]="form.controls.email.invalid && (form.controls.email.dirty || form.controls.email.touched)"/>
+    </label>
 
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        formControlName="password"
-        autocomplete="current-password"
-        [class.invalid]="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)" />
+    <label class="field">
+      <span class="field__label">Mot de passe</span>
+      <div class="pw">
+        <input
+          [type]="showPw() ? 'text' : 'password'"
+          formControlName="password"
+          name="current-password"
+          placeholder="••••••••"
+          [class.invalid]="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)"/>
+        <button type="button" class="pw__toggle" (click)="togglePw()" aria-label="Afficher/masquer le mot de passe">
+          {{ showPw() ? '🙈' : '👁️' }}
+        </button>
+      </div>
+    </label>
 
-      <button type="submit" [disabled]="form.invalid || busy()">
-        {{ busy() ? 'Connexion…' : 'Se connecter' }}
-      </button>
-    </form>
-
-    <p class="error" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+    <button type="submit" class="btn btn--primary btn--lg" [disabled]="form.invalid || busy()">
+      {{ busy() ? 'Connexion…' : 'Se connecter' }}
+    </button>
+  </form>
 </div>

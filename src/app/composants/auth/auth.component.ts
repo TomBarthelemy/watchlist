@@ -17,21 +17,22 @@ export class AuthComponent {
   });
 
   busy = signal(false);
-  errorMsg = signal<string | null>(null);
+  showPw = signal(false);
 
   constructor(private fb: FormBuilder, public supa: SupaService) {}
 
   async onLogin() {
-    this.errorMsg.set(null);
     if (this.form.invalid) return;
     this.busy.set(true);
     try {
       const { email, password } = this.form.getRawValue();
       await this.supa.signInWithPassword(email!, password!);
-    } catch (e: any) {
-      this.errorMsg.set(e?.message ?? 'Erreur de connexion.');
     } finally {
       this.busy.set(false);
     }
+  }
+
+  togglePw() {
+    this.showPw.update((v) => !v);
   }
 }

@@ -17,8 +17,8 @@
   );
   --surface-gradient-weak: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--surface) 80%, var(--bg-start) 60%),
-    color-mix(in oklab, var(--surface) 80%, var(--secondary-weak) 60%)
+    color-mix(in oklab, var(--surface) 40%, var(--bg-start) 80%),
+    color-mix(in oklab, var(--surface) 40%, var(--secondary-weak) 80%)
   );
 
   --text: #1f1d33; /* violet-gris foncé pour rester dans la gamme */
@@ -27,8 +27,8 @@
   /* brand & sémantique */
   --primary: #8b7dff; /* lavande lumineuse */
   --primary-weak: #eceaff; /* fond pastel assorti */
-  --secondary: #4dc9ff; /* cyan clair, cohérent avec le secondary dark */
-  --secondary-weak: #e6f8ff; /* bleu très pâle */
+  --secondary: #8fa6ff; /* lavande-bleu clair */
+  --secondary-weak: #eaefff; /* fond pastel */
 
   --success: #42c9b8; /* teal clair (écho au teal glacé du dark) */
   --danger: #f77fa3; /* rose-corail doux */
@@ -58,6 +58,8 @@
   --fs-lg: 18px;
   --fs-md: 16px;
   --fs-sm: 13px;
+
+  --tile: 200px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,8 +87,8 @@
 
     --primary: #a996ff; /* lavande lumineuse */
     --primary-weak: #4a3e66; /* violet-gris sourd */
-    --secondary: #7ad4ff; /* cyan froid lunaire */
-    --secondary-weak: #2a3e4e; /* bleu-gris profond */
+    --secondary: #9cb4ff; /* lavande bleuté lumineuse */
+    --secondary-weak: #39415f; /* fond froid assorti */
 
     --success: #58d7c7; /* teal glacé, plus cohérent que vert pur */
     --danger: #ff8aa8; /* rose-corail froid, lisible sur violet */
@@ -167,7 +169,7 @@ button {
 .btn--secondary {
   background: var(--secondary);
   color: #0c2a19;
-} /* vert lisible */
+}
 .btn--danger {
   background: var(--danger);
   color: #fff;
@@ -242,11 +244,55 @@ select.invalid {
 }
 .chip--self {
   color: var(--primary);
-  background: var(--primary-weak);
+  background: var(--surface-gradient);
   border-color: color-mix(in srgb, var(--primary) 35%, transparent);
 }
 .chip--other {
   color: var(--secondary);
-  background: var(--secondary-weak);
+  background: var(--surface-gradient-weak);
   border-color: color-mix(in srgb, var(--secondary) 35%, transparent);
+}
+
+// scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: repeating-linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface) 90%, black) 0 8px,
+    transparent 8px 16px
+  );
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 8px;
+  border: 2px solid var(--primary-weak);
+}
+
+// popcorn
+/* The overlay that owns the popcorns */
+.popcorn-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14vh; 
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1000;
+}
+
+/* Single popcorn node created by the directive */
+.popcorn-grain {
+  position: absolute;
+  width: var(--sz);
+  height: var(--sz);
+  background: url("/icons/popcorn.svg") center / contain no-repeat;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  will-change: transform, opacity;
+  transform-origin: 50% 50%;
 }

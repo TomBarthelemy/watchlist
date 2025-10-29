@@ -1,0 +1,39 @@
+<!-- src/assets/illustrations/popcorn-back.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="70" viewBox="0 0 200 70">
+  <defs>
+    <linearGradient id="pg1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffeec7"></stop>
+      <stop offset="1" stop-color="#ffe2a9"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Groupe arrière (opacité légère pour la profondeur) -->
+  <g opacity=".9">
+    <!-- IMPORTANT : ne rien toucher aux bords gauche/droite pour rester « tileable » -->
+    <!-- Rangée 1 -->
+    <circle cx="20" cy="48" r="12" fill="url(#pg1)"></circle>
+    <circle cx="40" cy="50" r="11" fill="url(#pg1)"></circle>
+    <circle cx="63" cy="47" r="12" fill="url(#pg1)"></circle>
+    <circle cx="85" cy="50" r="11" fill="url(#pg1)"></circle>
+    <circle cx="108" cy="48" r="13" fill="url(#pg1)"></circle>
+    <circle cx="133" cy="51" r="11" fill="url(#pg1)"></circle>
+    <circle cx="156" cy="49" r="12" fill="url(#pg1)"></circle>
+    <circle cx="178" cy="50" r="11" fill="url(#pg1)"></circle>
+
+    <!-- Rangée 2 (légèrement en arrière / plus haut) -->
+    <circle cx="30" cy="40" r="10" fill="url(#pg1)"></circle>
+    <circle cx="52" cy="39" r="9" fill="url(#pg1)"></circle>
+    <circle cx="75" cy="41" r="10" fill="url(#pg1)"></circle>
+    <circle cx="98" cy="40" r="9" fill="url(#pg1)"></circle>
+    <circle cx="120" cy="42" r="10" fill="url(#pg1)"></circle>
+    <circle cx="145" cy="41" r="9" fill="url(#pg1)"></circle>
+    <circle cx="168" cy="40" r="10" fill="url(#pg1)"></circle>
+  </g>
+
+  <!-- Quelques reflets doux -->
+  <g opacity=".25" fill="#fff">
+    <circle cx="40" cy="44" r="4"></circle>
+    <circle cx="108" cy="44" r="4"></circle>
+    <circle cx="156" cy="44" r="4"></circle>
+  </g>
+</svg>

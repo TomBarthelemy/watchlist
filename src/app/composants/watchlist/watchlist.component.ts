@@ -8,21 +8,23 @@ import {
 } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
-import { Category, SupaService } from '../../services/supa.service';
+import { SupaService } from '../../services/supa.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
-type Filter = 'Tout' | 'Film' | 'Série' | 'Animé' | 'A_voir' | 'Vus';
-type SortKey = 'created_desc' | 'created_asc' | 'title_asc' | 'title_desc';
+import { Filter } from '../../types/item-filter.type';
+import { SortKey } from '../../types/item-sort.type';
+import { Category } from '../../types/item-category.type';
+import { Item } from '../../models/item.model';
+import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.directive';
 
 @Component({
   selector: 'app-watchlist',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSlideToggleModule],
+  imports: [CommonModule, ReactiveFormsModule, MatSlideToggleModule, PopcornEmitterDirective],
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss'],
 })
 export class WatchlistComponent {
-  // --- Formulaire d’ajout
+  // --- Formulaire d'ajout
   form = this.fb.group({
     title: this.fb.control<string>('', {
       nonNullable: true,
@@ -54,14 +56,18 @@ export class WatchlistComponent {
   );
 
   // --- Liste filtrée (signals)
-  filtered = computed(() => {
-    const f = this.filter();
-    let arr = this.supa.items();
-    if (f === 'A_voir') arr = arr.filter((i) => !i.seen);
-    else if (f === 'Vus') arr = arr.filter((i) => i.seen);
-    else if (f !== 'Tout') arr = arr.filter((i) => i.category === f);
-    return arr;
-  });
+filtered = computed(() => {
+  const f = this.filter();
+  let arr = this.supa.items();
+
+  if (f === 'A_voir')        arr = arr.filter(i => !i.seen);
+  else if (f === 'Vus')      arr = arr.filter(i => i.seen);
+  else if (f === 'Mes_ajouts')   arr = arr.filter(i => this.isSelf(i));
+  else if (f === 'Ajouts_autres')arr = arr.filter(i => !this.isSelf(i));
+  else if (f !== 'Tout')     arr = arr.filter(i => i.category === f);
+
+  return arr;
+});
 
   sorted = computed(() => {
     const key = this.sort();
@@ -85,6 +91,8 @@ export class WatchlistComponent {
         return [...src].sort((a, b) => byCreated(b.created_at, a.created_at));
     }
   });
+
+  selfId = computed(() => this.supa.user()?.id ?? null);
 
   total = computed(() => this.supa.items().length);
   seenCount = computed(() => this.supa.items().filter((i) => i.seen).length);
@@ -116,6 +124,11 @@ export class WatchlistComponent {
   formatDate(dateStr: string): string {
     const [year, month, day] = dateStr.split('-');
     return `${day}-${month}-${year}`;
+  }
+
+  isSelf(item: Item): boolean {
+    const me = this.selfId();
+    return !!me && item.proposed_by === me;
   }
 
   private buildTrailerQuery(title: string, category: Category) {

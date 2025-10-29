@@ -26,6 +26,8 @@
       <option value="Animé">Animé</option>
       <option value="A_voir">À voir</option>
       <option value="Vus">Vus</option>
+      <option value="Mes_ajouts">Mes propositions</option>
+      <option value="Ajouts_autres">Ses propositions</option>
     </select>
 
     <select class="sort" [formControl]="sortCtrl" aria-label="Trier par">
@@ -41,7 +43,12 @@
   <!-- Only this box scrolls -->
   <div class="list-scroll">
     <ul class="list">
-      <li *ngFor="let item of sorted()" [class.seen]="item.seen">
+      <li
+        *ngFor="let item of sorted()"
+        [class.seen]="item.seen"
+        [class.li--self]="isSelf(item)"
+        [class.li--other]="!isSelf(item)"
+      >
         <div class="left">
           <strong class="title" [title]="item.title">
             {{
@@ -93,4 +100,24 @@
 
   <!-- Always visible; not inside the scroller -->
   <footer class="stats">{{ seenCount() }} / {{ total() }} vus</footer>
+</div>
+
+<!-- tout en bas du template -->
+<div class="popcorn-floor"></div>
+<div class="popcorn-overlay"
+     popcornEmitter
+     [rate]="25"          
+     [max]="36"
+     [minSize]="22"
+     [maxSize]="36"
+     [minHeightVh]="80"  
+     [maxHeightVh]="100"
+     [spreadX]="90"
+     [minSpin]="160"
+     [maxSpin]="360"
+     [minDuration]="1800"
+     [maxDuration]="2400"
+     [bounceMin]="14"
+     [bounceMax]="26"
+     [settleHold]="240">
 </div>

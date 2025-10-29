@@ -33,6 +33,26 @@
     }
   }
 
+  /* Branding */
+  .brand {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .brand-title {
+    margin: 0;
+    font-size: var(--fs-xxl);
+    letter-spacing: 0.3px;
+    font-weight: 700;
+  }
+
+  .brand-icon {
+    width: calc(var(--fs-xxl) * 1.2);
+    height: calc(var(--fs-xxl) * 1.2);
+    transform: translateY(-5px);
+    margin-left: 0.25rem;
+  }
+
   .right {
     display: flex;
     align-items: center;
@@ -40,24 +60,28 @@
 
     /* Bouton pill compact */
     .btn--logout {
+      background: none;
+      border: none;
+      box-shadow: none;
+      cursor: pointer;
+      padding: 4px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      height: 40px;
-      padding: 0 14px;
-      border-radius: 12px;
-      white-space: nowrap;
+      justify-content: center;
+      transition: transform 0.15s ease, opacity 0.2s ease;
     }
 
-    /* Icône + via mask */
-    .ic {
+    .icon-logout {
       inline-size: 24px;
       block-size: 24px;
-    }
-    .ic-logout {
-      background: currentColor;
+      background: var(--secondary);
       mask: url("/icons/logout.svg") center/contain no-repeat;
       -webkit-mask: url("/icons/logout.svg") center/contain no-repeat;
+    }
+
+    .btn--logout:hover {
+      transform: scale(1.1);
+      opacity: 0.8;
     }
   }
 }

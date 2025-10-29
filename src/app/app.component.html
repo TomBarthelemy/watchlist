@@ -1,6 +1,13 @@
 <main class="container">
   <header class="header">
-    <h1 class="title">🎬 Watchlist</h1>
+    <div class="brand">
+      <h1 class="brand-title">Watchlist</h1>
+      <img
+        class="brand-icon"
+        src="/icons/popcorn-icon.svg"
+        alt="Popcorn icon"
+      />
+    </div>
 
     <div class="right">
       <div class="presence" *ngIf="supa.onlineUsers().length">
@@ -17,13 +24,12 @@
 
       <div class="user">
         <button
-          class="btn btn--secondary btn--logout"
+          class="btn btn--logout"
           *ngIf="supa.user()"
           type="button"
           (click)="signOut()"
         >
-          Se déconnecter
-          <span class="ic ic-logout" aria-hidden="true"></span>
+          <span class="icon-logout" aria-hidden="true"></span>
         </button>
       </div>
     </div>
