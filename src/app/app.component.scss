@@ -75,8 +75,8 @@
       inline-size: 24px;
       block-size: 24px;
       background: var(--secondary);
-      mask: url("icons/logout.svg") center/contain no-repeat;
-      -webkit-mask: url("icons/logout.svg") center/contain no-repeat;
+      mask: url("/icons/logout.svg") center/contain no-repeat;
+      -webkit-mask: url("/icons/logout.svg") center/contain no-repeat;
     }
 
     .btn--logout:hover {
