@@ -7,7 +7,6 @@ on:
 permissions:
   contents: write   
   pages: write    
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -17,9 +16,10 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run build -- --configuration production --base-href "https://tombarthelemy.github.io/watchlist/"
-      - name: Deploy to GitHub Pages
+      - run: npm run build -- --configuration production --base-href "/watchlist/"
+      - run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
+      - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist/watchlist
+          folder: dist/watchlist/browser
