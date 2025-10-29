@@ -3,13 +3,13 @@
 /* ========= THEME (pastel / gradient) ========= */
 :root {
   /* gradient d’arrière-plan page */
-  --bg-start: #d5d0ff; /* lavande pâle inspirée du fond dark */
-  --bg-end: #f3c7ff; /* rose-lila clair */
+  --bg-start: #d5d0ff; 
+  --bg-end: #f3c7ff;
   --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
 
   /* surfaces & texte */
   --surface: #ffffff;
-  --surface-2: #f7f8fc; /* léger bleu-gris froid */
+  --surface-2: #f7f8fc; 
   --surface-gradient: linear-gradient(
     180deg,
     color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
@@ -21,25 +21,25 @@
     color-mix(in oklab, var(--surface) 40%, var(--secondary-weak) 80%)
   );
 
-  --text: #1f1d33; /* violet-gris foncé pour rester dans la gamme */
-  --muted: #747a92; /* gris bleuté doux */
+  --text: #1f1d33; 
+  --muted: #747a92; 
 
   /* brand & sémantique */
-  --primary: #8b7dff; /* lavande lumineuse */
-  --primary-weak: #eceaff; /* fond pastel assorti */
-  --secondary: #8fa6ff; /* lavande-bleu clair */
-  --secondary-weak: #eaefff; /* fond pastel */
+  --primary: #8b7dff;
+  --primary-weak: #eceaff;
+  --secondary: #8fa6ff; 
+  --secondary-weak: #eaefff; 
 
-  --success: #42c9b8; /* teal clair (écho au teal glacé du dark) */
-  --danger: #f77fa3; /* rose-corail doux */
+  --success: #42c9b8; 
+  --danger: #f77fa3; 
 
-  /* tags catégories (pastel harmonisé) */
-  --tag-film-bg: #eceaff; /* lavande pâle */
-  --tag-film-fg: #4a3ecc; /* violet moyen */
-  --tag-serie-bg: #f7e1ef; /* rosé froid */
-  --tag-serie-fg: #a04374; /* framboise douce */
-  --tag-anime-bg: #f5f1d1; /* jaune lunaire adouci */
-  --tag-anime-fg: #8b7a3c; /* doré clair désaturé */
+  /* tags catégories  */
+  --tag-film-bg: #eceaff; 
+  --tag-film-fg: #4a3ecc; 
+  --tag-serie-bg: #f7e1ef; 
+  --tag-serie-fg: #a04374; 
+  --tag-anime-bg: #f5f1d1; 
+  --tag-anime-fg: #8b7a3c; 
 
   /* élévation & arrondis */
   --shadow: 0 12px 32px rgba(40, 32, 70, 0.12);
@@ -53,7 +53,7 @@
   --space-lg: 16px;
 
   /* typographie (échelle rapide) */
-  --fs-xxl: clamp(28px, 4.5vw, 48px); /* gros titre “Watchlist” */
+  --fs-xxl: clamp(28px, 4.5vw, 48px); 
   --fs-xl: 28px;
   --fs-lg: 18px;
   --fs-md: 16px;
@@ -85,20 +85,20 @@
     --text: #eef0f7;
     --muted: #b1b7c9;
 
-    --primary: #a996ff; /* lavande lumineuse */
-    --primary-weak: #4a3e66; /* violet-gris sourd */
-    --secondary: #9cb4ff; /* lavande bleuté lumineuse */
-    --secondary-weak: #39415f; /* fond froid assorti */
+    --primary: #a996ff; 
+    --primary-weak: #4a3e66; 
+    --secondary: #9cb4ff; 
+    --secondary-weak: #39415f; 
 
-    --success: #58d7c7; /* teal glacé, plus cohérent que vert pur */
-    --danger: #ff8aa8; /* rose-corail froid, lisible sur violet */
+    --success: #58d7c7; 
+    --danger: #ff8aa8; 
 
     --tag-film-bg: #2e355e;
     --tag-film-fg: #c6ceff;
-    --tag-serie-bg: #4d3340; /* bordeaux froid au lieu de brun */
+    --tag-serie-bg: #4d3340; 
     --tag-serie-fg: #ffd0e0;
-    --tag-anime-bg: #3b3750; /* violet sourd */
-    --tag-anime-fg: #efe6a6; /* doré adouci */
+    --tag-anime-bg: #3b3750; 
+    --tag-anime-fg: #efe6a6; 
 
     --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
     --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
@@ -115,7 +115,7 @@ body {
 }
 body {
   margin: 0;
-  background: var(--bg); /* <- gradient */
+  background: var(--bg); 
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter,
     Helvetica, Arial, "Noto Sans", sans-serif;
@@ -199,10 +199,6 @@ input:focus,
 select:focus {
   background: var(--surface-2);
   box-shadow: var(--shadow);
-}
-input.invalid,
-select.invalid {
-  border-color: #ff7675;
 }
 
 /* Badges (catégories) */
