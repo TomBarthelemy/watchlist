@@ -5,37 +5,23 @@ on:
     branches: [ master ]
 
 permissions:
-  contents: write   # nécessaire pour pousser sur gh-pages
-  pages: write      # inoffensif ici (utilisé par actions/deploy-pages)
-
+  contents: write   
+  pages: write    
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    # Base path utilisé par Vite ET par le --base-href Angular
     env:
       APP_BASE: /watchlist/
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-
-      - name: Install deps
-        run: npm ci
-
-      - name: Build Angular app
-        run: npm run build -- --configuration production --base-href "${{ env.APP_BASE }}"
-
-      # Fallback SPA pour GitHub Pages (deep-links)
-      - name: Add 404.html
-        run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
-
+      - run: npm ci
+      - run: npm run build -- --configuration production --base-href "${{ env.APP_BASE }}"
+      - run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
