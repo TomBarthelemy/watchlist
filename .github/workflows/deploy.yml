@@ -38,18 +38,6 @@ jobs:
       - name: SPA fallback (404.html)
         run: cp dist/watchlist/browser/index.html dist/watchlist/browser/404.html
 
-      - name: Debug - list built assets and bad URLs (before patch)
-        run: |
-          echo "== List of built icons =="
-          ls -la dist/watchlist/browser/assets/icons || true
-          echo "== Base href in index.html =="
-          grep -o 'base href="[^"]*"' dist/watchlist/browser/index.html || true
-          echo "== Bad absolute URLs =="
-          grep -Rno '/assets/icons/' dist/watchlist/browser || true
-          echo "== Bad relative URLs =="
-          grep -Rno 'url(assets/icons/' dist/watchlist/browser || true
-          grep -Rno 'src="assets/icons/' dist/watchlist/browser || true
-
       - name: Patch - rewrite ALL asset URLs for GitHub Pages
         run: |
           # 1) /assets/...  -> /watchlist/assets/...
@@ -60,18 +48,7 @@ jobs:
             | xargs -0 sed -i 's#url(assets/#url(/watchlist/assets/#g'
           # 3) src="assets/..." -> src="/watchlist/assets/..."
           find dist/watchlist/browser -type f -name "*.html" -print0 \
-            | xargs -0 sed -i 's#src="assets/#src="/watchlist/assets/#g'
-
-      - name: Debug - confirm URLs after patch
-        run: |
-          echo "== Remaining /assets/ references (should be empty) =="
-          grep -Rno '/assets/icons/' dist/watchlist/browser || true
-          echo "== Final /watchlist/assets/ references (should exist) =="
-          grep -Rno '/watchlist/assets/icons/' dist/watchlist/browser | head -n 20 || true
-      
-      
-
-
+            | xargs -0 sed -i 's#src="assets/#src="/watchlist/assets/#g'      
 
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
