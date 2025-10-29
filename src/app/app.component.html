@@ -22,14 +22,30 @@
         </span>
       </div>
 
+      <button
+        title="This is a hint"
+        class="btn btn--theme"
+        title="Changer le thème"
+        aria-label="Changer le thème"
+        (click)="theme.toggle()"
+      >
+        <span
+          class="icon"
+          [class.is-sun]="theme.theme() === 'light'"
+          [class.is-moon]="theme.theme() === 'dark'"
+        ></span>
+      </button>
+
       <div class="user">
         <button
           class="btn btn--logout"
           *ngIf="supa.user()"
           type="button"
           (click)="signOut()"
+          title="Se déconnecter"
+          aria-label="Se déconnecter"
         >
-          <span class="icon-logout" aria-hidden="true"></span>
+          <span class="icon icon-logout" aria-hidden="true"></span>
         </button>
       </div>
     </div>

@@ -62,47 +62,45 @@
   --tile: 200px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-start: #221f35;
-    --bg-end: #3a2740;
-    --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
+html[data-theme="dark"] {
+  --bg-start: #221f35;
+  --bg-end: #3a2740;
+  --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
 
-    --surface: #26213b;
-    --surface-2: #312a4a;
+  --surface: #26213b;
+  --surface-2: #312a4a;
 
-    --surface-gradient: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
-      color-mix(in oklab, var(--surface) 90%, var(--bg-end) 50%)
-    );
-    --surface-gradient-weak: linear-gradient(
-      180deg,
-      color-mix(in oklab, var(--surface) 80%, var(--bg-start) 60%),
-      color-mix(in oklab, var(--surface) 80%, var(--secondary-weak) 60%)
-    );
+  --surface-gradient: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
+    color-mix(in oklab, var(--surface) 90%, var(--bg-end) 50%)
+  );
+  --surface-gradient-weak: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--surface) 80%, var(--bg-start) 60%),
+    color-mix(in oklab, var(--surface) 80%, var(--secondary-weak) 60%)
+  );
 
-    --text: #eef0f7;
-    --muted: #b1b7c9;
+  --text: #eef0f7;
+  --muted: #b1b7c9;
 
-    --primary: #a996ff; 
-    --primary-weak: #4a3e66; 
-    --secondary: #9cb4ff; 
-    --secondary-weak: #39415f; 
+  --primary: #a996ff; 
+  --primary-weak: #4a3e66; 
+  --secondary: #9cb4ff; 
+  --secondary-weak: #39415f; 
 
-    --success: #58d7c7; 
-    --danger: #ff8aa8; 
+  --success: #58d7c7; 
+  --danger: #ff8aa8; 
 
-    --tag-film-bg: #2e355e;
-    --tag-film-fg: #c6ceff;
-    --tag-serie-bg: #4d3340; 
-    --tag-serie-fg: #ffd0e0;
-    --tag-anime-bg: #3b3750; 
-    --tag-anime-fg: #efe6a6; 
+  --tag-film-bg: #2e355e;
+  --tag-film-fg: #c6ceff;
+  --tag-serie-bg: #4d3340; 
+  --tag-serie-fg: #ffd0e0;
+  --tag-anime-bg: #3b3750; 
+  --tag-anime-fg: #efe6a6; 
 
-    --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
-    --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
-  }
+  --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
 }
 
 /* ========= BASE ========= */

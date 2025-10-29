@@ -90,7 +90,12 @@
           >
             <span> Vu ?</span>
           </mat-slide-toggle>
-          <button class="btn btn--danger-icon" (click)="remove(item.id)">
+          <button
+            class="btn btn--danger-icon"
+            (click)="remove(item.id)"
+            title="Supprimer l'item"
+            aria-label="Supprimer l'item"
+          >
             <span class="icon-trash" aria-hidden="true"></span>
           </button>
         </div>
@@ -104,20 +109,21 @@
 
 <!-- tout en bas du template -->
 <div class="popcorn-floor"></div>
-<div class="popcorn-overlay"
-     popcornEmitter
-     [rate]="25"          
-     [max]="36"
-     [minSize]="22"
-     [maxSize]="36"
-     [minHeightVh]="80"  
-     [maxHeightVh]="100"
-     [spreadX]="90"
-     [minSpin]="160"
-     [maxSpin]="360"
-     [minDuration]="1800"
-     [maxDuration]="2400"
-     [bounceMin]="14"
-     [bounceMax]="26"
-     [settleHold]="240">
-</div>
+<div
+  class="popcorn-overlay"
+  popcornEmitter
+  [rate]="25"
+  [max]="36"
+  [minSize]="22"
+  [maxSize]="36"
+  [minHeightVh]="80"
+  [maxHeightVh]="100"
+  [spreadX]="90"
+  [minSpin]="160"
+  [maxSpin]="360"
+  [minDuration]="1800"
+  [maxDuration]="2400"
+  [bounceMin]="14"
+  [bounceMax]="26"
+  [settleHold]="240"
+></div>

@@ -58,8 +58,8 @@
     align-items: center;
     gap: 12px;
 
-    /* Bouton pill compact */
-    .btn--logout {
+    .btn--logout,
+    .btn--theme {
       background: none;
       border: none;
       box-shadow: none;
@@ -71,15 +71,45 @@
       transition: transform 0.15s ease, opacity 0.2s ease;
     }
 
-    .icon-logout {
+    .icon {
       inline-size: 24px;
       block-size: 24px;
+      mask-size: contain;
+      -webkit-mask-size: contain;
+      mask-repeat: no-repeat;
+      -webkit-mask-repeat: no-repeat;
+      transition: transform 0.5s ease, opacity 0.4s ease,
+        background-color 0.4s ease;
+      display: inline-block;
+    }
+
+    .btn--theme:active .icon {
+      transform: scale(0.85) rotate(15deg);
+    }
+
+    .icon-logout {
       background: var(--secondary);
       mask: url("/assets/icons/logout.svg") center/contain no-repeat;
       -webkit-mask: url("/assets/icons/logout.svg") center/contain no-repeat;
     }
 
-    .btn--logout:hover {
+    .icon.is-sun {
+      background: var(--primary);
+      mask: url("/assets/icons/sun.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/sun.svg") center/contain no-repeat;
+      opacity: 1;
+      transform: rotate(180deg);
+    }
+    .icon.is-moon {
+      background: var(--primary);
+      mask: url("/assets/icons/moon.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/moon.svg") center/contain no-repeat;
+      opacity: 1;
+      transform: rotate(0deg) scale(0.92);
+    }
+
+    .btn--logout:hover,
+    .btn--theme:hover {
       transform: scale(1.1);
       opacity: 0.8;
     }
