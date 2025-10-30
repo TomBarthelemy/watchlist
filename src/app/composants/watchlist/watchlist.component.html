@@ -22,12 +22,14 @@
         <option>Film</option>
         <option>Série</option>
         <option>Animé</option>
+        <option>Dessin animé</option>
       </select>
       <button
         type="submit"
         class="btn btn--secondary btn--add"
         [disabled]="form.invalid"
-      >Ajouter
+      >
+        Ajouter
         <span
           class="ic"
           [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
@@ -45,6 +47,7 @@
       <option value="Film">Film</option>
       <option value="Série">Série</option>
       <option value="Animé">Animé</option>
+      <option value="Dessin animé">Dessin animé</option>
       <option value="A_voir">À voir</option>
       <option value="Vus">Vus</option>
       <option value="Mes_ajouts">Mes propositions</option>
@@ -83,7 +86,8 @@
             [ngClass]="{
               'badge--film': item.category === 'Film',
               'badge--serie': item.category === 'Série',
-              'badge--anime': item.category === 'Animé'
+              'badge--anime': item.category === 'Animé',
+              'badge--dessin-anime': item.category === 'Dessin animé'
             }"
           >
             {{ item.category }}
