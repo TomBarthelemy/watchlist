@@ -17,6 +17,8 @@
   margin-bottom: 16px;
   display: flex;
   gap: 12px;
+  row-gap: 8px;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(var(--bg), var(--bg));
@@ -37,6 +39,7 @@
   .brand {
     display: flex;
     align-items: flex-end;
+    min-width: 0;
   }
 
   .brand-title {
@@ -44,6 +47,10 @@
     font-size: var(--fs-xxl);
     letter-spacing: 0.3px;
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .brand-icon {
@@ -54,9 +61,13 @@
   }
 
   .right {
+    min-width: 0;
+    flex: 1 1 auto; /* prend l'espace restant, mais peut shrink */
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
 
     .btn--logout,
     .btn--theme {
@@ -113,6 +124,29 @@
       transform: scale(1.1);
       opacity: 0.8;
     }
+
+    /* La liste de présence ne doit jamais pousser les actions hors écran */
+    .header .right .presence {
+      order: 0;
+      flex: 1 1 auto; /* occupe le “milieu” */
+      min-width: 0;
+      overflow-x: auto; /* si ça déborde, ça scrolle horizontalement */
+      white-space: nowrap; /* garde les chips sur une ligne */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Les actions restent toujours visibles */
+    .header .right .theme,
+    .header .right .user {
+      order: 1;
+      flex: 0 0 auto; /* ne rétrécissent pas, restent à l'écran */
+    }
+
+    /* Icônes : évite qu'elles rapetissent/ disparaissent */
+    .header .right .btn--logout,
+    .header .right .btn--theme {
+      flex: 0 0 auto;
+    }
   }
 }
 
@@ -134,8 +168,8 @@
   .header {
     align-items: flex-start;
     gap: 10px;
-    padding: 10px 0 16px 10px;
-    margin-bottom: 12px;
+    padding: 10px;
+    margin-bottom: 0;
 
     .brand {
       justify-content: flex-start;
@@ -176,10 +210,11 @@
 /* Téléphones (≤480px) */
 @media (max-width: 480px) {
   .container {
-    padding: 16px 10px 32px;
+    padding: 0 10px 32px;
   }
 
   .header {
+    justify-content: space-between;
     align-items: center;
     text-align: center;
     gap: 8px;
@@ -187,10 +222,14 @@
     .brand {
       align-items: center;
       gap: 4px;
+      display: flex;
+      width: 100%;
+      justify-content: center;
     }
 
     .brand-title {
       font-size: clamp(20px, 7vw, 26px);
+      max-width: 75vw;
     }
 
     .brand-icon {
@@ -201,8 +240,8 @@
     }
 
     .right {
+      width: 100%;
       justify-content: center;
-      gap: 8px;
 
       .btn--logout,
       .btn--theme {
