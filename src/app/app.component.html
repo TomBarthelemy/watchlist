@@ -22,19 +22,21 @@
         </span>
       </div>
 
-      <button
-        title="This is a hint"
-        class="btn btn--theme"
-        title="Changer le thème"
-        aria-label="Changer le thème"
-        (click)="theme.toggle()"
-      >
-        <span
-          class="icon"
-          [class.is-sun]="theme.theme() === 'light'"
-          [class.is-moon]="theme.theme() === 'dark'"
-        ></span>
-      </button>
+      <div class="theme">
+        <button
+          title="This is a hint"
+          class="btn btn--theme"
+          title="Changer le thème"
+          aria-label="Changer le thème"
+          (click)="theme.toggle()"
+        >
+          <span
+            class="icon"
+            [class.is-sun]="theme.theme() === 'light'"
+            [class.is-moon]="theme.theme() === 'dark'"
+          ></span>
+        </button>
+      </div>
 
       <div class="user">
         <button

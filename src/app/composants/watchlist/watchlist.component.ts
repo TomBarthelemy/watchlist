@@ -19,7 +19,12 @@ import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.direct
 @Component({
   selector: 'app-watchlist',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSlideToggleModule, PopcornEmitterDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    PopcornEmitterDirective,
+  ],
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss'],
 })
@@ -56,18 +61,18 @@ export class WatchlistComponent {
   );
 
   // --- Liste filtrée (signals)
-filtered = computed(() => {
-  const f = this.filter();
-  let arr = this.supa.items();
+  filtered = computed(() => {
+    const f = this.filter();
+    let arr = this.supa.items();
 
-  if (f === 'A_voir')        arr = arr.filter(i => !i.seen);
-  else if (f === 'Vus')      arr = arr.filter(i => i.seen);
-  else if (f === 'Mes_ajouts')   arr = arr.filter(i => this.isSelf(i));
-  else if (f === 'Ajouts_autres')arr = arr.filter(i => !this.isSelf(i));
-  else if (f !== 'Tout')     arr = arr.filter(i => i.category === f);
+    if (f === 'A_voir') arr = arr.filter((i) => !i.seen);
+    else if (f === 'Vus') arr = arr.filter((i) => i.seen);
+    else if (f === 'Mes_ajouts') arr = arr.filter((i) => this.isSelf(i));
+    else if (f === 'Ajouts_autres') arr = arr.filter((i) => !this.isSelf(i));
+    else if (f !== 'Tout') arr = arr.filter((i) => i.category === f);
 
-  return arr;
-});
+    return arr;
+  });
 
   sorted = computed(() => {
     const key = this.sort();
@@ -97,6 +102,9 @@ filtered = computed(() => {
   total = computed(() => this.supa.items().length);
   seenCount = computed(() => this.supa.items().filter((i) => i.seen).length);
 
+  formOpen = signal(false);
+  justAdded = signal(false);
+
   constructor(public supa: SupaService, private fb: FormBuilder) {}
 
   async addItem() {
@@ -112,6 +120,12 @@ filtered = computed(() => {
       trailer_url: trailer_url,
     });
     this.form.reset({ title: '', category: 'Film' });
+
+    // montre la coche 900 ms, puis reviens au "+"
+    this.justAdded.set(true); 
+    setTimeout(() => {
+      this.justAdded.set(false);
+    }, 900);
   }
 
   async toggle(it: any) {

@@ -12,6 +12,37 @@
   min-height: 0;
 }
 
+.add-toggle {
+  display: none;
+  cursor: pointer;
+
+  .chevron {
+    inline-size: 18px;
+    block-size: 18px;
+    background: currentColor;
+    mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
+    -webkit-mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
+    transition: transform 0.3s ease;
+  }
+
+  .chevron.open {
+    transform: rotate(180deg);
+  }
+}
+
+.add-collapsible {
+  max-height: none;
+  opacity: 1;
+  overflow: visible;
+  transform: none;
+}
+.add-collapsible.is-open {
+  max-height: 330px;
+  height: 330px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .form {
   display: grid;
   grid-template-columns: 1.6fr 0.7fr auto;
@@ -20,6 +51,7 @@
 
   .btn--add {
     display: inline-flex;
+    justify-content: center;
     align-items: center;
     gap: 8px;
     height: 40px;
@@ -27,17 +59,69 @@
     border-radius: 12px;
     white-space: nowrap;
     justify-self: start;
-  }
+    transition: transform 0.15s ease, background-color 0.25s ease;
 
-  .ic {
-    inline-size: 24px;
-    block-size: 24px;
+    &:hover {
+      transform: translateY(-1px);
+      background: color-mix(in oklab, var(--secondary) 90%, white 15%);
+    }
+
+    .ic {
+      inline-size: 24px;
+      block-size: 24px;
+    }
+    .ic-plus {
+      background: currentColor;
+      mask: url("/assets/icons/add.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/add.svg") center/contain no-repeat;
+    }
+
+    .ic-check {
+      background: currentColor;
+      mask: url("/assets/icons/check.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/check.svg") center/contain no-repeat;
+      animation: checkPop .9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      transform: translateX(+20px);
+    }
+
+
+    &:active .ic-plus {
+      transform: scale(0.85);
+    }
+
+    @keyframes checkPop {
+      0% {
+        transform: scale(0.6), translateX(0);
+        opacity: 0;
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+      }
+      40% {
+        transform: scale(1.12);
+        opacity: 1;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
+      }
+      70% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
   }
-  .ic-plus {
-    background: currentColor;
-    mask: url("/assets/icons/add.svg") center/contain no-repeat;
-    -webkit-mask: url("/assets/icons/add.svg") center/contain no-repeat;
-  }
+}
+
+.form > * {
+  min-width: 0;
+}
+.form input,
+.form select,
+.form button {
+  width: 100%;
+}
+
+.list-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
 }
 
 .section-sep {
@@ -116,9 +200,10 @@ ul.list {
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
+    word-break: break-word;
   }
 
-  /* --- Bouton icône YouTube --- */
+  /*  Bouton icône YouTube  */
   .btn--youtube-icon {
     background: none;
     border: none;
@@ -206,27 +291,203 @@ ul.list {
 }
 
 /* Bed of popcorn*/
-.popcorn-floor{
+.popcorn-floor {
   position: fixed;
-  left: 0; right: 0; bottom: -16px;
+  left: 0;
+  right: 0;
+  bottom: -16px;
   height: 12vh;
   pointer-events: none;
   z-index: 20;
-    background-image: url("/assets/icons/popcorn-front.svg"),
+  background-image: url("/assets/icons/popcorn-front.svg"),
     url("/assets/icons/popcorn-front.svg");
 
   background-repeat: repeat-x, repeat-x;
   background-size: var(--tile) 78px, var(--tile) 70px;
 
-  background-position: calc(var(--tile)/2) calc(100% + .5px), 0 calc(100% + 0.5px);
+  background-position: calc(var(--tile) / 2) calc(100% + 0.5px),
+    0 calc(100% + 0.5px);
 }
 
-/* Responsive : empile le formulaire sous ~720px */
-@media (max-width: 720px) {
+@media (max-width: 768px) {
+  .presence {
+    display: flex;
+  }
+
+  .add-toggle {
+    display: inline-flex;
+  }
+  .add-collapsible {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.28s ease;
+  }
+    .add-collapsible.is-open {
+    max-height: none !important;
+    height: auto !important;
+    opacity: 1;
+    transform: none;
+    overflow: visible;          
+    position: static;           
+    z-index: 1;                 
+  }
+
+  .form {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "title  title"
+      "cat    add";
+    gap: 10px;
+
+    input[formControlName="title"] {
+      grid-area: title;
+    }
+    select[formControlName="category"] {
+      grid-area: cat;
+    }
+    .btn--add {
+      grid-area: add;
+      justify-self: end;
+    }
+
+    input,
+    select,
+    .btn--add {
+      height: 46px;
+    }
+    .ic {
+      inline-size: 22px;
+      block-size: 22px;
+    }
+  }
+
+  /* Toolbar */
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toolbar .filter,
+  .toolbar .sort {
+    flex: 1 1 48%;
+    min-width: 0;
+    height: 44px;
+  }
+
+  /* Cartes */
+  .list li {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .left,
+  .right {
+    gap: 10px;
+  }
+
+  /* Ligne gauche : titre multi-ligne, badge et trailer côte à côte */
+  .left {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .left .title {
+    font-size: clamp(16px, 2.2vw, 18px);
+    font-weight: 600;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .left .badge {
+    margin-left: 0;
+  }
+  .left .btn--youtube-icon {
+    inline-size: 26px;
+    block-size: 26px;
+  }
+
+  /* Ligne droite */
+  .right {
+    width: 100%;
+    align-items: anchor-center;
+    justify-content: flex-end;
+  }
+  .right > span:first-child {
+    order: -1;
+    display: block;
+    opacity: 0.9;
+  }
+  .right .toggle,
+  .right .btn--danger-icon {
+    align-self: stretch;
+  }
+  .right .toggle {
+    justify-content: space-between;
+    transform: scale(1.08);
+    transform-origin: left center;
+  }
+  .right .btn--danger-icon {
+    margin-left: auto;
+  }
+
+  /* Scrollbar bien visible */
+  .list-scroll {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Formulaire  */
   .form {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "cat"
+      "add";
+    gap: 8px;
+
+    .btn--add {
+      justify-self: stretch;
+      height: 48px;
+      font-size: 15px;
+    }
   }
-  .btn--add {
-    justify-self: end;
+
+  /* Toolbar */
+  .toolbar .filter,
+  .toolbar .sort {
+    flex: 1;
+    height: 44px;
+  }
+
+  /* Cartes  */
+  .list li {
+    padding: 10px;
+    padding-bottom: 0;
+    gap: 0px;
+    border-radius: var(--radius-xl);
+  }
+
+  .left {
+    gap: 8px;
+  }
+  .left .title {
+    font-size: 18px;
+  }
+  .left .btn--youtube-icon {
+    inline-size: 28px;
+    block-size: 28px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+  .right .toggle {
+    transform: scale(1.12);
+  }
+  .right .icon-trash {
+    inline-size: 28px;
+    block-size: 28px;
   }
 }

@@ -4,7 +4,7 @@
 
   <form class="auth-form" [formGroup]="form" (ngSubmit)="onLogin()">
     <label class="field">
-      <span class="field__label">Email</span>
+      <span class="field-label">Email</span>
       <input
         type="email"
         formControlName="email"
@@ -19,7 +19,7 @@
     </label>
 
     <label class="field">
-      <span class="field__label">Mot de passe</span>
+      <span class="field-label">Mot de passe</span>
       <div class="pw">
         <input
           [type]="showPw() ? 'text' : 'password'"
@@ -27,7 +27,7 @@
           name="current-password"
           placeholder="••••••••"
           [class.invalid]="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)"/>
-        <button type="button" class="pw__toggle" (click)="togglePw()" aria-label="Afficher/masquer le mot de passe">
+        <button type="button" class="pw-toggle" (click)="togglePw()" aria-label="Afficher/masquer le mot de passe">
           {{ showPw() ? '🙈' : '👁️' }}
         </button>
       </div>

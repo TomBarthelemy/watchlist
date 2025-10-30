@@ -122,3 +122,96 @@
   display: flex;
   background: transparent;
 }
+
+/* ========= RESPONSIVE ========= */
+
+/* Tablettes / petits écrans horizontaux */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 14px 40px;
+  }
+
+  .header {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0 16px 10px;
+    margin-bottom: 12px;
+
+    .brand {
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .brand-title {
+      font-size: clamp(22px, 6vw, 28px);
+    }
+
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      transform: translateY(-3px);
+    }
+
+    .right {
+      width: 100%;
+      justify-content: flex-end;
+      gap: 10px;
+
+      .presence {
+        display: flex;
+      }
+
+      .btn--logout,
+      .btn--theme {
+        padding: 6px;
+      }
+    }
+  }
+
+  .content {
+    padding-top: 6px;
+  }
+}
+
+/* Téléphones (≤480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 10px 32px;
+  }
+
+  .header {
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+
+    .brand {
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brand-title {
+      font-size: clamp(20px, 7vw, 26px);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      transform: none;
+      margin-left: 0;
+    }
+
+    .right {
+      justify-content: center;
+      gap: 8px;
+
+      .btn--logout,
+      .btn--theme {
+        padding: 6px;
+      }
+    }
+  }
+
+  .content {
+    flex-direction: column;
+  }
+}

@@ -10,7 +10,7 @@
   position: relative;
 }
 
-.field__label {
+.field-label {
   font-size: 14px;
   color: var(--muted);
 }
@@ -42,7 +42,7 @@ input {
   padding-right: 40px; 
 }
 
-.pw__toggle {
+.pw-toggle {
   position: absolute;
   right: 12px;
   top: 50%;

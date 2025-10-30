@@ -2,14 +2,14 @@
 
 /* ========= THEME (pastel / gradient) ========= */
 :root {
-  /* gradient d’arrière-plan page */
-  --bg-start: #d5d0ff; 
+  /* gradient d'arrière-plan page */
+  --bg-start: #d5d0ff;
   --bg-end: #f3c7ff;
   --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
 
   /* surfaces & texte */
   --surface: #ffffff;
-  --surface-2: #f7f8fc; 
+  --surface-2: #f7f8fc;
   --surface-gradient: linear-gradient(
     180deg,
     color-mix(in oklab, var(--surface) 90%, var(--bg-start) 50%),
@@ -21,25 +21,25 @@
     color-mix(in oklab, var(--surface) 40%, var(--secondary-weak) 80%)
   );
 
-  --text: #1f1d33; 
-  --muted: #747a92; 
+  --text: #1f1d33;
+  --muted: #747a92;
 
   /* brand & sémantique */
   --primary: #8b7dff;
   --primary-weak: #eceaff;
-  --secondary: #8fa6ff; 
-  --secondary-weak: #eaefff; 
+  --secondary: #8fa6ff;
+  --secondary-weak: #eaefff;
 
-  --success: #42c9b8; 
-  --danger: #f77fa3; 
+  --success: #42c9b8;
+  --danger: #f77fa3;
 
   /* tags catégories  */
-  --tag-film-bg: #eceaff; 
-  --tag-film-fg: #4a3ecc; 
-  --tag-serie-bg: #f7e1ef; 
-  --tag-serie-fg: #a04374; 
-  --tag-anime-bg: #f5f1d1; 
-  --tag-anime-fg: #8b7a3c; 
+  --tag-film-bg: #eceaff;
+  --tag-film-fg: #4a3ecc;
+  --tag-serie-bg: #f7e1ef;
+  --tag-serie-fg: #a04374;
+  --tag-anime-bg: #f5f1d1;
+  --tag-anime-fg: #8b7a3c;
 
   /* élévation & arrondis */
   --shadow: 0 12px 32px rgba(40, 32, 70, 0.12);
@@ -53,13 +53,14 @@
   --space-lg: 16px;
 
   /* typographie (échelle rapide) */
-  --fs-xxl: clamp(28px, 4.5vw, 48px); 
+  --fs-xxl: clamp(28px, 4.5vw, 48px);
   --fs-xl: 28px;
   --fs-lg: 18px;
   --fs-md: 16px;
   --fs-sm: 13px;
 
   --tile: 200px;
+  --tap-size: 44px;
 }
 
 html[data-theme="dark"] {
@@ -84,20 +85,20 @@ html[data-theme="dark"] {
   --text: #eef0f7;
   --muted: #b1b7c9;
 
-  --primary: #a996ff; 
-  --primary-weak: #4a3e66; 
-  --secondary: #9cb4ff; 
-  --secondary-weak: #39415f; 
+  --primary: #a996ff;
+  --primary-weak: #4a3e66;
+  --secondary: #9cb4ff;
+  --secondary-weak: #39415f;
 
-  --success: #58d7c7; 
-  --danger: #ff8aa8; 
+  --success: #58d7c7;
+  --danger: #ff8aa8;
 
   --tag-film-bg: #2e355e;
   --tag-film-fg: #c6ceff;
-  --tag-serie-bg: #4d3340; 
+  --tag-serie-bg: #4d3340;
   --tag-serie-fg: #ffd0e0;
-  --tag-anime-bg: #3b3750; 
-  --tag-anime-fg: #efe6a6; 
+  --tag-anime-bg: #3b3750;
+  --tag-anime-fg: #efe6a6;
 
   --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
   --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
@@ -113,7 +114,7 @@ body {
 }
 body {
   margin: 0;
-  background: var(--bg); 
+  background: var(--bg);
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter,
     Helvetica, Arial, "Noto Sans", sans-serif;
@@ -138,9 +139,6 @@ a:hover {
 }
 
 /* Buttons */
-button {
-  font: inherit;
-}
 .btn {
   border: 0;
   padding: 10px 14px;
@@ -177,6 +175,13 @@ button {
   color: var(--text);
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
+.btn--icon {
+  inline-size: var(--tap-size);
+  block-size: var(--tap-size);
+  padding: 0;
+  border-radius: 999px;
+  justify-content: center;
+}
 
 /* Inputs */
 input,
@@ -197,6 +202,14 @@ input:focus,
 select:focus {
   background: var(--surface-2);
   box-shadow: var(--shadow);
+}
+
+button,
+input,
+select {
+  min-height: var(--tap-size);
+  font-size: 16px;
+  line-height: 1.25;
 }
 
 /* Badges (catégories) */
@@ -267,14 +280,13 @@ select:focus {
   border: 2px solid var(--primary-weak);
 }
 
-// popcorn
 /* The overlay that owns the popcorns */
 .popcorn-overlay {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 14vh; 
+  height: 14vh;
   pointer-events: none;
   overflow: visible;
   z-index: 1000;
@@ -289,4 +301,89 @@ select:focus {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
   will-change: transform, opacity;
   transform-origin: 50% 50%;
+}
+
+/* ======= Petits écrans (tablettes & téléphones) ======= */
+@media (max-width: 768px) {
+  :root {
+    /* typographie lisible sur mobile */
+    --fs-xxl: clamp(26px, 6.5vw, 38px);
+    --fs-xl: 22px;
+    --fs-lg: 18px;
+    --fs-md: 16px;
+    --fs-sm: 14px;
+
+    /* un peu plus d'air entre éléments */
+    --space: 14px;
+    --space-lg: 18px;
+
+    /* arrondis un peu réduits pour gagner de la place visuelle */
+    --radius-xl: 18px;
+    --radius-lg: 12px;
+    --radius-md: 10px;
+  }
+
+  /* champs pleine largeur par défaut */
+  input,
+  select,
+  .btn {
+    width: 100%;
+  }
+
+  /* cartes/containers plus "denses" mais confortables */
+  .card {
+    padding: calc(var(--space-lg) + 2px);
+    border-radius: var(--radius-xl);
+  }
+
+  /* scrollbars discrètes sur mobile */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
+/* ======= Très petits écrans (≤ 480 px) ======= */
+@media (max-width: 480px) {
+  :root {
+    --fs-xxl: clamp(24px, 7.8vw, 34px);
+    --fs-xl: 20px;
+    --fs-lg: 17px;
+    --fs-md: 16px;
+    --fs-sm: 14px;
+
+    /* un peu plus d'espace vertical pour les doigts */
+    --tap-size: 48px;
+    --space: 12px;
+    --space-lg: 16px;
+  }
+
+  /* padding vertical un peu plus grand pour les contrôles */
+  input,
+  select {
+    padding-block: 12px;
+  }
+
+  .btn {
+    padding-block: 12px;
+  }
+
+  /* badges/chips légèrement plus grands */
+  .badge,
+  .chip {
+    font-size: var(--fs-sm);
+    padding: 7px 12px;
+  }
+
+  /* masque la "grosse" ombre pour limiter le bruit visuel */
+  .card,
+  .btn {
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation-duration: 0.01ms !important;
+  }
 }
