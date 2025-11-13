@@ -12,42 +12,33 @@
   min-height: 0;
 }
 
-.add-toggle {
-  display: none;
-  cursor: pointer;
-
-  .chevron {
-    inline-size: 18px;
-    block-size: 18px;
-    background: currentColor;
-    mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
-    -webkit-mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
-    transition: transform 0.3s ease;
-  }
-
-  .chevron.open {
-    transform: rotate(180deg);
-  }
-}
-
-.add-collapsible {
-  max-height: none;
-  opacity: 1;
-  overflow: visible;
-  transform: none;
-}
-.add-collapsible.is-open {
-  max-height: 330px;
-  height: 330px;
-  opacity: 1;
-  transform: translateY(0);
-}
-
 .form {
   display: grid;
-  grid-template-columns: 1.6fr 0.7fr auto;
+  grid-template-columns: 1.6fr 0.7fr;
   gap: 10px;
   align-items: center;
+
+  .autocomplete {
+    position: relative; 
+    display: block; 
+  }
+
+  .autocomplete-select {
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    max-height: 20rem; 
+    overflow-y: auto; 
+    box-sizing: border-box;
+  }
+
+  .autocomplete-option{
+  line-height: 2.2rem;  // augmente l’espace vertical
+  padding: 6px 10px;    // marche aussi
+  font-size: var(--fs-md);
+  }
 
   .btn--add {
     display: inline-flex;
@@ -80,10 +71,9 @@
       background: currentColor;
       mask: url("/assets/icons/check.svg") center/contain no-repeat;
       -webkit-mask: url("/assets/icons/check.svg") center/contain no-repeat;
-      animation: checkPop .9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      animation: checkPop 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
       transform: translateX(+20px);
     }
-
 
     &:active .ic-plus {
       transform: scale(0.85);
@@ -312,26 +302,6 @@ ul.list {
 @media (max-width: 768px) {
   .presence {
     display: flex;
-  }
-
-  .add-toggle {
-    display: inline-flex;
-  }
-  .add-collapsible {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transform: translateY(-4px);
-    transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.28s ease;
-  }
-    .add-collapsible.is-open {
-    max-height: none !important;
-    height: auto !important;
-    opacity: 1;
-    transform: none;
-    overflow: visible;          
-    position: static;           
-    z-index: 1;                 
   }
 
   .form {

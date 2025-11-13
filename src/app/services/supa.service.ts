@@ -5,10 +5,10 @@ import {
   RealtimePostgresChangesPayload,
   type User,
 } from '@supabase/supabase-js';
-import { APP_CONFIG } from '../app-config';
 import { Category } from '../types/item-category.type';
 import { Item } from '../models/item.model';
 import { OnlineUser } from '../models/online-user.model';
+import { APP_CONFIG } from '../app.config';
 
 @Injectable({ providedIn: 'root' })
 export class SupaService {

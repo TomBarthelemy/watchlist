@@ -3,14 +3,12 @@ import { Injectable, effect, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  // 'system' only for initial detect; we'll store 'light'|'dark'
   readonly theme = signal<'light' | 'dark'>(
     (localStorage.getItem('theme') as 'light' | 'dark') ||
     (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
   );
 
   constructor() {
-    // Apply to <html data-theme="..."> and persist
     effect(() => {
       const t = this.theme();
       document.documentElement.setAttribute('data-theme', t);

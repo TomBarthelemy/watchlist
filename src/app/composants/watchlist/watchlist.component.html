@@ -1,22 +1,6 @@
 <div class="wl">
-  <button
-    type="button"
-    class="add-toggle btn btn--primary"
-    (click)="formOpen.set(!formOpen())"
-    [attr.aria-expanded]="formOpen()"
-    aria-controls="add-collapsible"
-  >
-    <span class="chevron" [class.open]="formOpen()"></span>Ajouter une
-    proposition
-  </button>
 
-  <!-- Collapsible container (always open on desktop via CSS) -->
-  <div
-    id="add-collapsible"
-    class="add-collapsible"
-    [class.is-open]="formOpen()"
-  >
-    <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
+    <!-- <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
       <input placeholder="Titre…" formControlName="title" maxlength="100" />
       <select formControlName="category" aria-label="Catégorie">
         <option>Film</option>
@@ -36,8 +20,50 @@
           aria-hidden="true"
         ></span>
       </button>
+    </form> -->
+
+    <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
+      <div class="autocomplete">
+        <input
+          placeholder="Film, série ou animé…"
+          formControlName="title"
+          maxlength="100"
+          autocomplete="off"
+          (focus)="showResults = true"
+          (blur)="onBlur()"
+        />
+
+
+        @if (showResults && results().length > 0) {
+        <select
+          
+          class="autocomplete-select"
+          size="5"
+          (change)="onSelectChange($event)"
+        >
+          @for (item of results(); track item.id) {
+          <option [value]="item.id" class="autocomplete-option">
+            {{ getOptionLabel(item) }}
+          </option>
+          }
+        </select>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn--secondary btn--add"
+        [disabled]="form.invalid || !selectedResult()"
+      >
+        Ajouter
+        <span
+          class="ic"
+          [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
+          aria-hidden="true"
+        ></span>
+      </button>
     </form>
-  </div>
+  
 
   <div class="section-sep" role="separator" aria-hidden="true"></div>
 
@@ -62,7 +88,7 @@
     </select>
   </div>
 
-  <div *ngIf="supa.loading()" class="loading">Chargement…</div>
+  <div *ngIf="!itemsLoaded()" class="loading">Chargement…</div>
 
   <!-- Only this box scrolls -->
   <div class="list-scroll">

@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -7,7 +7,18 @@ import {
   FormControl,
 } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { startWith } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  of,
+  startWith,
+  Subscription,
+  switchMap,
+  tap,
+  filter,
+  map,
+} from 'rxjs';
 import { SupaService } from '../../services/supa.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Filter } from '../../types/item-filter.type';
@@ -15,6 +26,10 @@ import { SortKey } from '../../types/item-sort.type';
 import { Category } from '../../types/item-category.type';
 import { Item } from '../../models/item.model';
 import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.directive';
+import { TmdbApiService } from '../../services/tmdbApi.service';
+import { TmdbSearchResult } from '../../models/tmdb/search/tmdb-search-result.model';
+import { TmdbSearchResponse } from '../../models/tmdb/search/tmdb-search-response.model';
+import { GenreStore } from '../../stores/genre.store';
 
 @Component({
   selector: 'app-watchlist',
@@ -28,11 +43,15 @@ import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.direct
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss'],
 })
-export class WatchlistComponent {
+export class WatchlistComponent implements OnDestroy {
+  private readonly fb = inject(FormBuilder);
+  private readonly tmdb = inject(TmdbApiService);
+  private readonly supa = inject(SupaService);
+  private readonly genreStore = inject(GenreStore);
+
   // --- Formulaire d'ajout
   form = this.fb.group({
-    title: this.fb.control<string>('', {
-      nonNullable: true,
+    title: this.fb.nonNullable.control<string>('', {
       validators: [
         Validators.required,
         Validators.minLength(1),
@@ -41,6 +60,13 @@ export class WatchlistComponent {
     }),
     category: this.fb.control<Category>('Film', { nonNullable: true }),
   });
+
+  // résultats de l'autocomplete
+  readonly results = signal<TmdbSearchResult[]>([]);
+  readonly selectedResult = signal<TmdbSearchResult | null>(null);
+  showResults = false;
+
+  private titleSub: Subscription;
 
   // --- Filtre (Reactive Forms)
   filterCtrl: FormControl<Filter> = this.fb.control<Filter>('Tout', {
@@ -104,25 +130,160 @@ export class WatchlistComponent {
 
   formOpen = signal(false);
   justAdded = signal(false);
+  itemsLoaded = signal(this.supa.loading());
 
-  constructor(public supa: SupaService, private fb: FormBuilder) {}
+  constructor() {
+    // On lance le chargement des genres une fois
+    void this.genreStore.ensureLoaded();
+
+    // écoute de la saisie pour l'autocomplete
+    this.titleSub = this.form.controls.title.valueChanges
+      .pipe(
+        map((value) => (value ?? '').toString().trim()),
+        tap((text) => {
+          this.selectedResult.set(null);
+          if (!text) {
+            this.results.set([]);
+          }
+        }),
+        filter((text) => text.length >= 2),
+        switchMap((text) =>
+          this.tmdb.searchMulti(text).pipe(
+            catchError(() =>
+              of<TmdbSearchResponse>({
+                page: 1,
+                total_pages: 1,
+                total_results: 0,
+                results: [],
+              })
+            )
+          )
+        )
+      )
+      .subscribe((resp) => {
+        this.results.set(resp.results ?? []);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.titleSub?.unsubscribe();
+  }
+
+  // titre affiché
+  getTitle(item: TmdbSearchResult): string {
+    return item.title || item.name || '';
+  }
+
+  // année
+  getYear(item: TmdbSearchResult): string | null {
+    const date = item.release_date || item.first_air_date;
+    return date ? date.substring(0, 4) : null;
+  }
+
+  // label de catégorie pour affichage
+  getCategoryLabel(item: TmdbSearchResult): string {
+    const cat = this.mapMediaTypeToCategory(item);
+    return cat;
+  }
+
+  private mapMediaTypeToCategory(item: TmdbSearchResult): Category {
+    // 1. Récupérer la bonne map (films vs séries)
+    const genreMap =
+      item.media_type === 'tv'
+        ? this.genreStore.tvGenreMap()
+        : this.genreStore.movieGenreMap();
+
+    const genreNames = (item.genre_ids ?? [])
+      .map((id) => genreMap.get(id))
+      .filter((n): n is string => !!n);
+
+    const hasAnimation = genreNames.includes('Animation');
+    const hasKids = genreNames.includes('Kids');
+    const hasFamily = genreNames.includes('Familial');
+    const lang = item.original_language;
+
+    // 2. Animé
+    if (hasAnimation && lang === 'ja') {
+      return 'Animé';
+    }
+
+    // 3. Dessin animé
+    if (hasAnimation && (hasKids || hasFamily) && lang !== 'ja') {
+      return 'Dessin animé';
+    }
+
+    // 4. Série
+    if (item.media_type === 'tv') {
+      return 'Série';
+    }
+
+    // 5. Film
+    return 'Film';
+  }
+
+  selectResult(item: TmdbSearchResult): void {
+    this.selectedResult.set(item);
+    const title = this.getOptionLabel(item);
+    const category = this.mapMediaTypeToCategory(item);
+
+    this.form.patchValue({
+      title,
+      category,
+    });
+  }
+
+  onBlur(): void {
+    setTimeout(() => {
+      this.showResults = false;
+    }, 150);
+  }
+
+  getOptionLabel(item: TmdbSearchResult): string {
+    const title = this.getTitle(item);
+    const category = this.getCategoryLabel(item);
+    const year = this.getYear(item);
+
+    return year ? `${title} · ${category} · ${year}` : `${title} · ${category}`;
+  }
+
+  onSelectChange(event: Event): void {
+    const select = event.target as HTMLSelectElement | null;
+    if (!select) return;
+
+    const id = select.value;
+    const numericId = Number(id);
+    const item = this.results().find((r) => r.id === numericId);
+
+    if (item) {
+      this.selectResult(item);
+      this.showResults = false;
+    }
+  }
 
   async addItem() {
     if (this.form.invalid) return;
-    const { title, category } = this.form.getRawValue();
 
-    const query = this.buildTrailerQuery(title, category);
+    const selected = this.selectedResult();
+    if (!selected) return;
+
+    const { title, category } = this.form.getRawValue();
+    const safeTitle = title.trim();
+    const cat = category as Category;
+
+    const query = this.buildTrailerQuery(safeTitle, cat);
     const trailer_url = this.youtubeSearchUrl(query);
 
     await this.supa.addItem({
-      title: title.trim(),
-      category: category as Category,
-      trailer_url: trailer_url,
+      title: safeTitle,
+      category: cat,
+      trailer_url,
     });
-    this.form.reset({ title: '', category: 'Film' });
 
-    // montre la coche 900 ms, puis reviens au "+"
-    this.justAdded.set(true); 
+    this.form.reset({ title: '', category: 'Film' });
+    this.selectedResult.set(null);
+    this.results.set([]);
+
+    this.justAdded.set(true);
     setTimeout(() => {
       this.justAdded.set(false);
     }, 900);

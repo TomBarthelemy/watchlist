@@ -1,9 +1,7 @@
+// main.ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideHttpClient } from '@angular/common/http';
 import { AppComponent } from './app/app.component';
-import { APP_CONFIG, type AppConfig } from './app/app-config';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
+import { appConfig, APP_CONFIG, AppConfig } from './app/app.config';
 
 async function loadConfig(): Promise<AppConfig> {
   const res = await fetch('app-config.json', { cache: 'no-cache' });
@@ -13,11 +11,12 @@ async function loadConfig(): Promise<AppConfig> {
 
 (async () => {
   const cfg = await loadConfig();
+
   await bootstrapApplication(AppComponent, {
+    ...appConfig,
     providers: [
-      provideHttpClient(),
+      ...(appConfig.providers ?? []),
       { provide: APP_CONFIG, useValue: cfg },
-      provideAnimationsAsync()
     ],
   });
 })();
