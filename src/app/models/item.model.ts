@@ -8,6 +8,6 @@ export interface Item {
   trailer_url?: string | null;
   seen: boolean;
   seen_at?: string | null;
-  proposed_by: string; // user uuid
+  proposed_by: string; 
   created_at: string;
 }

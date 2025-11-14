@@ -1,69 +1,43 @@
 <div class="wl">
+  <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
+    <div class="autocomplete">
+      <input
+        placeholder="Film, série ou animé…"
+        formControlName="title"
+        maxlength="100"
+        autocomplete="off"
+        (focus)="showResults = true"
+        (blur)="onBlur()"
+      />
 
-    <!-- <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
-      <input placeholder="Titre…" formControlName="title" maxlength="100" />
-      <select formControlName="category" aria-label="Catégorie">
-        <option>Film</option>
-        <option>Série</option>
-        <option>Animé</option>
-        <option>Dessin animé</option>
-      </select>
-      <button
-        type="submit"
-        class="btn btn--secondary btn--add"
-        [disabled]="form.invalid"
+      @if (showResults && results().length > 0) {
+      <select
+        class="autocomplete-select"
+        size="5"
+        (change)="onSelectChange($event)"
       >
-        Ajouter
-        <span
-          class="ic"
-          [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
-          aria-hidden="true"
-        ></span>
-      </button>
-    </form> -->
-
-    <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
-      <div class="autocomplete">
-        <input
-          placeholder="Film, série ou animé…"
-          formControlName="title"
-          maxlength="100"
-          autocomplete="off"
-          (focus)="showResults = true"
-          (blur)="onBlur()"
-        />
-
-
-        @if (showResults && results().length > 0) {
-        <select
-          
-          class="autocomplete-select"
-          size="5"
-          (change)="onSelectChange($event)"
-        >
-          @for (item of results(); track item.id) {
-          <option [value]="item.id" class="autocomplete-option">
-            {{ getOptionLabel(item) }}
-          </option>
-          }
-        </select>
+        @for (item of results(); track item.id) {
+        <option [value]="item.id" class="autocomplete-option">
+          {{ getOptionLabel(item) }}
+        </option>
         }
-      </div>
+      </select>
+      }
+    </div>
 
-      <button
-        type="submit"
-        class="btn btn--secondary btn--add"
-        [disabled]="form.invalid || !selectedResult()"
-      >
-        Ajouter
-        <span
-          class="ic"
-          [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
-          aria-hidden="true"
-        ></span>
-      </button>
-    </form>
-  
+    <button
+      type="submit"
+      class="btn btn--secondary btn--add"
+      [disabled]="form.invalid || !selectedResult()"
+    >
+      Ajouter
+      <span
+        class="ic"
+        [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
+        aria-hidden="true"
+      ></span>
+    </button>
+  </form>
 
   <div class="section-sep" role="separator" aria-hidden="true"></div>
 
@@ -90,7 +64,6 @@
 
   <div *ngIf="!itemsLoaded()" class="loading">Chargement…</div>
 
-  <!-- Only this box scrolls -->
   <div class="list-scroll">
     <ul class="list">
       <li
