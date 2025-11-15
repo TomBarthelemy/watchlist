@@ -1,0 +1,381 @@
+.list-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.list-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
+}
+
+/* toolbar fixe */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.sort {
+  min-width: 200px;
+}
+
+/* zone scrollable */
+.list-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+/* CARD */
+.item-card {
+  margin-right: 4px; /* pour bien voir le bord droit */
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 80%, var(--bg-end) 20%);
+  background: var(--surface);
+  color: var(--text);
+  overflow: hidden;
+  box-shadow: none;
+  transition: transform 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+  background: var(--surface-gradient);
+  border-left: 7px solid;
+
+  &--self {
+    border-left-color: var(--primary);
+  }
+
+  &--other {
+    border-left-color: var(--secondary);
+  }
+
+  &--seen {
+    opacity: 0.82;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* HEADER */
+.item-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: var(--space);
+  padding: var(--space) var(--space-lg);
+  cursor: pointer;
+  position: relative;
+}
+
+/* Gauche */
+.item-card-left {
+  display: flex;
+  gap: var(--space);
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.item-card-poster {
+  width: 72px;
+  height: 108px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface-gradient);
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.item-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Ligne 1 : titre sur 2 lignes max */
+.item-card-title {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Ligne 2 : année + category */
+.item-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-card-year {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: inherit;
+}
+
+/* Ligne 3 : genres */
+.item-card-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.genre-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--surface-2) 80%, var(--bg-end) 20%);
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* Droite */
+.item-card-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  flex: 0 0 auto;
+}
+
+.item-card-seen-at {
+  font-size: var(--fs-md);
+  color: var(--text);
+}
+
+/* Toggle "Vu ?" plus lisible */
+.item-card-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    color: var(--text);
+    font-weight: 500;
+  }
+}
+
+/* Boutons */
+.btn-youtube-icon,
+.btn-danger-icon,
+.btn-expand {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-youtube-icon {
+  inline-size: 28px;
+  block-size: 28px;
+  background: var(--primary);
+  mask: url("/assets/icons/youtube.svg") center/contain no-repeat;
+  -webkit-mask: url("/assets/icons/youtube.svg") center/contain no-repeat;
+
+  &:hover {
+    transform: scale(1.08);
+    background: var(--secondary);
+  }
+}
+
+.btn-youtube-icon--large {
+  inline-size: 36px;
+  block-size: 36px;
+}
+
+.btn-danger-icon .icon-trash {
+  inline-size: 24px;
+  block-size: 24px;
+  background: var(--danger);
+  mask: url("/assets/icons/trash.svg") center/contain no-repeat;
+  -webkit-mask: url("/assets/icons/trash.svg") center/contain no-repeat;
+}
+
+.btn-danger-icon:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+
+.btn-expand .icon-chevron {
+  inline-size: 18px;
+  block-size: 18px;
+  background: var(--muted);
+  mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
+  -webkit-mask: url("/assets/icons/chevron-down.svg") center/contain no-repeat;
+}
+
+/* Zone dépliée */
+.item-card-details {
+  border-top: 1px solid
+    color-mix(in oklab, var(--surface-2) 80%, var(--bg-end) 20%);
+  background: color-mix(in oklab, var(--surface-2) 82%, var(--bg-end) 30%);
+}
+
+.item-card-details-inner {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.item-card-overview {
+  font-size: var(--fs-md);
+  line-height: 1.45;
+}
+
+.item-card-overview--empty {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.item-card-actions {
+  display: flex;
+  gap: var(--space);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.loading {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  /* Toolbar */
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toolbar .filter,
+  .toolbar .sort {
+    flex: 1 1 48%;
+    min-width: 0;
+    height: 44px;
+  }
+
+  /* Cartes */
+  .list li {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .left,
+  .right {
+    gap: 10px;
+  }
+
+  /* Ligne gauche : titre multi-ligne, badge et trailer côte à côte */
+  .left {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .left .title {
+    font-size: clamp(16px, 2.2vw, 18px);
+    font-weight: 600;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .left .badge {
+    margin-left: 0;
+  }
+  .left .btn--youtube-icon {
+    inline-size: 26px;
+    block-size: 26px;
+  }
+
+  /* Ligne droite */
+  .right {
+    width: 100%;
+    align-items: anchor-center;
+    justify-content: flex-end;
+  }
+  .right > span:first-child {
+    order: -1;
+    display: block;
+    opacity: 0.9;
+  }
+  .right .toggle,
+  .right .btn--danger-icon {
+    align-self: stretch;
+  }
+  .right .toggle {
+    justify-content: space-between;
+    transform: scale(1.08);
+    transform-origin: left center;
+  }
+  .right .btn--danger-icon {
+    margin-left: auto;
+  }
+
+  /* Scrollbar bien visible */
+  .list-scroll {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Toolbar */
+  .toolbar .filter,
+  .toolbar .sort {
+    flex: 1;
+    height: 44px;
+  }
+
+  /* Cartes  */
+  .list li {
+    padding: 10px;
+    padding-bottom: 0;
+    gap: 0px;
+    border-radius: var(--radius-xl);
+  }
+
+  .left {
+    gap: 8px;
+  }
+  .left .title {
+    font-size: 18px;
+  }
+  .left .btn--youtube-icon {
+    inline-size: 28px;
+    block-size: 28px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+  .right .toggle {
+    transform: scale(1.12);
+  }
+  .right .icon-trash {
+    inline-size: 28px;
+    block-size: 28px;
+  }
+}

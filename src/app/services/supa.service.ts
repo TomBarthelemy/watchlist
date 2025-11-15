@@ -9,6 +9,8 @@ import { Category } from '../types/item-category.type';
 import { Item } from '../models/item.model';
 import { OnlineUser } from '../models/online-user.model';
 import { APP_CONFIG } from '../app.config';
+import { TmdbItemInsert } from '../models/tmdb/tmbd-item-insert.model';
+import { TmdbItem } from '../models/tmdb/tmdb-item.model';
 
 @Injectable({ providedIn: 'root' })
 export class SupaService {
@@ -20,7 +22,7 @@ export class SupaService {
   });
 
   user = signal<any>(null);
-  items = signal<Item[]>([]);
+  items = signal<TmdbItem[]>([]);
   loading = signal(false);
   onlineUsers = signal<OnlineUser[]>([]);
   private presenceCh?: RealtimeChannel;
@@ -66,14 +68,14 @@ export class SupaService {
   async loadItems() {
     this.zone.run(() => this.loading.set(true));
     const { data, error } = await this.supa
-      .from('items')
+      .from('tmdb_item')
       .select('*')
       .eq('list_id', this.cfg.listId)
       .order('created_at', { ascending: false });
     if (error) throw error;
 
     this.zone.run(() => {
-      this.items.set((data ?? []) as Item[]);
+      this.items.set((data ?? []) as TmdbItem[]);
       this.loading.set(false);
     });
 
@@ -86,10 +88,10 @@ export class SupaService {
         {
           event: '*',
           schema: 'public',
-          table: 'items',
+          table: 'tmdb_item',
           filter: `list_id=eq.${this.cfg.listId}`,
         },
-        (payload: RealtimePostgresChangesPayload<Item>) => {
+        (payload: RealtimePostgresChangesPayload<TmdbItem>) => {
           this.zone.run(() => {
             const cur = this.items();
             if (payload.eventType === 'INSERT')
@@ -106,17 +108,23 @@ export class SupaService {
       .subscribe();
   }
 
-  async addItem(partial: {
-    title: string;
-    category: Category;
-    trailer_url?: string;
-  }) {
-    const { error } = await this.supa.from('items').insert({
+  async addTmdbItem(insertObj: TmdbItemInsert) {
+    const { error } = await this.supa.from('tmdb_item').insert({
       list_id: this.cfg.listId,
-      title: partial.title,
-      category: partial.category,
-      trailer_url: partial.trailer_url ?? null,
+
+      title: insertObj.title,
+      category: insertObj.category,
+      genre: insertObj.genre,
+
+      overview: insertObj.overview ?? null,
+      poster_path: insertObj.poster_path ?? null,
+      year: insertObj.year ?? null,
+      trailer_url: insertObj.trailer_url ?? null,
+
+      seen: insertObj.seen,
+      seen_at: insertObj.seen_at ?? null,
     });
+
     if (error) throw error;
   }
 
@@ -125,7 +133,7 @@ export class SupaService {
     const seen_at = seen ? new Date().toISOString().slice(0, 10) : null;
 
     const { error } = await this.supa
-      .from('items')
+      .from('tmdb_item')
       .update({ seen, seen_at })
       .eq('id', item.id);
 
@@ -141,7 +149,7 @@ export class SupaService {
     });
 
     // 2) Requête réseau
-    const { error } = await this.supa.from('items').delete().eq('id', id);
+    const { error } = await this.supa.from('tmdb_item').delete().eq('id', id);
 
     // 3) Rollback en cas d’erreur (rare)
     if (error) {
