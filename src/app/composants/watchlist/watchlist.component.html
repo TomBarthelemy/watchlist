@@ -1,141 +1,15 @@
-<div class="wl">
-  <button
-    type="button"
-    class="add-toggle btn btn--primary"
-    (click)="formOpen.set(!formOpen())"
-    [attr.aria-expanded]="formOpen()"
-    aria-controls="add-collapsible"
-  >
-    <span class="chevron" [class.open]="formOpen()"></span>Ajouter une
-    proposition
-  </button>
+<div class="watchlist">
 
-  <!-- Collapsible container (always open on desktop via CSS) -->
-  <div
-    id="add-collapsible"
-    class="add-collapsible"
-    [class.is-open]="formOpen()"
-  >
-    <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
-      <input placeholder="Titre…" formControlName="title" maxlength="100" />
-      <select formControlName="category" aria-label="Catégorie">
-        <option>Film</option>
-        <option>Série</option>
-        <option>Animé</option>
-        <option>Dessin animé</option>
-      </select>
-      <button
-        type="submit"
-        class="btn btn--secondary btn--add"
-        [disabled]="form.invalid"
-      >
-        Ajouter
-        <span
-          class="ic"
-          [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
-          aria-hidden="true"
-        ></span>
-      </button>
-    </form>
-  </div>
+  <app-search-form></app-search-form>
 
   <div class="section-sep" role="separator" aria-hidden="true"></div>
 
-  <div class="toolbar">
-    <select class="filter" [formControl]="filterCtrl" aria-label="Filtrer par">
-      <option value="Tout">Tout</option>
-      <option value="Film">Film</option>
-      <option value="Série">Série</option>
-      <option value="Animé">Animé</option>
-      <option value="Dessin animé">Dessin animé</option>
-      <option value="A_voir">À voir</option>
-      <option value="Vus">Vus</option>
-      <option value="Mes_ajouts">Mes propositions</option>
-      <option value="Ajouts_autres">Ses propositions</option>
-    </select>
+  <app-list-item class="list-item"></app-list-item>
 
-    <select class="sort" [formControl]="sortCtrl" aria-label="Trier par">
-      <option value="created_desc">Ajouts récents</option>
-      <option value="created_asc">Plus anciens</option>
-      <option value="title_asc">Titre A → Z</option>
-      <option value="title_desc">Titre Z → A</option>
-    </select>
-  </div>
-
-  <div *ngIf="supa.loading()" class="loading">Chargement…</div>
-
-  <!-- Only this box scrolls -->
-  <div class="list-scroll">
-    <ul class="list">
-      <li
-        *ngFor="let item of sorted()"
-        [class.seen]="item.seen"
-        [class.li--self]="isSelf(item)"
-        [class.li--other]="!isSelf(item)"
-      >
-        <div class="left">
-          <strong class="title" [title]="item.title">
-            {{
-              item.title.length > 50
-                ? (item.title | slice : 0 : 50) + "…"
-                : item.title
-            }}
-          </strong>
-          <span
-            class="badge"
-            [ngClass]="{
-              'badge--film': item.category === 'Film',
-              'badge--serie': item.category === 'Série',
-              'badge--anime': item.category === 'Animé',
-              'badge--dessin-anime': item.category === 'Dessin animé'
-            }"
-          >
-            {{ item.category }}
-          </span>
-          <a
-            *ngIf="item.trailer_url"
-            [attr.href]="item.trailer_url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn--youtube-icon"
-            title="Voir le trailer sur YouTube"
-            aria-label="Voir le trailer sur YouTube"
-          ></a>
-        </div>
-        <div class="right">
-          <span *ngIf="item.seen_at"
-            >Vu le {{ formatDate(item.seen_at) }}
-          </span>
-
-          <mat-slide-toggle
-            class="toggle"
-            [checked]="item.seen"
-            (change)="toggle(item)"
-            color="secondary"
-          >
-            <span> Vu ?</span>
-          </mat-slide-toggle>
-
-          <div class="delete">
-            <button
-              class="btn btn--danger-icon"
-              (click)="remove(item.id)"
-              title="Supprimer l'item"
-              aria-label="Supprimer l'item"
-            >
-              <span class="icon-trash" aria-hidden="true"></span>
-            </button>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Always visible; not inside the scroller -->
   <footer class="stats">{{ seenCount() }} / {{ total() }} vus</footer>
 </div>
 
-<!-- tout en bas du template -->
+<!-- Le petit lit de popcorn -->
 <div class="popcorn-floor"></div>
 <div
   class="popcorn-overlay"

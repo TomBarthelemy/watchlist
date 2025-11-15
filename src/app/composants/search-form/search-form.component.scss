@@ -1,0 +1,128 @@
+.form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr);
+  gap: 10px;
+  align-items: center;
+
+  .autocomplete {
+    position: relative;
+    display: block;
+    min-width: 0; // important pour éviter les débords
+  }
+
+  .autocomplete-input {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .autocomplete-select {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    max-height: 20rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .autocomplete-option {
+    line-height: 2.2rem;
+    padding: 6px 10px;
+    font-size: var(--fs-md);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn--add {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 12px;
+    white-space: nowrap;
+    justify-self: start;
+    transition: transform 0.15s ease, background-color 0.25s ease;
+    width: 100%;
+
+    &:hover {
+      transform: translateY(-1px);
+      background: color-mix(in oklab, var(--secondary) 90%, white 15%);
+    }
+
+    .ic {
+      inline-size: 24px;
+      block-size: 24px;
+    }
+    .ic-plus {
+      background: currentColor;
+      mask: url("/assets/icons/add.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/add.svg") center/contain no-repeat;
+    }
+
+    .ic-check {
+      background: currentColor;
+      mask: url("/assets/icons/check.svg") center/contain no-repeat;
+      -webkit-mask: url("/assets/icons/check.svg") center/contain no-repeat;
+      animation: checkPop 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      transform: translateX(+20px);
+    }
+
+    &:active .ic-plus {
+      transform: scale(0.85);
+    }
+  }
+}
+
+.form > * {
+  min-width: 0;
+}
+.form input,
+.form select,
+.form button {
+  width: 100%;
+}
+
+/* 👇 tablette / petit laptop : 2 colonnes mais plus équilibrées */
+@media (max-width: 768px) {
+  .form {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 8px;
+
+    .btn--add {
+      height: 44px;
+      .ic {
+        inline-size: 22px;
+        block-size: 22px;
+      }
+    }
+  }
+}
+
+/* 👇 téléphone : 1 seule colonne (input puis bouton en dessous) */
+@media (max-width: 540px) {
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .form .autocomplete,
+  .form .btn--add {
+    width: 100%;
+  }
+
+  .form .btn--add {
+    height: 48px;
+    font-size: 15px;
+    justify-content: center;
+  }
+}

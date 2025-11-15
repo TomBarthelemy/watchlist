@@ -1,20 +1,11 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  ReactiveFormsModule,
-  Validators,
-  FormControl,
-} from '@angular/forms';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { startWith } from 'rxjs';
-import { SupaService } from '../../services/supa.service';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { Filter } from '../../types/item-filter.type';
-import { SortKey } from '../../types/item-sort.type';
-import { Category } from '../../types/item-category.type';
-import { Item } from '../../models/item.model';
 import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.directive';
+import { SearchFormComponent } from '../search-form/search-form.component';
+import { SupaService } from '../../services/supa.service';
+import { ListItemComponent } from "../list-item/list-item.component";
 
 @Component({
   selector: 'app-watchlist',
@@ -24,142 +15,15 @@ import { PopcornEmitterDirective } from '../../directives/popcorn-emitter.direct
     ReactiveFormsModule,
     MatSlideToggleModule,
     PopcornEmitterDirective,
-  ],
+    SearchFormComponent,
+    ListItemComponent
+],
   templateUrl: './watchlist.component.html',
   styleUrls: ['./watchlist.component.scss'],
 })
 export class WatchlistComponent {
-  // --- Formulaire d'ajout
-  form = this.fb.group({
-    title: this.fb.control<string>('', {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(100),
-      ],
-    }),
-    category: this.fb.control<Category>('Film', { nonNullable: true }),
-  });
-
-  // --- Filtre (Reactive Forms)
-  filterCtrl: FormControl<Filter> = this.fb.control<Filter>('Tout', {
-    nonNullable: true,
-  });
-  filter = toSignal(
-    this.filterCtrl.valueChanges.pipe(startWith(this.filterCtrl.value)),
-    {
-      initialValue: this.filterCtrl.value,
-    }
-  );
-  sortCtrl = this.fb.control<SortKey>('created_desc', { nonNullable: true });
-  sort = toSignal(
-    this.sortCtrl.valueChanges.pipe(startWith(this.sortCtrl.value)),
-    {
-      initialValue: this.sortCtrl.value,
-    }
-  );
-
-  // --- Liste filtrée (signals)
-  filtered = computed(() => {
-    const f = this.filter();
-    let arr = this.supa.items();
-
-    if (f === 'A_voir') arr = arr.filter((i) => !i.seen);
-    else if (f === 'Vus') arr = arr.filter((i) => i.seen);
-    else if (f === 'Mes_ajouts') arr = arr.filter((i) => this.isSelf(i));
-    else if (f === 'Ajouts_autres') arr = arr.filter((i) => !this.isSelf(i));
-    else if (f !== 'Tout') arr = arr.filter((i) => i.category === f);
-
-    return arr;
-  });
-
-  sorted = computed(() => {
-    const key = this.sort();
-    const src = this.filtered();
-
-    // helpers de comparaison
-    const byTitle = (a: string, b: string) =>
-      a.localeCompare(b, 'fr', { sensitivity: 'base' });
-
-    const byCreated = (a: string, b: string) =>
-      new Date(a).getTime() - new Date(b).getTime();
-
-    switch (key) {
-      case 'title_asc':
-        return [...src].sort((a, b) => byTitle(a.title, b.title));
-      case 'title_desc':
-        return [...src].sort((a, b) => byTitle(b.title, a.title));
-      case 'created_asc':
-        return [...src].sort((a, b) => byCreated(a.created_at, b.created_at));
-      case 'created_desc':
-        return [...src].sort((a, b) => byCreated(b.created_at, a.created_at));
-    }
-  });
-
-  selfId = computed(() => this.supa.user()?.id ?? null);
+  private readonly supa = inject(SupaService);
 
   total = computed(() => this.supa.items().length);
   seenCount = computed(() => this.supa.items().filter((i) => i.seen).length);
-
-  formOpen = signal(false);
-  justAdded = signal(false);
-
-  constructor(public supa: SupaService, private fb: FormBuilder) {}
-
-  async addItem() {
-    if (this.form.invalid) return;
-    const { title, category } = this.form.getRawValue();
-
-    const query = this.buildTrailerQuery(title, category);
-    const trailer_url = this.youtubeSearchUrl(query);
-
-    await this.supa.addItem({
-      title: title.trim(),
-      category: category as Category,
-      trailer_url: trailer_url,
-    });
-    this.form.reset({ title: '', category: 'Film' });
-
-    // montre la coche 900 ms, puis reviens au "+"
-    this.justAdded.set(true); 
-    setTimeout(() => {
-      this.justAdded.set(false);
-    }, 900);
-  }
-
-  async toggle(it: any) {
-    await this.supa.toggleSeen(it);
-  }
-  async remove(id: string) {
-    await this.supa.removeItem(id);
-  }
-
-  formatDate(dateStr: string): string {
-    const [year, month, day] = dateStr.split('-');
-    return `${day}-${month}-${year}`;
-  }
-
-  isSelf(item: Item): boolean {
-    const me = this.selfId();
-    return !!me && item.proposed_by === me;
-  }
-
-  private buildTrailerQuery(title: string, category: Category) {
-    const base = title.trim();
-    const suffix =
-      category === 'Série'
-        ? 'official trailer season 1'
-        : category === 'Animé'
-        ? 'anime official trailer'
-        : 'official trailer';
-
-    return [base, suffix].join(' ');
-  }
-
-  private youtubeSearchUrl(query: string) {
-    return `https://www.youtube.com/results?search_query=${encodeURIComponent(
-      query
-    )}`;
-  }
 }
