@@ -1,13 +1,13 @@
 .form {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr);
+  grid-template-columns: 1.6fr 0.7fr;
   gap: 10px;
   align-items: center;
 
   .autocomplete {
     position: relative;
     display: block;
-    min-width: 0; // important pour éviter les débords
+    min-width: 0;
   }
 
   .autocomplete-input {
@@ -17,25 +17,46 @@
     text-overflow: ellipsis;
   }
 
-  .autocomplete-select {
+  .autocomplete-panel {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 4px);
     left: 0;
     width: 100%;
-    z-index: 10;
-    max-height: 20rem;
+
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid color-mix(in oklab, var(--surface-2) 80%, var(--bg-end) 20%);
+
+    max-height: calc(5 * 2.6rem); 
     overflow-y: auto;
-    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 20;
   }
 
-  .autocomplete-option {
-    line-height: 2.2rem;
-    padding: 6px 10px;
+  .autocomplete-list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+  }
+
+  .autocomplete-item {
+    padding: 6px 12px;
     font-size: var(--fs-md);
-    display: block;
+    line-height: 1.5rem;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    cursor: pointer;
+    transition: background-color 0.12s ease, color 0.12s ease;
+
+    &:hover {
+      background: color-mix(in oklab, var(--primary) 12%, transparent);
+      color: var(--text);
+    }
   }
 
   .btn--add {
@@ -65,7 +86,6 @@
       mask: url("/assets/icons/add.svg") center/contain no-repeat;
       -webkit-mask: url("/assets/icons/add.svg") center/contain no-repeat;
     }
-
     .ic-check {
       background: currentColor;
       mask: url("/assets/icons/check.svg") center/contain no-repeat;
@@ -73,39 +93,48 @@
       animation: checkPop 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
       transform: translateX(+20px);
     }
-
     &:active .ic-plus {
       transform: scale(0.85);
     }
   }
 }
 
+/* layout responsive identique à ce que tu avais déjà */
 .form > * {
   min-width: 0;
 }
 .form input,
-.form select,
 .form button {
   width: 100%;
 }
 
-/* 👇 tablette / petit laptop : 2 colonnes mais plus équilibrées */
 @media (max-width: 768px) {
   .form {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    gap: 8px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "title add";
+    gap: 10px;
+
+    .autocomplete {
+      grid-area: title;
+    }
 
     .btn--add {
-      height: 44px;
+      grid-area: add;
+      justify-self: end;
+      height: 46px;
+
       .ic {
         inline-size: 22px;
         block-size: 22px;
       }
     }
+
+    .autocomplete-input {
+      height: 46px;
+    }
   }
 }
 
-/* 👇 téléphone : 1 seule colonne (input puis bouton en dessous) */
 @media (max-width: 540px) {
   .form {
     display: flex;

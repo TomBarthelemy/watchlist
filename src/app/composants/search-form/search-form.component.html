@@ -1,41 +1,42 @@
-  <form class="form" [formGroup]="form" (ngSubmit)="addItem()">
-    <div class="autocomplete">
-      <input
-        placeholder="Film, série ou animé…"
-        formControlName="title"
-        maxlength="100"
-        autocomplete="off"
-        (focus)="showResults = true"
-        (blur)="onBlur()"
-        class="autocomplete-input"
-        [title]="form.controls['title'].value"
-      />
+<form class="form" [formGroup]="form" (ngSubmit)="addItem()">
+  <div class="autocomplete">
+    <input
+      placeholder="Film, série ou animé…"
+      formControlName="title"
+      maxlength="100"
+      autocomplete="off"
+      class="autocomplete-input"
+      [title]="form.controls['title'].value"
+      (blur)="onBlur()"
+    />
 
-      @if (showResults && results().length > 0) {
-      <select
-        class="autocomplete-select"
-        size="5"
-        (change)="onSelectChange($event)"
-      >
-        @for (item of results(); track item.id) {
-        <option [value]="item.id" class="autocomplete-option" [title]="getResultLabel(item)">
-          {{ getResultLabel(item) }}
-        </option>
-        }
-      </select>
-      }
-    </div>
-
-    <button
-      type="submit"
-      class="btn btn--secondary btn--add"
-      [disabled]="form.invalid || !selectedResult()"
+    <!-- Panneau des résultats -->
+    <div
+      class="autocomplete-panel"
+      *ngIf="showResults && results().length > 0"
     >
-      Ajouter
-      <span
-        class="ic"
-        [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
-        aria-hidden="true"
-      ></span>
-    </button>
-  </form>
+      <ul class="autocomplete-list">
+        <li
+          class="autocomplete-item"
+          *ngFor="let item of results()"
+          (mousedown)="onOptionMouseDown($event, item)"
+        >
+          {{ getResultLabel(item) }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn--secondary btn--add"
+    [disabled]="form.invalid || !selectedResult()"
+  >
+    Ajouter
+    <span
+      class="ic"
+      [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
+      aria-hidden="true"
+    ></span>
+  </button>
+</form>

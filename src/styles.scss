@@ -259,7 +259,6 @@ select {
   border-radius: 999px;
   font-size: var(--fs-sm);
   border: 1px solid transparent;
-  box-shadow: var(--shadow-soft);
 }
 .chip--self {
   color: var(--primary);
@@ -342,12 +341,6 @@ select {
     width: 100%;
   }
 
-  /* cartes/containers plus "denses" mais confortables */
-  .card {
-    padding: calc(var(--space-lg) + 2px);
-    border-radius: var(--radius-xl);
-  }
-
   /* scrollbars discrètes sur mobile */
   ::-webkit-scrollbar {
     width: 8px;
@@ -379,15 +372,12 @@ select {
     padding-block: 12px;
   }
 
-  /* badges/chips légèrement plus grands */
   .badge,
   .chip {
     font-size: var(--fs-sm);
     padding: 7px 12px;
   }
 
-  /* masque la "grosse" ombre pour limiter le bruit visuel */
-  .card,
   .btn {
     box-shadow: var(--shadow-soft);
   }

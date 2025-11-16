@@ -34,8 +34,6 @@ export class GenreStore {
     this.movieGenresSignal.set(movieResp.genres ?? []);
     this.tvGenresSignal.set(tvResp.genres ?? []);
     this.loaded = true;
-    console.log("movieGenresSignal", this.movieGenresSignal())
-    console.log("tvGenresSignal", this.tvGenresSignal())
   }
 
   getGenreNames(genreIds: number[], mediaType: 'movie' | 'tv'): string[] {

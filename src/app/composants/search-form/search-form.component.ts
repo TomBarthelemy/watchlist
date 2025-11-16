@@ -49,6 +49,7 @@ export class SearchFormComponent implements OnDestroy {
   showResults = false;
 
   private titleSub: Subscription;
+  private blurTimeoutId: any;
 
   justAdded = signal(false);
 
@@ -82,11 +83,15 @@ export class SearchFormComponent implements OnDestroy {
       )
       .subscribe((resp) => {
         this.results.set(resp.results ?? []);
+        this.showResults = this.results().length > 0;
       });
   }
 
   ngOnDestroy(): void {
     this.titleSub?.unsubscribe();
+    if (this.blurTimeoutId) {
+      clearTimeout(this.blurTimeoutId);
+    }
   }
 
   getTitle(item: TmdbSearchResult): string {
@@ -146,10 +151,25 @@ export class SearchFormComponent implements OnDestroy {
     return 'Film';
   }
 
+  onInputFocus(): void {
+    this.showResults = true;
+  }
+
   onBlur(): void {
-    setTimeout(() => {
+    this.blurTimeoutId = setTimeout(() => {
       this.showResults = false;
     }, 150);
+  }
+
+  onOptionMouseDown(event: MouseEvent, item: TmdbSearchResult): void {
+    event.preventDefault(); 
+    if (this.blurTimeoutId) {
+      clearTimeout(this.blurTimeoutId);
+      this.blurTimeoutId = null;
+    }
+
+    this.selectResult(item);
+    this.showResults = false;
   }
 
   onSelectChange(event: Event): void {
@@ -169,70 +189,72 @@ export class SearchFormComponent implements OnDestroy {
   selectResult(item: TmdbSearchResult): void {
     this.selectedResult.set(item);
     const title = this.getResultLabel(item);
-    this.form.patchValue({
-      title,
-    }, {emitEvent:false});
+    this.form.patchValue(
+      {
+        title,
+      },
+      { emitEvent: false }
+    );
   }
 
-async addItem() {
-  if (this.form.invalid) return;
+  async addItem() {
+    if (this.form.invalid) return;
 
-  const selected = this.selectedResult();
-  if (!selected) return;
+    const selected = this.selectedResult();
+    if (!selected) return;
 
-  const safeTitle = this.getTitle(selected).trim();
-  const cat = this.mapMediaTypeToCategory(selected);
+    const safeTitle = this.getTitle(selected).trim();
+    const cat = this.mapMediaTypeToCategory(selected);
 
-  const trailerQuery = this.buildTrailerQuery(safeTitle, cat);
-  const trailer_url = this.youtubeSearchUrl(trailerQuery);
+    const trailerQuery = this.buildTrailerQuery(safeTitle, cat);
+    const trailer_url = this.youtubeSearchUrl(trailerQuery);
 
-  const insertObj = this.mapSearchResultToTmdbItemInsert(
-    selected,
-    trailer_url
-  );
+    const insertObj = this.mapSearchResultToTmdbItemInsert(
+      selected,
+      trailer_url
+    );
 
-  // INSERT
-  await this.supa.addTmdbItem(insertObj);
+    // INSERT
+    await this.supa.addTmdbItem(insertObj);
 
-  // reset du form
-  this.form.reset({ title: '' });
-  this.selectedResult.set(null);
-  this.results.set([]);
+    // reset du form
+    this.form.reset({ title: '' });
+    this.selectedResult.set(null);
+    this.results.set([]);
 
-  this.justAdded.set(true);
-  setTimeout(() => (this.justAdded.set(false)), 900);
-}
+    this.justAdded.set(true);
+    setTimeout(() => this.justAdded.set(false), 900);
+  }
 
   private mapSearchResultToTmdbItemInsert(
-  selected: TmdbSearchResult,
-  trailerUrl: string
-): TmdbItemInsert {
-  const title = this.getTitle(selected);
-  const category = this.mapMediaTypeToCategory(selected);
-  const year = this.getYear(selected);
+    selected: TmdbSearchResult,
+    trailerUrl: string
+  ): TmdbItemInsert {
+    const title = this.getTitle(selected);
+    const category = this.mapMediaTypeToCategory(selected);
+    const year = this.getYear(selected);
 
-  const genreMap =
-    selected.media_type === 'tv'
-      ? this.genreStore.tvGenreMap()
-      : this.genreStore.movieGenreMap();
+    const genreMap =
+      selected.media_type === 'tv'
+        ? this.genreStore.tvGenreMap()
+        : this.genreStore.movieGenreMap();
 
-  const genreNames = (selected.genre_ids ?? [])
-    .map(id => genreMap.get(id))
-    .filter((x): x is string => !!x);
+    const genreNames = (selected.genre_ids ?? [])
+      .map((id) => genreMap.get(id))
+      .filter((x): x is string => !!x);
 
-  return {
-    title,
-    category,
-    genre: genreNames.join(', '),     
-    overview: selected.overview ?? null,
-    poster_path: selected.poster_path ?? null,
-    year: year ? Number(year) : null,
-    trailer_url: trailerUrl ?? null,
-    seen: false,
-    seen_at: null,
-  };
-}
-
+    return {
+      title,
+      category,
+      genre: genreNames.join(', '),
+      overview: selected.overview ?? null,
+      poster_path: selected.poster_path ?? null,
+      year: year ? Number(year) : null,
+      trailer_url: trailerUrl ?? null,
+      seen: false,
+      seen_at: null,
+    };
+  }
 
   private buildTrailerQuery(title: string, category: Category) {
     const base = title.trim();
