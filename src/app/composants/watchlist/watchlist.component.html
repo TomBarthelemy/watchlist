@@ -4,9 +4,11 @@
 
   <div class="section-sep" role="separator" aria-hidden="true"></div>
 
-  <app-list-item class="list-item"></app-list-item>
-
-  <footer class="stats">{{ seenCount() }} / {{ total() }} vus</footer>
+  <app-list-item
+    class="list-item"
+    [seenCount]="seenCount()"
+    [totalCount]="total()"
+  ></app-list-item>
 </div>
 
 <!-- Le petit lit de popcorn -->

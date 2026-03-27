@@ -18,6 +18,10 @@
       <option value="title_asc">Titre A → Z</option>
       <option value="title_desc">Titre Z → A</option>
     </select>
+
+    <div class="toolbar-stats" aria-label="Statistiques de visionnage">
+      {{ seenCount() }} / {{ totalCount() }} vus
+    </div>
   </div>
 
   <div *ngIf="!itemsLoaded()" class="loading">Chargement…</div>
@@ -31,124 +35,117 @@
         [class.item-card--self]="isSelf(item)"
         [class.item-card--other]="!isSelf(item)"
       >
-        <!-- HEADER (cliquable pour déplier) -->
-        <div class="item-card-header" (click)="toggleExpanded(item.id)">
-
-          <!-- Gauche : poster + infos -->
-          <div class="item-card-left">
-            <div class="item-card-poster">
-              <img
-                [src]="getPosterUrl(item.poster_path)"
-                [alt]="item.title"
-                loading="lazy"
-              />
-            </div>
-
-            <div class="item-card-main">
-              <!-- Ligne 1 : titre (2 lignes max) -->
-              <strong class="item-card-title" [title]="item.title">
-                {{ item.title }}
-              </strong>
-
-              <!-- Ligne 2 : année + catégorie -->
-              <div class="item-card-meta">
-                <span class="item-card-year" *ngIf="item.year">
-                  {{ item.year }}
-                </span>
-
-                <span
-                  class="badge"
-                  [ngClass]="{
-                    'badge--film': item.category === 'Film',
-                    'badge--serie': item.category === 'Série',
-                    'badge--anime': item.category === 'Animé',
-                    'badge--dessin-anime': item.category === 'Dessin animé'
-                  }"
-                >
-                  {{ item.category }}
-                </span>
-
-                <a
-                  *ngIf="item.trailer_url"
-                  [attr.href]="item.trailer_url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn-youtube-icon"
-                  title="Voir le trailer sur YouTube"
-                  aria-label="Voir le trailer sur YouTube"
-                  (click)="$event.stopPropagation()"
-                ></a>
-
-                <span class="item-card-seen-at" *ngIf="item.seen_at">
-                  • Vu le {{ formatDate(item.seen_at) }}
-                </span>
-              </div>
-
-              <!-- Ligne 3 : tous les genres -->
-              <div class="item-card-genres" *ngIf="item.genre">
-                <span
-                  class="genre-pill"
-                  *ngFor="let genre of splitGenres(item.genre)"
-                >
-                  {{ genre }}
-                </span>
-              </div>
-            </div>
+        <!-- CARD TOP -->
+        <div class="item-card-header">
+          <div class="item-card-poster">
+            <img
+              [src]="getPosterUrl(item.poster_path)"
+              [alt]="item.title"
+              loading="lazy"
+            />
           </div>
 
-          <!-- Droite : actions -->
-          <div class="item-card-right">
-            <button
-              class="btn-expand"
-              type="button"
-              (click)="toggleExpanded(item.id); $event.stopPropagation()"
-              [attr.aria-expanded]="expandedId === item.id"
-              aria-label="Afficher plus de détails"
+          <div class="item-card-main">
+            <strong
+              class="item-card-title"
+              [title]="item.title"
+              [class.item-card-title--sm]="item.title.length > 38"
+              [class.item-card-title--xs]="item.title.length > 58"
             >
-              <span class="icon-chevron" aria-hidden="true"></span>
-            </button>
+              {{ item.title }}
+            </strong>
+
+            <div class="item-card-meta">
+              <span class="item-card-year" *ngIf="item.year">
+                {{ item.year }}
+              </span>
+
+              <a
+                *ngIf="item.trailer_url"
+                [attr.href]="item.trailer_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-youtube-icon item-card-trailer-link"
+                title="Voir le trailer sur YouTube"
+                aria-label="Voir le trailer sur YouTube"
+              ></a>
+
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge--film': item.category === 'Film',
+                  'badge--serie': item.category === 'Série',
+                  'badge--anime': item.category === 'Animé',
+                  'badge--dessin-anime': item.category === 'Dessin animé'
+                }"
+              >
+                {{ item.category }}
+              </span>
+            </div>
+
+            <div class="item-card-genres" *ngIf="item.genre">
+              <span
+                class="genre-pill"
+                *ngFor="let genre of splitGenres(item.genre) | slice:0:4"
+              >
+                {{ genre }}
+              </span>
+            </div>
+
+            <div
+              class="item-card-synopsis-trigger"
+              [matTooltip]="item.overview || 'Aucun synopsis disponible.'"
+              matTooltipPosition="above"
+              matTooltipClass="synopsis-tooltip"
+              [matTooltipShowDelay]="150"
+            >
+              <span class="icon-synopsis-info" aria-hidden="true">i</span>
+              Synopsis
+            </div>
           </div>
         </div>
 
-        <!-- DÉTAILS (overview + trailer) -->
-        <div class="item-card-details" *ngIf="expandedId === item.id">
-          <div class="item-card-details-inner">
-            <div
-              class="item-card-overview"
-              *ngIf="item.overview; else noOverview"
+        <div class="item-card-actions">
+          <div class="item-card-actions-left">
+            <mat-slide-toggle
+              class="item-card-toggle"
+              [checked]="item.seen"
+              (click)="$event.stopPropagation()"
+              (change)="toggle(item)"
+              color="secondary"
             >
-              {{ item.overview }}
-            </div>
+              <span>Vu ?</span>
+            </mat-slide-toggle>
 
-            <ng-template #noOverview>
-              <div class="item-card-overview item-card-overview--empty">
-                Aucun synopsis disponible.
-              </div>
-            </ng-template>
+            <span class="item-card-seen-at" *ngIf="item.seen_at">
+              Vu le {{ formatDate(item.seen_at) }}
+            </span>
+          </div>
 
-            <div class="item-card-actions">
-              <mat-slide-toggle
-                class="item-card-toggle"
-                [checked]="item.seen"
-                (click)="$event.stopPropagation()"
-                (change)="toggle(item)"
-                color="secondary"
-              >
-                <span>Vu ?</span>
-              </mat-slide-toggle>
-
-              <button
-                class="btn-danger-icon"
-                (click)="remove(item.id); $event.stopPropagation()"
-                title="Supprimer l'item"
-                aria-label="Supprimer l'item"
-              >
-                <span class="icon-trash" aria-hidden="true"></span>
-              </button>
-            </div>
+          <div class="item-card-action-buttons">
+            <button
+              class="btn-danger-icon"
+              (click)="confirmDelete(item, $event)"
+              title="Supprimer l'item"
+              aria-label="Supprimer l'item"
+            >
+              <span class="icon-trash" aria-hidden="true"></span>
+            </button>
           </div>
         </div>
       </li>
     </ul>
+  </div>
+
+  <!-- Confirm delete dialog -->
+  <div class="confirm-overlay" *ngIf="confirmDeleteItem()" (click)="cancelDelete()">
+    <div class="confirm-dialog" (click)="$event.stopPropagation()">
+      <strong class="confirm-title">Supprimer « {{ confirmDeleteItem()?.title }} » ?</strong>
+      <p class="confirm-message">Cette action est irréversible.</p>
+      <div class="confirm-actions">
+        <button class="btn btn--ghost confirm-btn" (click)="cancelDelete()">Annuler</button>
+        <button class="btn btn--danger confirm-btn" (click)="executeDelete()">Supprimer</button>
+      </div>
+    </div>
   </div>
 </div>

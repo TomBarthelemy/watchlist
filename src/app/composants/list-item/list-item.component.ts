@@ -1,10 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { SupaService } from '../../services/supa.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Filter } from '../../types/item-filter.type';
 import { SortKey } from '../../types/item-sort.type';
 import { Item } from '../../models/item.model';
@@ -12,7 +13,7 @@ import { Item } from '../../models/item.model';
 @Component({
   selector: 'app-list-item',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatSlideToggleModule],
+  imports: [CommonModule, ReactiveFormsModule, MatSlideToggleModule, MatTooltipModule],
   templateUrl: './list-item.component.html',
   styleUrl: './list-item.component.scss',
 })
@@ -20,9 +21,10 @@ export class ListItemComponent {
   private readonly supa = inject(SupaService);
   private readonly fb = inject(FormBuilder);
 
-  private readonly imgBase = 'https://image.tmdb.org/t/p/';
+  readonly seenCount = input(0);
+  readonly totalCount = input(0);
 
-  expandedId: string | null = null;
+  private readonly imgBase = 'https://image.tmdb.org/t/p/';
 
   // --- Filtre (Reactive Forms)
   filterCtrl: FormControl<Filter> = this.fb.control<Filter>('Tout', {
@@ -86,12 +88,27 @@ export class ListItemComponent {
   async toggle(it: any) {
     await this.supa.toggleSeen(it);
   }
-  async remove(id: string) {
-    await this.supa.removeItem(id);
+
+  // --- Confirm delete
+  confirmDeleteItem = signal<Item | null>(null);
+
+  confirmDelete(item: Item, event: Event) {
+    event.stopPropagation();
+    this.confirmDeleteItem.set(item);
   }
 
-  toggleExpanded(id: string): void {
-    this.expandedId = this.expandedId === id ? null : id;
+  cancelDelete() {
+    this.confirmDeleteItem.set(null);
+  }
+
+  async executeDelete() {
+    const item = this.confirmDeleteItem();
+    this.confirmDeleteItem.set(null);
+    if (item) await this.supa.removeItem(item.id);
+  }
+
+  async remove(id: string) {
+    await this.supa.removeItem(id);
   }
 
   formatDate(dateStr: string): string {
@@ -112,11 +129,11 @@ export class ListItemComponent {
     return `${this.imgBase}w185${path}`;
   }
 
-splitGenres(concatedGenres: string | null | undefined): string[] {
-  if (!concatedGenres) return [];
-  return concatedGenres
-    .split(',')
-    .map((genre) => genre.trim())
-    .filter((genre) => !!genre);
-}
+  splitGenres(concatedGenres: string | null | undefined): string[] {
+    if (!concatedGenres) return [];
+    return concatedGenres
+      .split(',')
+      .map((genre) => genre.trim())
+      .filter((genre) => !!genre);
+  }
 }

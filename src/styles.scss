@@ -383,6 +383,16 @@ select {
   }
 }
 
+/* ======= Synopsis tooltip ======= */
+.synopsis-tooltip .mdc-tooltip__surface {
+  max-width: 300px !important;
+  white-space: normal !important;
+  text-align: left !important;
+  line-height: 1.45 !important;
+  font-size: 0.79rem !important;
+  padding: 8px 12px !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

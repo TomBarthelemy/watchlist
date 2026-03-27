@@ -254,3 +254,15 @@
     flex-direction: column;
   }
 }
+
+// @media (min-width: 1200px) {
+//   .container {
+//     /* “zoom” global de l'app : 0.85 ≈ 85 % */
+//     transform: scale(0.85);
+//     transform-origin: top center;
+
+//     /* Comme on a “rétréci” l'app, on lui donne un peu plus de largeur
+//        logique pour qu'elle reste bien centrée. 960 / 0.85 ≈ 1130 */
+//     max-width: 1130px;
+//   }
+// }
