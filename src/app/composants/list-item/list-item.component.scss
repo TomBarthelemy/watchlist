@@ -1126,7 +1126,86 @@
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .item-card {
+    border-left-width: 2px;
+  }
+
+  .item-card-header {
+    aspect-ratio: 7 / 10;
+  }
+
+  .item-card-main {
+    padding: 18px 5px 5px;
+    gap: 2px;
+  }
+
+  .item-card-title {
+    font-size: 0.73rem;
+    line-height: 1.14;
+  }
+
+  .item-card-title--sm {
+    font-size: 0.69rem;
+  }
+
+  .item-card-title--xs {
+    font-size: 0.65rem;
+  }
+
+  .item-card-year {
+    font-size: 0.66rem;
+  }
+
+  .item-card-meta .badge {
+    font-size: 0.58rem;
+    padding: 1px 4px;
+  }
+
+  .item-card-genres {
+    gap: 2px;
+  }
+
+  .genre-pill {
+    font-size: 0.58rem;
+    padding: 1px 4px;
+    max-width: calc((100% - 26px) / 2);
+  }
+
+  .item-card-synopsis-trigger {
+    margin-top: 2px;
+    font-size: 0.64rem;
+    padding: 2px 6px 2px 4px;
+  }
+
+  .poster-overlay-controls {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+  }
+
+  .poster-ctrl-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .poster-ctrl-trash {
+    inline-size: 12px;
+    block-size: 12px;
+  }
+
+  .poster-seen-at {
+    font-size: 0.56rem;
+    padding: 1px 4px;
+  }
+}
+
+@media (max-width: 329px) {
   .tiny-screen-hint {
     display: block;
   }
