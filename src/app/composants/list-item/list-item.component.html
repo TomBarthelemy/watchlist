@@ -26,6 +26,10 @@
 
   <div *ngIf="!itemsLoaded()" class="loading">Chargement…</div>
 
+  <div class="tiny-screen-hint" role="status" aria-live="polite">
+    Mini ecran detecte: mode ultra compact active. Pour plus de confort, agrandis la fenetre.
+  </div>
+
   <div class="list-scroll">
     <ul class="list">
       <li
@@ -43,6 +47,30 @@
               [alt]="item.title"
               loading="lazy"
             />
+          </div>
+
+          <!-- Mobile-only poster overlay controls -->
+          <div class="poster-overlay-controls">
+            <div class="poster-ctrl-left">
+              <button
+                class="poster-ctrl-btn poster-ctrl-btn--seen"
+                [class.poster-ctrl-btn--active]="item.seen"
+                (click)="toggle(item); $event.stopPropagation()"
+                [attr.aria-label]="item.seen ? 'Marquer comme non vu' : 'Marquer comme vu'"
+              >
+                <span class="poster-ctrl-icon--seen" aria-hidden="true">✓</span>
+              </button>
+              <span class="poster-seen-at" *ngIf="item.seen && item.seen_at">
+                Vu le {{ formatDate(item.seen_at) }}
+              </span>
+            </div>
+            <button
+              class="poster-ctrl-btn poster-ctrl-btn--delete"
+              (click)="confirmDelete(item, $event)"
+              aria-label="Supprimer l'item"
+            >
+              <span class="poster-ctrl-trash" aria-hidden="true"></span>
+            </button>
           </div>
 
           <div class="item-card-main">
@@ -86,9 +114,18 @@
             <div class="item-card-genres" *ngIf="item.genre">
               <span
                 class="genre-pill"
-                *ngFor="let genre of splitGenres(item.genre) | slice:0:4"
+                *ngFor="let genre of getVisibleGenres(item.genre)"
               >
                 {{ genre }}
+              </span>
+              <span
+                *ngIf="getExtraGenresCount(item.genre) > 0"
+                class="genre-pill genre-pill--more"
+                [matTooltip]="getAllGenresLabel(item.genre)"
+                matTooltipPosition="above"
+                matTooltipClass="synopsis-tooltip"
+              >
+                +{{ getExtraGenresCount(item.genre) }}
               </span>
             </div>
 

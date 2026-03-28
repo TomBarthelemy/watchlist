@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -20,6 +20,7 @@ import { Item } from '../../models/item.model';
 export class ListItemComponent {
   private readonly supa = inject(SupaService);
   private readonly fb = inject(FormBuilder);
+  readonly isMobile = signal(this.getIsMobileViewport());
 
   readonly seenCount = input(0);
   readonly totalCount = input(0);
@@ -125,15 +126,47 @@ export class ListItemComponent {
     if (!path) {
       return '/assets/icons/poster-placeholder.svg';
     }
-    // w185 = très bon ratio qualité/poids pour des vignettes de 64–100px
-    return `${this.imgBase}w185${path}`;
+    // Mobile stays lightweight, desktop gets a sharper poster variant.
+    const size = this.isMobile() ? 'w185' : 'w342';
+    return `${this.imgBase}${size}${path}`;
   }
 
   splitGenres(concatedGenres: string | null | undefined): string[] {
     if (!concatedGenres) return [];
     return concatedGenres
       .split(',')
-      .map((genre) => genre.trim())
+      .map((genre) => this.normalizeGenreLabel(genre.trim()))
       .filter((genre) => !!genre);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.isMobile.set(this.getIsMobileViewport());
+  }
+
+  private getIsMobileViewport(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 540px)').matches;
+  }
+
+  private normalizeGenreLabel(genre: string): string {
+    return genre.toLowerCase() === 'science-fiction et fantastique'
+      ? 'SF et fantastique'
+      : genre;
+  }
+
+  private getVisibleGenreLimit(): number {
+    return this.isMobile() ? 2 : 3;
+  }
+
+  getVisibleGenres(genreStr: string | null | undefined): string[] {
+    return this.splitGenres(genreStr).slice(0, this.getVisibleGenreLimit());
+  }
+
+  getExtraGenresCount(genreStr: string | null | undefined): number {
+    return Math.max(0, this.splitGenres(genreStr).length - this.getVisibleGenreLimit());
+  }
+
+  getAllGenresLabel(genreStr: string | null | undefined): string {
+    return this.splitGenres(genreStr).join(', ');
   }
 }
