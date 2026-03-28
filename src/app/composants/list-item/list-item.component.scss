@@ -6,11 +6,6 @@
   min-height: 0;
 }
 
-.list-scroll {
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable both-edges;
-}
-
 /* toolbar fixe */
 .toolbar {
   display: flex;
@@ -30,6 +25,8 @@
   min-height: 0;
   overflow-y: auto;
   padding-right: 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable both-edges;
 }
 
 .seen-hud {
