@@ -62,7 +62,7 @@
   --fs-sm: 13px;
 
   --tile: 200px;
-  --tap-size: 44px;
+  --tap-size: 40px;
 
   --item-card-header-bg-opacity: 0.095;
 }
@@ -149,7 +149,7 @@ a:hover {
 /* Buttons */
 .btn {
   border: 0;
-  padding: 10px 14px;
+  padding: 9px 12px;
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: transform 0.08s ease, opacity 0.15s, box-shadow 0.15s;
@@ -195,7 +195,7 @@ a:hover {
 input,
 select {
   background: var(--surface-gradient, var(--surface));
-  padding: 12px 14px;
+  padding: 10px 12px;
   background: var(--surface-gradient);
   border: 1px solid color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
   color: var(--text);
@@ -216,7 +216,7 @@ button,
 input,
 select {
   min-height: var(--tap-size);
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.25;
 }
 
@@ -357,7 +357,7 @@ select {
     --fs-sm: 14px;
 
     /* un peu plus d'espace vertical pour les doigts */
-    --tap-size: 48px;
+    --tap-size: 42px;
     --space: 12px;
     --space-lg: 16px;
   }
@@ -365,11 +365,11 @@ select {
   /* padding vertical un peu plus grand pour les contrôles */
   input,
   select {
-    padding-block: 12px;
+    padding-block: 10px;
   }
 
   .btn {
-    padding-block: 12px;
+    padding-block: 10px;
   }
 
   .badge,

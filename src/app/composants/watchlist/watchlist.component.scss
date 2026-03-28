@@ -8,7 +8,7 @@
 .watchlist {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;  
@@ -17,7 +17,7 @@
   .list-item{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
     flex: 1 1 auto;
     min-height: 0;
     min-width: 0;  
@@ -27,10 +27,7 @@
 
 
 .section-sep {
-  height: 1px;
-  border-radius: 1px;
-  background: color-mix(in srgb, var(--text) 10%, transparent);
-  opacity: 0.6;
+  display: none;
 }
 
 

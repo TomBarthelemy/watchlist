@@ -18,10 +18,6 @@
       <option value="title_asc">Titre A → Z</option>
       <option value="title_desc">Titre Z → A</option>
     </select>
-
-    <div class="toolbar-stats" aria-label="Statistiques de visionnage">
-      {{ seenCount() }} / {{ totalCount() }} vus
-    </div>
   </div>
 
   <div *ngIf="!itemsLoaded()" class="loading">Chargement…</div>
@@ -31,6 +27,11 @@
   </div>
 
   <div class="list-scroll">
+    <div class="seen-hud" aria-label="Statistiques de visionnage">
+      <span class="seen-hud-value">{{ seenCount() }} / {{ totalCount() }}</span>
+      <span class="seen-hud-label">vus</span>
+    </div>
+
     <ul class="list">
       <li
         *ngFor="let item of sorted()"

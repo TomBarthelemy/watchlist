@@ -52,6 +52,7 @@ export class SearchFormComponent implements OnDestroy {
   private blurTimeoutId: any;
 
   justAdded = signal(false);
+  duplicateDialogOpen = signal(false);
 
   constructor() {
     // On lance le chargement des genres une fois
@@ -203,6 +204,11 @@ export class SearchFormComponent implements OnDestroy {
     const selected = this.selectedResult();
     if (!selected) return;
 
+    if (this.isDuplicateItem(selected)) {
+      this.duplicateDialogOpen.set(true);
+      return;
+    }
+
     const safeTitle = this.getTitle(selected).trim();
     const cat = this.mapMediaTypeToCategory(selected);
 
@@ -224,6 +230,36 @@ export class SearchFormComponent implements OnDestroy {
 
     this.justAdded.set(true);
     setTimeout(() => this.justAdded.set(false), 900);
+  }
+
+  closeDuplicateDialog() {
+    this.duplicateDialogOpen.set(false);
+    this.form.reset({ title: '' });
+    this.selectedResult.set(null);
+    this.results.set([]);
+    this.showResults = false;
+  }
+
+  private isDuplicateItem(selected: TmdbSearchResult): boolean {
+    const selectedTitle = this.normalizeText(this.getTitle(selected));
+    const selectedCategory = this.mapMediaTypeToCategory(selected);
+    const selectedYear = this.getYear(selected);
+
+    return this.supa.items().some((it) => {
+      const sameTitle = this.normalizeText(it.title) === selectedTitle;
+      const sameCategory = it.category === selectedCategory;
+      const sameYear = !selectedYear || !it.year || String(it.year) === selectedYear;
+      return sameTitle && sameCategory && sameYear;
+    });
+  }
+
+  private normalizeText(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   private mapSearchResultToTmdbItemInsert(

@@ -14,26 +14,14 @@
 /* toolbar fixe */
 .toolbar {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .sort {
-  min-width: 200px;
-}
-
-.toolbar-stats {
-  margin-left: auto;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--surface-2) 82%, var(--bg-end) 18%);
-  color: var(--text);
-  font-size: 0.84rem;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  box-shadow: var(--shadow-soft);
+  min-width: 170px;
 }
 
 /* zone scrollable */
@@ -42,6 +30,38 @@
   min-height: 0;
   overflow-y: auto;
   padding-right: 6px;
+}
+
+.seen-hud {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  margin-left: auto;
+  margin-bottom: 8px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 24%, transparent 76%);
+  background: color-mix(in oklab, var(--surface-2) 78%, var(--primary-weak) 22%);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.seen-hud-value {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+.seen-hud-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.82;
 }
 
 .list {
@@ -77,7 +97,11 @@
   }
 
   &--seen {
-    opacity: 0.82;
+    opacity: 0.9;
+
+    .item-card-poster img {
+      filter: grayscale(0.58) saturate(0.68) brightness(0.8);
+    }
   }
 }
 
@@ -109,6 +133,7 @@
     height: 100%;
     object-fit: cover;
     object-position: top center;
+    transition: filter 0.16s ease, opacity 0.16s ease;
   }
 }
 
@@ -218,12 +243,13 @@
 }
 
 .item-card-seen-at {
-  font-size: 0.74rem;
-  color: var(--text);
+  font-size: 0.7rem;
+  color: var(--primary);
   display: inline-block;
   margin-left: 6px;
   line-height: 1.2;
   opacity: 0.9;
+  font-weight: 500;
 }
 
 /* Toggle "Vu ?" plus lisible */
@@ -649,11 +675,12 @@
   .poster-seen-at {
     display: block;
     font-size: 0.62rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.92);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    color: var(--primary);
+    text-shadow: none;
     line-height: 1.2;
-    background: color-mix(in oklab, var(--primary) 60%, transparent 40%);
+    background: color-mix(in oklab, var(--surface) 72%, transparent 28%);
+    border: 1px solid color-mix(in oklab, var(--primary) 34%, transparent 66%);
     padding: 1px 6px;
     border-radius: 999px;
     white-space: nowrap;
@@ -737,6 +764,7 @@
   .poster-seen-at {
     font-size: 0.58rem;
     padding: 1px 5px;
+    font-weight: 500;
   }
 }
 
@@ -817,6 +845,7 @@
   .poster-seen-at {
     font-size: 0.58rem;
     padding: 1px 5px;
+    font-weight: 500;
   }
 }
 
@@ -830,22 +859,31 @@
 @media (max-width: 540px) {
   /* ---- Toolbar ---- */
   .toolbar {
-    gap: 8px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
   }
 
   .toolbar .filter,
   .toolbar .sort {
-    flex: 1 1 48%;
     min-width: 0;
-    height: 44px;
+    height: 40px;
   }
 
-  .toolbar-stats {
-    margin-left: 0;
-    flex: 1 1 100%;
-    justify-content: center;
-    display: inline-flex;
-    min-height: 36px;
+  .seen-hud {
+    top: 0;
+    margin-bottom: 6px;
+    padding: 3px 7px;
+    gap: 4px;
+  }
+
+  .seen-hud-value {
+    font-size: 0.72rem;
+  }
+
+  .seen-hud-label {
+    font-size: 0.64rem;
   }
 
   /* ---- 2-column poster grid ---- */
@@ -1058,11 +1096,12 @@
   .poster-seen-at {
     display: block;
     font-size: 0.6rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+    color: var(--primary);
+    text-shadow: none;
     line-height: 1.2;
-    background: color-mix(in oklab, var(--primary) 60%, transparent 40%);
+    background: color-mix(in oklab, var(--surface) 70%, transparent 30%);
+    border: 1px solid color-mix(in oklab, var(--primary) 36%, transparent 64%);
     padding: 1px 5px;
     border-radius: 999px;
     white-space: nowrap;
@@ -1095,9 +1134,20 @@
     display: block;
   }
 
+  .toolbar {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   .toolbar .filter,
   .toolbar .sort {
-    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .seen-hud {
+    position: static;
+    margin: 0 0 6px;
+    justify-self: start;
   }
 
   .list {

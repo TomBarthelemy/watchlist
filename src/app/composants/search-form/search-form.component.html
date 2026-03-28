@@ -32,7 +32,7 @@
     class="btn btn--secondary btn--add"
     [disabled]="form.invalid || !selectedResult()"
   >
-    Ajouter
+    <span class="btn-add-label">Ajouter</span>
     <span
       class="ic"
       [ngClass]="justAdded() ? 'ic-check' : 'ic-plus'"
@@ -40,3 +40,21 @@
     ></span>
   </button>
 </form>
+
+<div
+  class="duplicate-overlay"
+  *ngIf="duplicateDialogOpen()"
+  (click)="closeDuplicateDialog()"
+>
+  <div class="duplicate-dialog" (click)="$event.stopPropagation()">
+    <strong class="duplicate-title">Item deja present</strong>
+    <p class="duplicate-message">
+      Cet element existe deja dans ta watchlist. Impossible de l'ajouter une seconde fois.
+    </p>
+    <div class="duplicate-actions">
+      <button class="btn btn--primary duplicate-btn" (click)="closeDuplicateDialog()">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
