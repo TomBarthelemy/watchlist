@@ -1,5 +1,7 @@
 :host {
   display: block;
+  --home-brand-size: clamp(40px, 6vw, 56px);
+  --home-auth-lift: clamp(18px, 3vh, 42px);
 }
 
 .container {
@@ -60,9 +62,9 @@
     margin-left: 0.2rem;
   }
 
-  .right {
+  .header__actions {
     min-width: 0;
-    flex: 1 1 auto; /* prend l'espace restant, mais peut shrink */
+    flex: 1 1 auto;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -126,7 +128,7 @@
     }
 
     /* La liste de présence ne doit jamais pousser les actions hors écran */
-    .header .right .presence {
+    .presence {
       order: 0;
       flex: 1 1 auto; /* occupe le “milieu” */
       min-width: 0;
@@ -136,15 +138,15 @@
     }
 
     /* Les actions restent toujours visibles */
-    .header .right .theme,
-    .header .right .user {
+    .theme,
+    .user {
       order: 1;
       flex: 0 0 auto; /* ne rétrécissent pas, restent à l'écran */
     }
 
     /* Icônes : évite qu'elles rapetissent/ disparaissent */
-    .header .right .btn--logout,
-    .header .right .btn--theme {
+    .btn--logout,
+    .btn--theme {
       flex: 0 0 auto;
     }
   }
@@ -155,6 +157,11 @@
   min-height: 0;
   display: flex;
   background: transparent;
+}
+
+.content > * {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /* ========= RESPONSIVE ========= */
@@ -186,7 +193,7 @@
       transform: translateY(-2px);
     }
 
-    .right {
+    .header__actions {
       width: auto;
       justify-content: flex-end;
       gap: 8px;
@@ -243,7 +250,7 @@
       margin-left: 0;
     }
 
-    .right {
+    .header__actions {
       width: auto;
       flex: 1 1 auto;
       min-width: 0;
@@ -281,5 +288,44 @@
 
   .content {
     flex-direction: column;
+  }
+}
+
+/* Desktop home balance: visually centered brand and stronger hierarchy */
+@media (min-width: 769px) {
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+
+    .brand {
+      grid-column: 2;
+      justify-self: center;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-title {
+      font-size: var(--home-brand-size);
+      letter-spacing: 0.4px;
+      line-height: 1;
+    }
+
+    .brand-icon {
+      width: clamp(38px, 4.6vw, 50px);
+      height: clamp(38px, 4.6vw, 50px);
+      transform: translateY(-1px);
+      margin-left: 0;
+    }
+
+    .header__actions {
+      grid-column: 3;
+      justify-self: end;
+      width: max-content;
+      max-width: 100%;
+      gap: 8px;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone, signal } from '@angular/core';
+import { inject, Injectable, isDevMode, NgZone, signal } from '@angular/core';
 import {
   createClient,
   RealtimeChannel,
@@ -11,11 +11,13 @@ import { OnlineUser } from '../models/online-user.model';
 import { APP_CONFIG } from '../app.config';
 import { TmdbItemInsert } from '../models/tmdb/tmbd-item-insert.model';
 import { TmdbItem } from '../models/tmdb/tmdb-item.model';
+import { ActiveWatchlistService } from './active-watchlist.service';
 
 @Injectable({ providedIn: 'root' })
 export class SupaService {
   private cfg = inject(APP_CONFIG);
   private zone = inject(NgZone);
+  private activeWatchlist = inject(ActiveWatchlistService);
 
   supa = createClient(this.cfg.supaUrl, this.cfg.supaAnon, {
     auth: { persistSession: true, autoRefreshToken: true },
@@ -39,7 +41,6 @@ export class SupaService {
         this.user.set(u);
         if (u) {
           this.startPresence();
-          this.loadItems();
         } else {
           this.stopPresence();
           this.zone.run(() => this.onlineUsers.set([]));
@@ -62,34 +63,59 @@ export class SupaService {
   async signOut() {
     await this.supa.auth.signOut();
     this.stopPresence();
-    this.zone.run(() => this.onlineUsers.set([]));
+    this.activeWatchlist.clearActiveListId();
+    this.zone.run(() => {
+      this.onlineUsers.set([]);
+      this.items.set([]);
+    });
   }
 
   async loadItems() {
+    const activeListId = this.activeWatchlist.getActiveListId();
+    if (!activeListId) {
+      this.zone.run(() => {
+        this.items.set([]);
+        this.loading.set(false);
+      });
+      this.channel?.unsubscribe();
+      this.channel = undefined;
+      return;
+    }
+
     this.zone.run(() => this.loading.set(true));
     const { data, error } = await this.supa
       .from('tmdb_item')
       .select('*')
-      .eq('list_id', this.cfg.listId)
+      .eq('list_id', activeListId)
       .order('created_at', { ascending: false });
-    if (error) throw error;
+    if (error) {
+      this.zone.run(() => this.loading.set(false));
+      throw error;
+    }
 
     this.zone.run(() => {
       this.items.set((data ?? []) as TmdbItem[]);
       this.loading.set(false);
     });
 
+    if (isDevMode()) {
+      console.info('[SupaService] loadItems', {
+        activeListId,
+        itemCount: (data ?? []).length,
+      });
+    }
+
     // (Re)subscribe realtime proprement
     this.channel?.unsubscribe();
     this.channel = this.supa
-      .channel(`items-${this.cfg.listId}`)
+      .channel(`items-${activeListId}`)
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'tmdb_item',
-          filter: `list_id=eq.${this.cfg.listId}`,
+          filter: `list_id=eq.${activeListId}`,
         },
         (payload: RealtimePostgresChangesPayload<TmdbItem>) => {
           this.zone.run(() => {
@@ -109,8 +135,10 @@ export class SupaService {
   }
 
   async addTmdbItem(insertObj: TmdbItemInsert) {
+    const activeListId = this.getRequiredActiveListId();
+
     const { error } = await this.supa.from('tmdb_item').insert({
-      list_id: this.cfg.listId,
+      list_id: activeListId,
 
       title: insertObj.title,
       category: insertObj.category,
@@ -129,18 +157,21 @@ export class SupaService {
   }
 
   async toggleSeen(item: Item) {
+    const activeListId = this.getRequiredActiveListId();
     const seen = !item.seen;
     const seen_at = seen ? new Date().toISOString().slice(0, 10) : null;
 
     const { error } = await this.supa
       .from('tmdb_item')
       .update({ seen, seen_at })
-      .eq('id', item.id);
+      .eq('id', item.id)
+      .eq('list_id', activeListId);
 
     if (error) throw error;
   }
 
   async removeItem(id: string) {
+    const activeListId = this.getRequiredActiveListId();
     const before = this.items();
 
     // 1) Optimiste : retire l’item côté client immédiatement
@@ -149,7 +180,11 @@ export class SupaService {
     });
 
     // 2) Requête réseau
-    const { error } = await this.supa.from('tmdb_item').delete().eq('id', id);
+    const { error } = await this.supa
+      .from('tmdb_item')
+      .delete()
+      .eq('id', id)
+      .eq('list_id', activeListId);
 
     // 3) Rollback en cas d’erreur (rare)
     if (error) {
@@ -207,5 +242,14 @@ export class SupaService {
     this.presenceCh?.unsubscribe();
     this.presenceCh = undefined;
     this.zone.run(() => this.onlineUsers.set([]));
+  }
+
+  private getRequiredActiveListId(): string {
+    const activeListId = this.activeWatchlist.getActiveListId();
+    if (!activeListId) {
+      throw new Error('No active watchlist selected');
+    }
+
+    return activeListId;
   }
 }

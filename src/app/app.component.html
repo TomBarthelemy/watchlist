@@ -1,15 +1,13 @@
 <main class="container">
+  <!-- Application header: branding, theme, user actions -->
   <header class="header">
     <div class="brand">
       <h1 class="brand-title">Watchlist</h1>
-      <img
-        class="brand-icon"
-        src="assets/icons/popcorn-icon.svg"
-        alt="Popcorn icon"
-      />
+      <img class="brand-icon" src="assets/icons/popcorn-icon.svg" alt="Popcorn icon" />
     </div>
 
-    <div class="right">
+    <div class="header__actions">
+      <!-- Online user presence indicator -->
       <div class="presence" *ngIf="supa.onlineUsers().length">
         <span
           *ngFor="let u of supa.onlineUsers()"
@@ -22,10 +20,11 @@
         </span>
       </div>
 
+      <!-- Theme toggle -->
       <div class="theme">
         <button
-          title="This is a hint"
           class="btn btn--theme"
+          type="button"
           title="Changer le thème"
           aria-label="Changer le thème"
           (click)="theme.toggle()"
@@ -38,14 +37,15 @@
         </button>
       </div>
 
+      <!-- User logout -->
       <div class="user">
         <button
           class="btn btn--logout"
           *ngIf="supa.user()"
           type="button"
-          (click)="signOut()"
           title="Se déconnecter"
           aria-label="Se déconnecter"
+          (click)="signOut()"
         >
           <span class="icon icon-logout" aria-hidden="true"></span>
         </button>
@@ -53,10 +53,12 @@
     </div>
   </header>
 
+  <!-- Main content area: authentication or routed pages -->
   <section class="content">
-    <ng-container *ngIf="supa.user(); else auth">
-      <app-watchlist />
-    </ng-container>
+    <!-- Authenticated user: show routed pages -->
+    <router-outlet *ngIf="supa.user(); else auth" />
+
+    <!-- Not authenticated: show auth form -->
     <ng-template #auth>
       <app-auth />
     </ng-template>

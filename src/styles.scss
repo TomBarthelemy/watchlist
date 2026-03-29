@@ -65,6 +65,12 @@
   --tap-size: 40px;
 
   --item-card-header-bg-opacity: 0.095;
+
+  /* inputs communs (theme-aware) */
+  --input-bg: var(--surface-gradient);
+  --input-bg-focus: var(--surface-2);
+  --input-border: color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
+  --input-fg: var(--text);
 }
 
 html[data-theme="dark"] {
@@ -110,6 +116,12 @@ html[data-theme="dark"] {
   --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
 
   --item-card-header-bg-opacity: 0.06;
+
+  /* inputs communs (theme-aware) */
+  --input-bg: var(--surface-gradient);
+  --input-bg-focus: var(--surface-2);
+  --input-border: color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
+  --input-fg: var(--text);
 }
 
 /* ========= BASE ========= */
@@ -194,11 +206,10 @@ a:hover {
 /* Inputs */
 input,
 select {
-  background: var(--surface-gradient, var(--surface));
   padding: 10px 12px;
-  background: var(--surface-gradient);
-  border: 1px solid color-mix(in oklab, var(--surface-2) 70%, var(--bg-end) 30%);
-  color: var(--text);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-fg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -208,7 +219,7 @@ input::placeholder {
 }
 input:focus,
 select:focus {
-  background: var(--surface-2);
+  background: var(--input-bg-focus);
   box-shadow: var(--shadow);
 }
 
