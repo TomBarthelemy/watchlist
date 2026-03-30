@@ -1,0 +1,14 @@
+<div class="confirm-overlay" *ngIf="open" (click)="onOverlayClick()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <strong class="confirm-title">{{ title }}</strong>
+    <p class="confirm-message">{{ message }}</p>
+    <div class="confirm-actions">
+      <button class="btn btn--ghost confirm-btn" type="button" (click)="onCancel()">
+        {{ cancelLabel }}
+      </button>
+      <button class="btn btn--danger confirm-btn" type="button" (click)="onConfirm()">
+        {{ confirmLabel }}
+      </button>
+    </div>
+  </div>
+</div>

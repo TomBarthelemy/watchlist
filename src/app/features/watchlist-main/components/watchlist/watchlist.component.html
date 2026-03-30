@@ -1,0 +1,42 @@
+﻿<div class="watchlist">
+
+  <ng-container *ngIf="currentListId() as listId">
+    <!-- Desktop nav (masqué sur mobile) -->
+    <nav class="watchlist-nav watchlist-nav--desktop" aria-label="Navigation watchlist">
+      <button class="btn btn--ghost" type="button" (click)="goToWatchlists()">Mes watchlists</button>
+      <a class="btn btn--ghost" [routerLink]="['/watchlist', listId, 'members']" [queryParams]="{ from: 'watchlist' }">Membres</a>
+      <a class="btn btn--ghost" [routerLink]="['/watchlist', listId, 'settings']" [queryParams]="{ from: 'watchlist' }">Paramètres</a>
+    </nav>
+  </ng-container>
+
+  <app-search-form></app-search-form>
+
+  <div class="section-sep" role="separator" aria-hidden="true"></div>
+
+  <app-list-item
+    class="list-item"
+    [seenCount]="seenCount()"
+    [totalCount]="total()"
+  ></app-list-item>
+</div>
+
+<!-- Le petit lit de popcorn -->
+<div class="popcorn-floor"></div>
+<div
+  class="popcorn-overlay"
+  popcornEmitter
+  [rate]="4.5"
+  [max]="16"
+  [minSize]="22"
+  [maxSize]="32"
+  [minHeightVh]="80"
+  [maxHeightVh]="100"
+  [spreadX]="76"
+  [minSpin]="160"
+  [maxSpin]="360"
+  [minDuration]="2000"
+  [maxDuration]="2800"
+  [bounceMin]="10"
+  [bounceMax]="20"
+  [settleHold]="240"
+></div>

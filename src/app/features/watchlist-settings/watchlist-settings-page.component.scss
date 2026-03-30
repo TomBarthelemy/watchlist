@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--space-lg);
+  overflow-y: auto;
+
+  @media (max-width: 640px) {
+    padding: var(--space);
+  }
+}
+
+app-watchlist-settings {
+  width: 100%;
+  max-width: 640px;
+}

@@ -1,12 +1,12 @@
 <main class="container">
   <!-- Application header: branding, theme, user actions -->
   <header class="header">
-    <div class="brand">
+    <button class="brand" type="button" (click)="goHome()" title="Mes watchlists" aria-label="Mes watchlists">
       <h1 class="brand-title">Watchlist</h1>
       <img class="brand-icon" src="assets/icons/popcorn-icon.svg" alt="Popcorn icon" />
-    </div>
+    </button>
 
-    <div class="header__actions">
+    <div class="header__actions" [class.header__actions--with-mobile-menu]="hasActiveWatchlist()">
       <!-- Online user presence indicator -->
       <div class="presence" *ngIf="supa.onlineUsers().length">
         <span
@@ -50,8 +50,75 @@
           <span class="icon icon-logout" aria-hidden="true"></span>
         </button>
       </div>
+
+      <button
+        *ngIf="hasActiveWatchlist()"
+        class="header__menu-button"
+        type="button"
+        (click)="toggleMobileMenu()"
+        aria-label="Ouvrir le menu"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-controls="app-mobile-menu"
+      >
+        <span class="header__menu-bar"></span>
+        <span class="header__menu-bar"></span>
+        <span class="header__menu-bar"></span>
+      </button>
     </div>
   </header>
+
+  <ng-container *ngIf="hasActiveWatchlist() && currentListId() as listId">
+    <div
+      class="mobile-menu__overlay"
+      [class.is-open]="mobileMenuOpen()"
+      (click)="closeMobileMenu()"
+      aria-hidden="true"
+    ></div>
+
+    <aside
+      id="app-mobile-menu"
+      class="mobile-menu"
+      [class.is-open]="mobileMenuOpen()"
+      [attr.aria-hidden]="!mobileMenuOpen()"
+      aria-label="Menu mobile"
+    >
+      <div class="mobile-menu__header">
+        <span class="mobile-menu__title">Menu</span>
+        <button class="mobile-menu__close" type="button" (click)="closeMobileMenu()" aria-label="Fermer le menu">
+          &#x2715;
+        </button>
+      </div>
+
+      <nav class="mobile-menu__links" aria-label="Navigation watchlist">
+        <button class="mobile-menu__link" type="button" (click)="goHome()">Mes watchlists</button>
+        <a class="mobile-menu__link" [routerLink]="['/watchlist', listId, 'members']" [queryParams]="{ from: 'watchlist' }" (click)="closeMobileMenu()">Membres</a>
+        <a class="mobile-menu__link" [routerLink]="['/watchlist', listId, 'settings']" [queryParams]="{ from: 'watchlist' }" (click)="closeMobileMenu()">Param&egrave;tres</a>
+      </nav>
+
+      <div class="mobile-menu__actions">
+        <button
+          class="mobile-menu__utility"
+          type="button"
+          (click)="toggleTheme()"
+          [attr.aria-label]="themeToggleLabel()"
+          [title]="themeToggleLabel()"
+        >
+          <span
+            class="mobile-menu__icon"
+            [class.is-sun]="nextTheme() === 'light'"
+            [class.is-moon]="nextTheme() === 'dark'"
+            aria-hidden="true"
+          ></span>
+          <span class="mobile-menu__text">{{ themeToggleLabel() }}</span>
+        </button>
+
+        <button class="mobile-menu__utility mobile-menu__utility--logout" type="button" (click)="signOut()" aria-label="Se deconnecter">
+          <span class="mobile-menu__icon mobile-menu__icon--logout" aria-hidden="true"></span>
+          <span class="mobile-menu__text">D&eacute;connexion</span>
+        </button>
+      </div>
+    </aside>
+  </ng-container>
 
   <!-- Main content area: authentication or routed pages -->
   <section class="content">

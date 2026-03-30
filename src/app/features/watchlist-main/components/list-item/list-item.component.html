@@ -1,0 +1,187 @@
+<div class="list-item">
+  <div class="toolbar">
+    <select class="filter" [formControl]="filterCtrl" aria-label="Filtrer par">
+      <option value="Tout">Tout</option>
+      <option value="Film">Film</option>
+      <option value="Série">Série</option>
+      <option value="Animé">Animé</option>
+      <option value="Dessin animé">Dessin animé</option>
+      <option value="A_voir">À voir</option>
+      <option value="Vus">Vus</option>
+      <option value="Mes_ajouts">Mes propositions</option>
+      <option value="Ajouts_autres">Ses propositions</option>
+    </select>
+
+    <select class="sort" [formControl]="sortCtrl" aria-label="Trier par">
+      <option value="created_desc">Ajouts récents</option>
+      <option value="created_asc">Plus anciens</option>
+      <option value="title_asc">Titre A → Z</option>
+      <option value="title_desc">Titre Z → A</option>
+    </select>
+  </div>
+
+  <div *ngIf="isLoading() && sorted().length === 0" class="loading">Chargement...</div>
+
+  <div class="tiny-screen-hint" role="status" aria-live="polite">
+    Mini ecran detecte: mode ultra compact active. Pour plus de confort, agrandis la fenetre.
+  </div>
+
+  <div class="list-scroll">
+    <div class="seen-hud" aria-label="Statistiques de visionnage">
+      <span class="seen-hud-value">{{ seenCount() }} / {{ totalCount() }}</span>
+      <span class="seen-hud-label">vus</span>
+    </div>
+
+    <ul class="list">
+      <li
+        *ngFor="let item of sorted()"
+        class="item-card"
+        [class.item-card--seen]="item.seen"
+        [class.item-card--self]="isSelf(item)"
+        [class.item-card--other]="!isSelf(item)"
+      >
+        <!-- CARD TOP -->
+        <div class="item-card-header">
+          <div class="item-card-poster">
+            <img
+              [src]="getPosterUrl(item.poster_path)"
+              [alt]="item.title"
+              loading="lazy"
+            />
+          </div>
+
+          <!-- Mobile-only poster overlay controls -->
+          <div class="poster-overlay-controls">
+            <div class="poster-ctrl-left">
+              <button
+                class="poster-ctrl-btn poster-ctrl-btn--seen"
+                [class.poster-ctrl-btn--active]="item.seen"
+                (click)="toggle(item); $event.stopPropagation()"
+                [attr.aria-label]="item.seen ? 'Marquer comme non vu' : 'Marquer comme vu'"
+              >
+                <span class="poster-ctrl-icon--seen" aria-hidden="true">✓</span>
+              </button>
+              <span class="poster-seen-at" *ngIf="item.seen && item.seen_at">
+                Vu le {{ formatDate(item.seen_at) }}
+              </span>
+            </div>
+            <button
+              class="poster-ctrl-btn poster-ctrl-btn--delete"
+              (click)="confirmDelete(item, $event)"
+              aria-label="Supprimer l'item"
+            >
+              <span class="poster-ctrl-trash" aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <div class="item-card-main">
+            <strong
+              class="item-card-title"
+              [title]="item.title"
+              [class.item-card-title--sm]="item.title.length > 38"
+              [class.item-card-title--xs]="item.title.length > 58"
+            >
+              {{ item.title }}
+            </strong>
+
+            <div class="item-card-meta">
+              <span class="item-card-year" *ngIf="item.year">
+                {{ item.year }}
+              </span>
+
+              <a
+                *ngIf="item.trailer_url"
+                [attr.href]="item.trailer_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-youtube-icon item-card-trailer-link"
+                title="Voir le trailer sur YouTube"
+                aria-label="Voir le trailer sur YouTube"
+              ></a>
+
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge--film': item.category === 'Film',
+                  'badge--serie': item.category === 'Série',
+                  'badge--anime': item.category === 'Animé',
+                  'badge--dessin-anime': item.category === 'Dessin animé'
+                }"
+              >
+                {{ item.category }}
+              </span>
+            </div>
+
+            <div class="item-card-genres" *ngIf="item.genre">
+              <span
+                class="genre-pill"
+                *ngFor="let genre of getVisibleGenres(item.genre)"
+              >
+                {{ genre }}
+              </span>
+              <span
+                *ngIf="getExtraGenresCount(item.genre) > 0"
+                class="genre-pill genre-pill--more"
+                [matTooltip]="getAllGenresLabel(item.genre)"
+                matTooltipPosition="above"
+                matTooltipClass="synopsis-tooltip"
+              >
+                +{{ getExtraGenresCount(item.genre) }}
+              </span>
+            </div>
+
+            <div
+              class="item-card-synopsis-trigger"
+              [matTooltip]="item.overview || 'Aucun synopsis disponible.'"
+              matTooltipPosition="above"
+              matTooltipClass="synopsis-tooltip"
+              [matTooltipShowDelay]="150"
+            >
+              <span class="icon-synopsis-info" aria-hidden="true">i</span>
+              Synopsis
+            </div>
+          </div>
+        </div>
+
+        <div class="item-card-actions">
+          <div class="item-card-actions-left">
+            <mat-slide-toggle
+              class="item-card-toggle"
+              [checked]="item.seen"
+              (click)="$event.stopPropagation()"
+              (change)="toggle(item)"
+              color="secondary"
+            >
+              <span>Vu ?</span>
+            </mat-slide-toggle>
+
+            <span class="item-card-seen-at" *ngIf="item.seen_at">
+              Vu le {{ formatDate(item.seen_at) }}
+            </span>
+          </div>
+
+          <div class="item-card-action-buttons">
+            <button
+              class="btn-danger-icon"
+              (click)="confirmDelete(item, $event)"
+              title="Supprimer l'item"
+              aria-label="Supprimer l'item"
+            >
+              <span class="icon-trash" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <app-confirm-dialog
+    [open]="!!confirmDeleteItem()"
+    [title]="'Supprimer « ' + (confirmDeleteItem()?.title ?? '') + ' » ?'"
+    message="Cette action est irréversible."
+    confirmLabel="Supprimer"
+    cancelLabel="Annuler"
+    (cancelled)="cancelDelete()"
+    (confirmed)="executeDelete()"
+  ></app-confirm-dialog>
+</div>

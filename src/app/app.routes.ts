@@ -1,36 +1,42 @@
 import { Routes } from '@angular/router';
-import { WatchlistAccessPage } from './pages/watchlist-access/watchlist-access.page';
-import { WatchlistMainPage } from './pages/watchlist-main/watchlist-main.page';
-import { WatchlistMembersComponent } from './composants/watchlist-members/watchlist-members.component';
-import { WatchlistSettingsComponent } from './composants/watchlist-settings/watchlist-settings.component';
+import { WatchlistAccessPageComponent } from './features/watchlist-access/watchlist-access-page.component';
+import { WatchlistMainPageComponent } from './features/watchlist-main/watchlist-main-page.component';
+import { WatchlistMembersPageComponent } from './features/watchlist-members/watchlist-members-page.component';
+import { WatchlistSettingsPageComponent } from './features/watchlist-settings/watchlist-settings-page.component';
+import { authGuard, membershipGuard } from './core/guards';
 
 /**
  * Application routes
  *
  * Routing structure:
  * - '' → Watchlist access gateway (selection, creation)
- * - 'watchlist/:id' → Main watchlist view with items
- * - 'watchlist/:id/members' → Member management
- * - 'watchlist/:id/settings' → Watchlist settings
+ * - 'watchlist/:id' → Main watchlist view with items (protected by auth + membership)
+ * - 'watchlist/:id/members' → Member management (protected by auth + membership)
+ * - 'watchlist/:id/settings' → Watchlist settings (protected by auth + membership)
  *
- * Future: Add auth guards and role-based access
+ * Guards:
+ * - authGuard: Ensures user is authenticated
+ * - membershipGuard: Ensures user is member of the referenced watchlist
  */
 export const routes: Routes = [
   {
     path: '',
-    component: WatchlistAccessPage,
+    component: WatchlistAccessPageComponent,
   },
   {
     path: 'watchlist/:id',
-    component: WatchlistMainPage,
+    component: WatchlistMainPageComponent,
+    canActivate: [authGuard, membershipGuard],
   },
   {
     path: 'watchlist/:id/members',
-    component: WatchlistMembersComponent,
+    component: WatchlistMembersPageComponent,
+    canActivate: [authGuard, membershipGuard],
   },
   {
     path: 'watchlist/:id/settings',
-    component: WatchlistSettingsComponent,
+    component: WatchlistSettingsPageComponent,
+    canActivate: [authGuard, membershipGuard],
   },
   // Wildcard route - redirect to home
   {
@@ -38,3 +44,4 @@ export const routes: Routes = [
     redirectTo: '',
   },
 ];
+

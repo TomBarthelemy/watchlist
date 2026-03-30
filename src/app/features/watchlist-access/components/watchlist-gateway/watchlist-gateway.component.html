@@ -1,0 +1,133 @@
+<ng-container *ngIf="access.resolvingPostLogin(); else resolvedState">
+  <p class="loading-state">Chargement de vos watchlists...</p>
+</ng-container>
+
+<ng-template #resolvedState>
+  <!-- Watchlist selection & creation gate -->
+  <ng-template #watchlistGate>
+    <section
+      class="watchlist-gateway card"
+      [attr.aria-label]="
+        access.postLoginState() === 'empty'
+          ? 'Création de watchlist'
+          : 'Sélection de watchlist'
+      "
+    >
+      <!-- Header with context-aware messaging -->
+      <header class="watchlist-gateway__header">
+        <h2 class="watchlist-gateway__title">
+          {{
+            access.postLoginState() === 'empty'
+              ? 'Créer une watchlist'
+              : 'Choisir une watchlist'
+          }}
+        </h2>
+        <p class="watchlist-gateway__subtitle">
+          {{
+            access.postLoginState() === 'empty'
+              ? 'Tu n\'as encore aucune watchlist. Crée la première pour commencer.'
+              : 'Sélectionne la liste à ouvrir, ou crée une nouvelle watchlist.'
+          }}
+        </p>
+      </header>
+
+      <!-- Error message display -->
+      <p *ngIf="access.postLoginError()" class="watchlist-gateway__error">
+        {{ access.postLoginError() }}
+      </p>
+
+      <!-- Existing watchlists list (shown when lists exist) -->
+      <ul
+        *ngIf="access.availableLists().length"
+        class="watchlist-gateway__list"
+        role="list"
+      >
+        <li *ngFor="let list of access.availableLists(); trackBy: trackByListId">
+          <div
+            class="watchlist-gateway__item"
+            role="button"
+            tabindex="0"
+            [class.is-disabled]="access.selectingList() || access.creatingList()"
+            (click)="selectWatchlist(list.id)"
+            (keydown.enter)="selectWatchlist(list.id)"
+            (keydown.space)="onItemSpace($event, list.id)"
+          >
+            <span class="watchlist-gateway__item-title">{{ list.name }}</span>
+            <div class="watchlist-gateway__item-actions" role="group" aria-label="Actions de watchlist">
+              <a
+                class="watchlist-gateway__item-action"
+                [routerLink]="['/watchlist', list.id, 'members']"
+                [queryParams]="{ from: 'gateway' }"
+                title="Gerer les membres"
+                aria-label="Gerer les membres"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="watchlist-gateway__icon watchlist-gateway__icon--users" aria-hidden="true"></span>
+              </a>
+              <a
+                class="watchlist-gateway__item-action"
+                [routerLink]="['/watchlist', list.id, 'settings']"
+                [queryParams]="{ from: 'gateway' }"
+                title="Parametres"
+                aria-label="Parametres"
+                (click)="$event.stopPropagation()"
+              >
+                <span class="watchlist-gateway__icon watchlist-gateway__icon--settings" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Watchlist creation form -->
+      <form
+        class="watchlist-gateway__form"
+        [formGroup]="createWatchlistForm"
+        (ngSubmit)="submitCreateWatchlist()"
+      >
+        <label class="watchlist-gateway__field">
+          <span class="watchlist-gateway__label">
+            {{
+              access.availableLists().length
+                ? 'Nom de la nouvelle watchlist'
+                : 'Nom de la watchlist'
+            }}
+          </span>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Ex. Watchlist Tom & Roo"
+            maxlength="60"
+            class="watchlist-gateway__input"
+          />
+        </label>
+
+        <p
+          class="watchlist-gateway__validation-error"
+          *ngIf="
+            createWatchlistForm.controls.name.invalid &&
+            (createWatchlistForm.controls.name.dirty ||
+              createWatchlistForm.controls.name.touched)
+          "
+        >
+          Le nom doit contenir entre 2 et 60 caractères.
+        </p>
+
+        <button
+          class="btn btn--primary watchlist-gateway__submit"
+          type="submit"
+          [disabled]="access.creatingList() || access.selectingList()"
+        >
+          {{
+            access.creatingList()
+              ? 'Création...'
+              : 'Créer une watchlist'
+          }}
+        </button>
+      </form>
+    </section>
+  </ng-template>
+
+  <!-- Display main watchlist view or gateway depending on state -->
+  <app-watchlist *ngIf="access.postLoginState() === 'watchlist'; else watchlistGate" />
+</ng-template>

@@ -1,0 +1,53 @@
+<section class="watchlist-members">
+  <header class="watchlist-members__header">
+    <div class="watchlist-members__title-row">
+      <button class="watchlist-members__back" type="button" (click)="goBack()" aria-label="Retour">
+        <span class="watchlist-members__back-icon" aria-hidden="true"></span>
+      </button>
+      <h2 class="watchlist-members__title">Membres</h2>
+    </div>
+    <p class="watchlist-members__subtitle">
+      Membres et rôles d'accès de cette watchlist
+    </p>
+  </header>
+
+  <!-- Loading state -->
+  <ng-container *ngIf="loading()">
+    <div class="watchlist-members__skeleton">
+      <div class="watchlist-members__skeleton-item" *ngFor="let i of [1,2]"></div>
+    </div>
+  </ng-container>
+
+  <!-- Error state -->
+  <ng-container *ngIf="error() && !loading()">
+    <div class="watchlist-members__error">
+      <p>{{ error() }}</p>
+      <button class="btn btn--secondary" type="button" (click)="retryLoadMembers()">
+        Réessayer
+      </button>
+    </div>
+  </ng-container>
+
+  <!-- Members list -->
+  <ng-container *ngIf="!loading() && members().length > 0">
+    <ul class="watchlist-members__list">
+      <li class="watchlist-members__item" *ngFor="let member of members()">
+        <div class="watchlist-members__avatar" aria-hidden="true">
+          {{ member.user_name.charAt(0).toUpperCase() }}
+        </div>
+        <div class="watchlist-members__info">
+          <span class="watchlist-members__name">{{ member.user_name }}</span>
+          <span class="watchlist-members__email" *ngIf="member.user_email">{{ member.user_email }}</span>
+        </div>
+        <span class="watchlist-members__badge role--{{ member.role }}">
+          {{ getRoleLabel(member.role) }}
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Empty state -->
+  <ng-container *ngIf="!loading() && !error() && members().length === 0">
+    <p class="watchlist-members__empty">Aucun membre trouvé.</p>
+  </ng-container>
+</section>

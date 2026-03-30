@@ -1,9 +1,6 @@
 import { Category } from '@app/types';
 
-export interface TmdbItem {
-  id: string;
-  list_id: string;
-
+export interface TmdbItemInsert {
   title: string;
   category: Category;
   genre: string;
@@ -11,11 +8,7 @@ export interface TmdbItem {
   poster_path?: string | null;
   year?: number | null;
   trailer_url?: string | null;
-
   seen: boolean;
   seen_at?: string | null;
-
-  proposed_by: string;
-  created_at: string;
 }
 

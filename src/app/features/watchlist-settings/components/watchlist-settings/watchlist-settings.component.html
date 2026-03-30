@@ -1,0 +1,77 @@
+<section class="watchlist-settings">
+  <header class="watchlist-settings__header">
+    <div class="watchlist-settings__title-row">
+      <button class="watchlist-settings__back" type="button" (click)="goBack()" aria-label="Retour">
+        <span class="watchlist-settings__back-icon" aria-hidden="true"></span>
+      </button>
+      <h2 class="watchlist-settings__title">Paramètres de la watchlist</h2>
+    </div>
+    <p class="watchlist-settings__subtitle">
+      Gérez les paramètres et la configuration de votre watchlist
+    </p>
+  </header>
+
+  <ng-container *ngIf="loading(); else settingsContent">
+    <p class="watchlist-settings__placeholder">Chargement des paramètres...</p>
+  </ng-container>
+
+  <ng-template #settingsContent>
+    <div class="watchlist-settings__content">
+      <p *ngIf="error()" class="watchlist-settings__feedback watchlist-settings__feedback--error">
+        {{ error() }}
+      </p>
+
+      <p *ngIf="success()" class="watchlist-settings__feedback watchlist-settings__feedback--success">
+        {{ success() }}
+      </p>
+
+      <div class="watchlist-settings__meta card">
+        <p><strong>Votre role:</strong> {{ currentUserRole() || 'aucun role' }}</p>
+        <p><strong>Creee le:</strong> {{ createdAt() ? (createdAt() | date:'short') : '-' }}</p>
+      </div>
+
+      <form class="watchlist-settings__form card" [formGroup]="form" (ngSubmit)="saveName()">
+        <label class="watchlist-settings__field">
+          <span class="watchlist-settings__label">Nom de la watchlist</span>
+          <input type="text" formControlName="name" maxlength="60" placeholder="Nom de la watchlist" />
+        </label>
+
+        <p
+          class="watchlist-settings__validation"
+          *ngIf="form.controls.name.invalid && (form.controls.name.touched || form.controls.name.dirty)"
+        >
+          Le nom doit contenir entre 2 et 60 caractères.
+        </p>
+
+        <div class="watchlist-settings__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="saving() || deleting()">
+            {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="watchlist-settings__danger card" *ngIf="currentUserRole() === 'owner'">
+        <h3>Zone de danger</h3>
+        <p>La suppression est reservee au proprietaire et irreversible.</p>
+        <button
+          class="btn btn--danger"
+          type="button"
+          [disabled]="deleting() || saving()"
+          (click)="openDeleteDialog()"
+        >
+          {{ deleting() ? 'Suppression...' : 'Supprimer la watchlist' }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+
+  <app-confirm-dialog
+    [open]="deleteDialogOpen()"
+    title="Supprimer cette watchlist ?"
+    message="Cette action est irreversible et supprimera les donnees associees."
+    confirmLabel="Supprimer"
+    cancelLabel="Annuler"
+    (cancelled)="cancelDeleteDialog()"
+    (confirmed)="confirmDeleteWatchlist()"
+  ></app-confirm-dialog>
+</section>
