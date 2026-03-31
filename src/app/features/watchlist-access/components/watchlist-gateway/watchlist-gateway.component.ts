@@ -37,6 +37,7 @@ export class WatchlistGatewayComponent {
   readonly access: WatchlistAccessService = inject(WatchlistAccessService);
   readonly supa: SupaService = inject(SupaService);
   readonly progressByListId = signal<Record<string, WatchlistProgress>>({});
+  private didBootstrapFallbackLoad = false;
 
   createWatchlistForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
@@ -74,6 +75,24 @@ export class WatchlistGatewayComponent {
           if (this.progressLoadRequestId !== requestId) return;
           this.progressByListId.set({});
         });
+    }, { allowSignalWrites: true });
+
+    // Mobile PWA safeguard: if /watchlists opens with a restored session but no lists loaded yet,
+    // trigger a one-time explicit load to avoid a blank gateway state.
+    effect(() => {
+      const userId = this.supa.user()?.id;
+      const isResolving = this.access.resolvingPostLogin();
+      const listsCount = this.access.availableLists().length;
+      const state = this.access.postLoginState();
+
+      if (!userId || isResolving || this.didBootstrapFallbackLoad) return;
+      if (listsCount > 0 || state === 'empty') return;
+
+      const path = globalThis.location?.pathname ?? '';
+      if (path !== '/watchlists') return;
+
+      this.didBootstrapFallbackLoad = true;
+      void this.access.showSelectionMode();
     }, { allowSignalWrites: true });
   }
 

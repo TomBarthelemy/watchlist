@@ -1,4 +1,4 @@
-import { Component, HostListener, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -22,6 +22,7 @@ import { ConfirmDialogComponent } from '@app/shared/components/confirm-dialog/co
   ],
   templateUrl: './list-item.component.html',
   styleUrl: './list-item.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListItemComponent {
   private readonly supa = inject(SupaService);
@@ -192,6 +193,10 @@ export class ListItemComponent {
 
   getAllGenresLabel(genreStr: string | null | undefined): string {
     return this.splitGenres(genreStr).join(', ');
+  }
+
+  trackByItemId(_index: number, item: Item): string {
+    return item.id;
   }
 }
 

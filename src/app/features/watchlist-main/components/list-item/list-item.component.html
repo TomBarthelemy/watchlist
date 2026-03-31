@@ -25,7 +25,7 @@
   <div class="list-scroll">
     <ul class="list">
       <li
-        *ngFor="let item of sorted()"
+        *ngFor="let item of sorted(); trackBy: trackByItemId"
         class="item-card"
         [class.item-card--seen]="item.seen"
         [class.item-card--self]="isSelf(item)"

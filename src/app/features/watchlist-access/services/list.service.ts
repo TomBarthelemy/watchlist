@@ -21,14 +21,28 @@ export interface UserList extends ListRecord {
 export class ListService {
   private supaService = inject(SupaService);
 
-  async getUserLists(): Promise<UserList[]> {
+  private async resolveCurrentUserId(): Promise<string | null> {
+    // Prefer session first: more stable on startup with persisted auth.
+    const {
+      data: { session },
+      error: sessionError,
+    } = await this.supaService.supa.auth.getSession();
+
+    if (sessionError) throw sessionError;
+    if (session?.user?.id) return session.user.id;
+
     const {
       data: { user },
       error: userError,
     } = await this.supaService.supa.auth.getUser();
 
     if (userError) throw userError;
-    if (!user) return [];
+    return user?.id ?? null;
+  }
+
+  async getUserLists(): Promise<UserList[]> {
+    const userId = await this.resolveCurrentUserId();
+    if (!userId) return [];
 
     const { data, error } = await this.supaService.supa
       .from('list_members')
@@ -43,7 +57,7 @@ export class ListService {
           )
         `
       )
-      .eq('user_id', user.id);
+      .eq('user_id', userId);
 
     if (error) throw error;
 
@@ -74,19 +88,14 @@ export class ListService {
       throw new Error('Le nom de la watchlist doit contenir au moins 2 caracteres');
     }
 
-    const {
-      data: { user },
-      error: userError,
-    } = await this.supaService.supa.auth.getUser();
-
-    if (userError) throw userError;
-    if (!user) throw new Error('Utilisateur non connecte');
+    const userId = await this.resolveCurrentUserId();
+    if (!userId) throw new Error('Utilisateur non connecte');
 
     const { data: createdList, error: createListError } = await this.supaService.supa
       .from('lists')
       .insert({
         name: trimmedName,
-        created_by: user.id,
+        created_by: userId,
       })
       .select('id, name, created_by, created_at')
       .single<ListRecord>();
@@ -97,7 +106,7 @@ export class ListService {
       .from('list_members')
       .insert({
         list_id: createdList.id,
-        user_id: user.id,
+        user_id: userId,
         role: 'owner',
       });
 
