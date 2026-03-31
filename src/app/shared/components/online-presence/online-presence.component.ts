@@ -116,7 +116,10 @@ export class OnlinePresenceComponent implements AfterViewInit {
     });
 
     this.resizeObserver.observe(this.host.nativeElement);
-    this.destroyRef.onDestroy(() => this.resizeObserver?.disconnect());
+    this.destroyRef.onDestroy(() => {
+      this.resizeObserver?.disconnect();
+      if (this.tapTimer) clearTimeout(this.tapTimer);
+    });
   }
 
   @HostListener('window:resize')
@@ -159,6 +162,16 @@ export class OnlinePresenceComponent implements AfterViewInit {
   protected avatarFg(name: string): string {
     const h = this.nameHue(name);
     return `hsl(${h}, 82%, 88%)`;
+  }
+
+  // ── Tap tooltip (mobile: simple tap → nom affiché 2 s) ────────────────────
+  protected readonly shownUserId = signal<string | null>(null);
+  private tapTimer: ReturnType<typeof setTimeout> | null = null;
+
+  protected showTap(id: string): void {
+    if (this.tapTimer) clearTimeout(this.tapTimer);
+    this.shownUserId.set(id);
+    this.tapTimer = setTimeout(() => this.shownUserId.set(null), 2000);
   }
 
   /**

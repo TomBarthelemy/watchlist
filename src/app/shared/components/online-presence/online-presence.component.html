@@ -6,9 +6,11 @@
       [matTooltip]="userTooltip(user)"
       matTooltipPosition="above"
       matTooltipClass="synopsis-tooltip"
+      matTooltipTouchGestures="off"
       [matTooltipShowDelay]="120"
       [attr.aria-label]="userTooltip(user)"
       role="listitem"
+      (click)="showTap(user.id)"
     >
       <img
         *ngIf="user.avatarUrl; else initialsBlock"
@@ -18,6 +20,7 @@
         width="30"
         height="30"
         decoding="async"
+        draggable="false"
       />
       <ng-template #initialsBlock>
         <span
@@ -27,6 +30,7 @@
         >{{ initials(user.name) }}</span>
       </ng-template>
       <span class="presence-strip__status-dot" [class.is-online]="user.isOnline" aria-hidden="true"></span>
+      <span *ngIf="shownUserId() === user.id" class="presence-strip__tap-label">{{ userTooltip(user) }}</span>
     </div>
 
     <div
@@ -35,6 +39,7 @@
       [matTooltip]="hiddenUsersTooltip()"
       matTooltipPosition="above"
       matTooltipClass="synopsis-tooltip"
+      matTooltipTouchGestures="off"
       [matTooltipShowDelay]="120"
       [attr.aria-label]="hiddenCount() + ' autres utilisateurs connectes'"
       role="listitem"
