@@ -1,8 +1,10 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import { ActiveWatchlistService } from '@app/core/services/active-watchlist.service';
 import { ListService, UserList } from './list.service';
 import { SupaService } from '@app/core/services/supa.service';
+import { filter, map, startWith } from 'rxjs';
 
 export type PostLoginState = 'watchlist' | 'empty' | 'select';
 
@@ -12,6 +14,14 @@ export class WatchlistAccessService {
   private activeWatchlist = inject(ActiveWatchlistService);
   private supa = inject(SupaService);
   private router = inject(Router);
+  private readonly routerUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
+    { initialValue: this.router.url },
+  );
 
   resolvingPostLogin = signal(false);
   postLoginState = signal<PostLoginState>('watchlist');
@@ -20,18 +30,25 @@ export class WatchlistAccessService {
   creatingList = signal(false);
   postLoginError = signal<string | null>(null);
   private resolveRunId = 0;
+  private initialResolutionDoneForUserId: string | null = null;
 
   constructor() {
     effect(
       () => {
         const user = this.supa.user();
+        this.routerUrl();
+
         if (!user) {
           this.resolvingPostLogin.set(false);
           this.postLoginState.set('watchlist');
           this.availableLists.set([]);
           this.postLoginError.set(null);
+          this.initialResolutionDoneForUserId = null;
           return;
         }
+
+        const userId = user.id;
+        const isInitialResolutionForUser = this.initialResolutionDoneForUserId !== userId;
 
         const currentPath = this.getCurrentPath();
         const shouldResolvePostLogin =
@@ -45,7 +62,7 @@ export class WatchlistAccessService {
           return;
         }
 
-        this.resolvePostLoginNavigation();
+        this.resolvePostLoginNavigation({ autoOpenSingleWatchlist: isInitialResolutionForUser });
       },
       { allowSignalWrites: true }
     );
@@ -117,10 +134,13 @@ export class WatchlistAccessService {
     }
   }
 
-  private async resolvePostLoginNavigation() {
+  private async resolvePostLoginNavigation(options?: { autoOpenSingleWatchlist?: boolean }) {
+    const autoOpenSingleWatchlist = options?.autoOpenSingleWatchlist === true;
     const runId = ++this.resolveRunId;
     this.resolvingPostLogin.set(true);
     this.postLoginError.set(null);
+
+    const userId = this.supa.user()?.id ?? null;
 
     try {
       const userLists = await this.listService.getUserLists();
@@ -141,11 +161,17 @@ export class WatchlistAccessService {
       if (userLists.length === 1) {
         const singleListId = userLists[0].id;
         this.availableLists.set(userLists);
-        this.activeWatchlist.setActiveListId(singleListId);
-        // Auto-navigate from login or gateway; on a refresh at /watchlist/:id the page handles loading itself.
-        const currentPath = this.router.url.split('?')[0];
-        if (currentPath === '/login' || currentPath === '/watchlists') {
-          await this.router.navigate(['/watchlist', singleListId]);
+        if (autoOpenSingleWatchlist) {
+          this.activeWatchlist.setActiveListId(singleListId);
+          // Auto-navigate only right after auth/bootstrap; not on manual returns to /watchlists.
+          const currentPath = this.router.url.split('?')[0];
+          if (currentPath === '/login' || currentPath === '/watchlists') {
+            await this.router.navigate(['/watchlist', singleListId]);
+          }
+        } else {
+          this.activeWatchlist.clearActiveListId();
+          this.supa.items.set([]);
+          this.postLoginState.set('select');
         }
         return;
       }
@@ -167,6 +193,9 @@ export class WatchlistAccessService {
       this.postLoginState.set(this.availableLists().length > 0 ? 'select' : 'empty');
     } finally {
       if (runId === this.resolveRunId) {
+        if (userId) {
+          this.initialResolutionDoneForUserId = userId;
+        }
         this.resolvingPostLogin.set(false);
       }
     }

@@ -3,9 +3,12 @@
     <div
       *ngFor="let user of visibleUsers(); trackBy: trackByUserId"
       class="presence-strip__chip"
-      [title]="user.name + ' (' + statusLabel(user) + ')'"
+      [matTooltip]="userTooltip(user)"
+      matTooltipPosition="above"
+      matTooltipClass="synopsis-tooltip"
+      [matTooltipShowDelay]="120"
+      [attr.aria-label]="userTooltip(user)"
       role="listitem"
-      aria-hidden="true"
     >
       <img
         *ngIf="user.avatarUrl; else initialsBlock"
@@ -29,7 +32,10 @@
     <div
       *ngIf="hiddenCount() > 0"
       class="presence-strip__chip presence-strip__chip--summary"
-      [title]="hiddenUsersTooltip()"
+      [matTooltip]="hiddenUsersTooltip()"
+      matTooltipPosition="above"
+      matTooltipClass="synopsis-tooltip"
+      [matTooltipShowDelay]="120"
       [attr.aria-label]="hiddenCount() + ' autres utilisateurs connectes'"
       role="listitem"
     >

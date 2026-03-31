@@ -12,6 +12,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export type PresenceUser = {
   id: string;
@@ -23,7 +24,7 @@ export type PresenceUser = {
 @Component({
   selector: 'app-online-presence',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatTooltipModule],
   templateUrl: './online-presence.component.html',
   styleUrl: './online-presence.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +126,10 @@ export class OnlinePresenceComponent implements AfterViewInit {
 
   protected trackByUserId(_index: number, user: PresenceUser) {
     return user.id;
+  }
+
+  protected userTooltip(user: PresenceUser): string {
+    return `${user.name} (${this.statusLabel(user)})`;
   }
 
   protected initials(name: string) {
