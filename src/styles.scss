@@ -50,6 +50,15 @@
   --radius-lg: 14px;
   --radius-md: 10px;
 
+  /* cartes (cohérence globale) */
+  --card-padding: var(--space-lg);
+  --card-border-radius: var(--radius-xl);
+  --card-background: var(--surface);
+  --card-border: 1px solid color-mix(in oklab, var(--surface-2) 72%, var(--bg-end) 28%);
+  --card-box-shadow: var(--shadow);
+  --card-inner-box-shadow: 0 4px 12px rgba(40, 32, 70, 0.06);
+  --card-gap: var(--space-lg);
+
   /* tailles */
   --space: 12px;
   --space-lg: 16px;
@@ -114,6 +123,7 @@ html[data-theme="dark"] {
 
   --shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
   --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.35);
+  --card-inner-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
 
   --item-card-header-bg-opacity: 0.06;
 
@@ -152,10 +162,15 @@ a:hover {
 
 /* Cards */
 .card {
-  background: var(--surface);
-  padding: var(--space-lg);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
+  background: var(--card-background);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+  border: var(--card-border);
+}
+
+.card .card {
+  box-shadow: var(--card-inner-box-shadow);
 }
 
 /* Buttons */
@@ -254,32 +269,6 @@ select {
 .badge--dessin-anime {
   background: var(--tag-dessin-anime-bg);
   color: var(--tag-dessin-anime-fg);
-}
-
-/* Chips présence */
-.chips {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  margin-inline: 3px;
-  border-radius: 999px;
-  font-size: var(--fs-sm);
-  border: 1px solid transparent;
-}
-.chip--self {
-  color: var(--primary);
-  background: var(--surface-gradient);
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
-}
-.chip--other {
-  color: var(--secondary);
-  background: var(--surface-gradient-weak);
-  border-color: color-mix(in srgb, var(--secondary) 35%, transparent);
 }
 
 // scrollbar
@@ -383,8 +372,7 @@ select {
     padding-block: 10px;
   }
 
-  .badge,
-  .chip {
+  .badge {
     font-size: var(--fs-sm);
     padding: 7px 12px;
   }

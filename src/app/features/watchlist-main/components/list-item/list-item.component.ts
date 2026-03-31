@@ -92,8 +92,26 @@ export class ListItemComponent {
 
   isLoading = computed(() => this.supa.loading());
 
-  async toggle(it: any) {
-    await this.supa.toggleSeen(it);
+  // --- Confirm unsee (protect seen date from accidental removal)
+  confirmUnseeItem = signal<Item | null>(null);
+
+  async requestSeenToggle(item: Item) {
+    if (item.seen) {
+      this.confirmUnseeItem.set(item);
+      return;
+    }
+
+    await this.supa.toggleSeen(item);
+  }
+
+  cancelUnsee() {
+    this.confirmUnseeItem.set(null);
+  }
+
+  async executeUnsee() {
+    const item = this.confirmUnseeItem();
+    this.confirmUnseeItem.set(null);
+    if (item) await this.supa.toggleSeen(item);
   }
 
   // --- Confirm delete

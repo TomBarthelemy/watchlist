@@ -1,4 +1,5 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { ActiveWatchlistService } from '@app/core/services/active-watchlist.service';
 import { ListService, UserList } from './list.service';
 import { SupaService } from '@app/core/services/supa.service';
@@ -10,6 +11,7 @@ export class WatchlistAccessService {
   private listService = inject(ListService);
   private activeWatchlist = inject(ActiveWatchlistService);
   private supa = inject(SupaService);
+  private router = inject(Router);
 
   resolvingPostLogin = signal(false);
   postLoginState = signal<PostLoginState>('watchlist');
@@ -31,10 +33,35 @@ export class WatchlistAccessService {
           return;
         }
 
+        const currentPath = this.getCurrentPath();
+        const shouldResolvePostLogin =
+          currentPath === '/' ||
+          currentPath === '/login' ||
+          currentPath === '/watchlists';
+
+        // Keep current context routes stable (e.g. /watchlist/:id, /profile).
+        // Otherwise this resolver can clear active watchlist/items after a refresh.
+        if (!shouldResolvePostLogin) {
+          return;
+        }
+
         this.resolvePostLoginNavigation();
       },
       { allowSignalWrites: true }
     );
+  }
+
+  private getCurrentPath(): string {
+    const routerPath = this.router.url?.split('?')[0] ?? '';
+    const locationPath = globalThis.location?.pathname ?? '';
+
+    // On hard refresh the router can transiently report '/' before it hydrates
+    // the real deep-link URL. Prefer location pathname in that case.
+    if (routerPath === '/' && locationPath && locationPath !== '/') {
+      return locationPath;
+    }
+
+    return routerPath || locationPath || '/';
   }
 
   async selectWatchlist(listId: string) {
@@ -43,8 +70,7 @@ export class WatchlistAccessService {
 
     try {
       this.activeWatchlist.setActiveListId(listId);
-      await this.supa.loadItems();
-      this.postLoginState.set('watchlist');
+      await this.router.navigate(['/watchlist', listId]);
     } catch (error: any) {
       const message = this.formatErrorMessage(error);
       console.error('Watchlist selection failed:', error);
@@ -62,8 +88,7 @@ export class WatchlistAccessService {
       const createdList = await this.listService.createWatchlist(name);
       this.availableLists.update((lists) => [createdList, ...lists]);
       this.activeWatchlist.setActiveListId(createdList.id);
-      await this.supa.loadItems();
-      this.postLoginState.set('watchlist');
+      await this.router.navigate(['/watchlist', createdList.id]);
     } catch (error: any) {
       const message = this.formatErrorMessage(error);
       console.error('Watchlist creation failed:', error);
@@ -106,25 +131,21 @@ export class WatchlistAccessService {
         this.activeWatchlist.clearActiveListId();
         this.supa.items.set([]);
         this.postLoginState.set('empty');
+        // Navigate away from /login to the gateway so the empty state is shown
+        if (this.router.url.split('?')[0] === '/login') {
+          await this.router.navigate(['/watchlists']);
+        }
         return;
       }
 
       if (userLists.length === 1) {
-        const previousActiveListId = this.activeWatchlist.getActiveListId();
         const singleListId = userLists[0].id;
-
         this.availableLists.set(userLists);
         this.activeWatchlist.setActiveListId(singleListId);
-        this.postLoginState.set('watchlist');
-        try {
-          await this.supa.loadItems();
-        } catch (error) {
-          if (previousActiveListId && previousActiveListId !== singleListId) {
-            this.activeWatchlist.setActiveListId(previousActiveListId);
-            await this.supa.loadItems();
-          } else {
-            throw error;
-          }
+        // Auto-navigate from login or gateway; on a refresh at /watchlist/:id the page handles loading itself.
+        const currentPath = this.router.url.split('?')[0];
+        if (currentPath === '/login' || currentPath === '/watchlists') {
+          await this.router.navigate(['/watchlist', singleListId]);
         }
         return;
       }
@@ -133,6 +154,10 @@ export class WatchlistAccessService {
       this.activeWatchlist.clearActiveListId();
       this.supa.items.set([]);
       this.postLoginState.set('select');
+      // Navigate away from /login to the gateway so the list is shown
+      if (this.router.url.split('?')[0] === '/login') {
+        await this.router.navigate(['/watchlists']);
+      }
     } catch (error: any) {
       const message = this.formatErrorMessage(error);
       console.error('Post-login navigation failed:', error);

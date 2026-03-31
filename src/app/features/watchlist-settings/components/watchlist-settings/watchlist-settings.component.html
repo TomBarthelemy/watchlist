@@ -1,4 +1,4 @@
-<section class="watchlist-settings">
+<section class="watchlist-settings card">
   <header class="watchlist-settings__header">
     <div class="watchlist-settings__title-row">
       <button class="watchlist-settings__back" type="button" (click)="goBack()" aria-label="Retour">
@@ -68,7 +68,7 @@
   <app-confirm-dialog
     [open]="deleteDialogOpen()"
     title="Supprimer cette watchlist ?"
-    message="Cette action est irreversible et supprimera les donnees associees."
+    [message]="deleteDialogMessage()"
     confirmLabel="Supprimer"
     cancelLabel="Annuler"
     (cancelled)="cancelDeleteDialog()"

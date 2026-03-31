@@ -3,8 +3,9 @@
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 12px;
 }
 
 .auth-box {
@@ -15,7 +16,7 @@
 @media (min-width: 769px) {
   .auth-box {
     width: min(400px, 100%);
-    transform: translateY(calc(-1 * var(--home-auth-lift, 28px)));
+    transform: translateY(0);
   }
 }
 

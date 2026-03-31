@@ -1,0 +1,39 @@
+<div class="presence-strip" *ngIf="others().length" [attr.aria-label]="ariaLabel()" aria-live="polite">
+  <div class="presence-strip__list" role="list">
+    <div
+      *ngFor="let user of visibleUsers(); trackBy: trackByUserId"
+      class="presence-strip__chip"
+      [title]="user.name + ' (' + statusLabel(user) + ')'"
+      role="listitem"
+      aria-hidden="true"
+    >
+      <img
+        *ngIf="user.avatarUrl; else initialsBlock"
+        class="presence-strip__avatar-img"
+        [src]="avatarSrc(user.avatarUrl)"
+        [alt]="user.name"
+        width="30"
+        height="30"
+        decoding="async"
+      />
+      <ng-template #initialsBlock>
+        <span
+          class="presence-strip__avatar-initials"
+          [style.background]="avatarBg(user.name)"
+          [style.color]="avatarFg(user.name)"
+        >{{ initials(user.name) }}</span>
+      </ng-template>
+      <span class="presence-strip__status-dot" [class.is-online]="user.isOnline" aria-hidden="true"></span>
+    </div>
+
+    <div
+      *ngIf="hiddenCount() > 0"
+      class="presence-strip__chip presence-strip__chip--summary"
+      [title]="hiddenUsersTooltip()"
+      [attr.aria-label]="hiddenCount() + ' autres utilisateurs connectes'"
+      role="listitem"
+    >
+      +{{ hiddenCount() }}
+    </div>
+  </div>
+</div>

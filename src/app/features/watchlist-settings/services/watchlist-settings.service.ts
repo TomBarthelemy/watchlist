@@ -58,7 +58,7 @@ export class WatchlistSettingsService {
     };
   }
 
-  async renameWatchlist(watchlistId: string, name: string): Promise<void> {
+  async renameWatchlist(watchlistId: string, name: string): Promise<string> {
     const trimmedName = name.trim();
     if (trimmedName.length < 2 || trimmedName.length > 60) {
       throw new Error('Le nom doit contenir entre 2 et 60 caracteres');
@@ -72,6 +72,21 @@ export class WatchlistSettingsService {
     if (error) {
       throw new Error(error.message || 'Impossible de renommer la watchlist');
     }
+
+    // Re-fetch the confirmed name (avoids RETURNING clause RLS issues)
+    const { data, error: fetchError } = await this.supaService.supa
+      .from('lists')
+      .select('name')
+      .eq('id', watchlistId)
+      .maybeSingle();
+
+    if (fetchError) {
+      throw new Error(fetchError.message);
+    }
+    if (!data) {
+      throw new Error('Mise à jour non appliquée (droits insuffisants ?)');
+    }
+    return data.name;
   }
 
   async deleteWatchlist(watchlistId: string): Promise<void> {

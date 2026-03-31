@@ -1,14 +1,4 @@
 ﻿<div class="watchlist">
-
-  <ng-container *ngIf="currentListId() as listId">
-    <!-- Desktop nav (masqué sur mobile) -->
-    <nav class="watchlist-nav watchlist-nav--desktop" aria-label="Navigation watchlist">
-      <button class="btn btn--ghost" type="button" (click)="goToWatchlists()">Mes watchlists</button>
-      <a class="btn btn--ghost" [routerLink]="['/watchlist', listId, 'members']" [queryParams]="{ from: 'watchlist' }">Membres</a>
-      <a class="btn btn--ghost" [routerLink]="['/watchlist', listId, 'settings']" [queryParams]="{ from: 'watchlist' }">Paramètres</a>
-    </nav>
-  </ng-container>
-
   <app-search-form></app-search-form>
 
   <div class="section-sep" role="separator" aria-hidden="true"></div>

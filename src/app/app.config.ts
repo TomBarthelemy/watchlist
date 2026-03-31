@@ -15,6 +15,7 @@ export interface AppConfig {
   listId: string;
   redirectUrl: string;
   tmdbApiKey: string;
+  avatarBucket?: string;
 }
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');

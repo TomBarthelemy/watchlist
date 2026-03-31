@@ -122,7 +122,8 @@ Exemple:
 	"supaAnon": "YOUR_SUPABASE_ANON_KEY",
 	"listId": "optional-default-list-id",
 	"redirectUrl": "http://localhost:4200",
-	"tmdbApiKey": "YOUR_TMDB_API_KEY"
+	"tmdbApiKey": "YOUR_TMDB_API_KEY",
+	"avatarBucket": "avatars"
 }
 ```
 

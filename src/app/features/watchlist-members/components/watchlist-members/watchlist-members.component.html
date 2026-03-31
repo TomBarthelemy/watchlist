@@ -1,4 +1,4 @@
-<section class="watchlist-members">
+<section class="watchlist-members card">
   <header class="watchlist-members__header">
     <div class="watchlist-members__title-row">
       <button class="watchlist-members__back" type="button" (click)="goBack()" aria-label="Retour">
@@ -33,7 +33,18 @@
     <ul class="watchlist-members__list">
       <li class="watchlist-members__item" *ngFor="let member of members()">
         <div class="watchlist-members__avatar" aria-hidden="true">
-          {{ member.user_name.charAt(0).toUpperCase() }}
+          <img
+            *ngIf="member.user_avatar_url; else initialsAvatar"
+            class="watchlist-members__avatar-img"
+            [src]="avatarSrc(member.user_avatar_url)"
+            [alt]="member.user_name"
+            width="38"
+            height="38"
+            decoding="async"
+          />
+          <ng-template #initialsAvatar>
+            {{ initials(member.user_name) }}
+          </ng-template>
         </div>
         <div class="watchlist-members__info">
           <span class="watchlist-members__name">{{ member.user_name }}</span>

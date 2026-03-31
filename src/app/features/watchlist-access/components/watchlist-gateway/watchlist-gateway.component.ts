@@ -1,11 +1,11 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { WatchlistComponent } from '@app/features/watchlist-main/components/watchlist/watchlist.component';
 import { WatchlistAccessService } from '@app/features/watchlist-access/services/watchlist-access.service';
 import { SupaService } from '@app/core/services/supa.service';
 import { UserList } from '@app/features/watchlist-access/services/list.service';
+import { WatchlistProgress, WatchlistStatsService } from '@app/features/watchlist-access/services/watchlist-stats.service';
 
 /**
  * WatchlistGatewayComponent
@@ -25,15 +25,18 @@ import { UserList } from '@app/features/watchlist-access/services/list.service';
 @Component({
   selector: 'app-watchlist-gateway',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, WatchlistComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './watchlist-gateway.component.html',
   styleUrls: ['./watchlist-gateway.component.scss'],
 })
 export class WatchlistGatewayComponent {
   private fb = inject(FormBuilder);
+  private statsService = inject(WatchlistStatsService);
+  private progressLoadRequestId = 0;
 
   readonly access: WatchlistAccessService = inject(WatchlistAccessService);
   readonly supa: SupaService = inject(SupaService);
+  readonly progressByListId = signal<Record<string, WatchlistProgress>>({});
 
   createWatchlistForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(60)]],
@@ -49,6 +52,34 @@ export class WatchlistGatewayComponent {
         control.enable({ emitEvent: false });
       }
     });
+
+    effect(() => {
+      const lists = this.access.availableLists();
+      const userId = this.supa.user()?.id;
+
+      if (!userId || lists.length === 0) {
+        this.progressByListId.set({});
+        return;
+      }
+
+      const requestId = ++this.progressLoadRequestId;
+      const listIds = lists.map((list) => list.id);
+
+      void this.statsService.getProgressByListIds(listIds)
+        .then((progressMap) => {
+          if (this.progressLoadRequestId !== requestId) return;
+          this.progressByListId.set(progressMap);
+        })
+        .catch(() => {
+          if (this.progressLoadRequestId !== requestId) return;
+          this.progressByListId.set({});
+        });
+    }, { allowSignalWrites: true });
+  }
+
+  getProgressLabel(listId: string): string {
+    const progress = this.progressByListId()[listId] ?? { seen: 0, total: 0 };
+    return `${progress.seen}/${progress.total} vus`;
   }
 
   /**

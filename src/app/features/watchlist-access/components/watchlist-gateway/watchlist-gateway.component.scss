@@ -4,13 +4,15 @@
   min-height: 0;
   min-width: 0;
   width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 12px;
 }
 
 .watchlist-gateway {
   display: grid;
   gap: 16px;
   width: min(760px, 100%);
-  margin: auto;
 }
 
 .watchlist-gateway__header {
@@ -89,11 +91,35 @@
 }
 
 .watchlist-gateway__item-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
   font-size: 16px;
   font-weight: 600;
+}
+
+.watchlist-gateway__item-main {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.watchlist-gateway__item-progress {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  background: color-mix(in oklab, var(--surface-2) 72%, var(--primary-weak) 28%);
+  border: 1px solid color-mix(in oklab, var(--primary) 26%, transparent 74%);
 }
 
 .watchlist-gateway__item-actions {
@@ -222,6 +248,15 @@
 
   .watchlist-gateway__item-title {
     font-size: 15px;
+  }
+
+  .watchlist-gateway__item-main {
+    gap: 6px;
+  }
+
+  .watchlist-gateway__item-progress {
+    font-size: 11px;
+    padding: 2px 7px;
   }
 
   .watchlist-gateway__item-actions {

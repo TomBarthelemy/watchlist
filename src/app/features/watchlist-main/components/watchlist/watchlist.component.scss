@@ -8,7 +8,7 @@
 .watchlist {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 14px;
   flex: 1 1 auto;
   min-height: 0;
   min-width: 0;
@@ -23,20 +23,10 @@
   }
 }
 
-.watchlist-nav {
-  display: flex;
-  align-items: center;
-}
-
-// Desktop nav
-.watchlist-nav--desktop {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-
-  .btn { text-decoration: none; }
-
-  @media (max-width: 640px) { display: none; }
+@media (max-width: 540px) {
+  .watchlist {
+    gap: 12px;
+  }
 }
 
 .section-sep { display: none; }

@@ -32,13 +32,19 @@ export class SupaService {
       .getUser()
       .then(({ data }) => this.user.set(data.user ?? null));
 
-    this.supa.auth.onAuthStateChange((_e, s) => {
+    this.supa.auth.onAuthStateChange((event, s) => {
       this.zone.run(() => {
         const u = s?.user ?? null;
-        this.user.set(u);
         if (u) {
+          this.user.set(u);
           this.startPresence();
-        } else {
+          return;
+        }
+
+        // Ignore transient null sessions (can happen on refresh/lock contention).
+        // Only clear app state on explicit sign-out-like events.
+        if (event === 'SIGNED_OUT') {
+          this.user.set(null);
           this.stopPresence();
           this.zone.run(() => this.onlineUsers.set([]));
           this.items.set([]);
@@ -64,6 +70,21 @@ export class SupaService {
     this.zone.run(() => {
       this.onlineUsers.set([]);
       this.items.set([]);
+    });
+  }
+
+  refreshSessionUserMetadata(data: Record<string, unknown>) {
+    const current = this.user();
+    if (!current) return;
+
+    this.zone.run(() => {
+      this.user.set({
+        ...current,
+        user_metadata: {
+          ...(current.user_metadata ?? {}),
+          ...data,
+        },
+      });
     });
   }
 
@@ -196,6 +217,7 @@ export class SupaService {
     if (!me) return;
 
     const name: string = me.user_metadata?.display_name;
+    const avatar_url: string | null = me.user_metadata?.avatar_url ?? null;
 
     // (re)create channel
     this.presenceCh?.unsubscribe();
@@ -213,6 +235,7 @@ export class SupaService {
             id,
             name: payload.name ?? 'User',
             isSelf: id === me.id,
+            avatarUrl: payload.avatar_url ?? null,
           };
         })
         // self d'abord
@@ -230,7 +253,7 @@ export class SupaService {
     // join + publish my presence
     this.presenceCh.subscribe((status) => {
       if (status === 'SUBSCRIBED') {
-        this.presenceCh!.track({ name });
+        this.presenceCh!.track({ name, avatar_url });
       }
     });
   }
@@ -239,6 +262,19 @@ export class SupaService {
     this.presenceCh?.unsubscribe();
     this.presenceCh = undefined;
     this.zone.run(() => this.onlineUsers.set([]));
+  }
+
+  async refreshPresenceIdentity(name?: string | null) {
+    if (!this.presenceCh) return;
+
+    const current = this.user();
+    const presenceName = name ?? current?.user_metadata?.display_name ?? current?.email?.split('@')[0] ?? 'User';
+    const avatar_url: string | null = current?.user_metadata?.avatar_url ?? null;
+
+    await this.presenceCh.track({
+      name: presenceName,
+      avatar_url,
+    });
   }
 
   private getRequiredActiveListId(): string {

@@ -17,14 +17,14 @@ export const membershipGuard: CanActivateFn = async (route: ActivatedRouteSnapsh
 
   if (!user) {
     console.warn('[membershipGuard] No authenticated user');
-    router.navigateByUrl('/');
+    router.navigateByUrl('/login');
     return false;
   }
 
   const listId = route.paramMap.get('id');
   if (!listId) {
     console.warn('[membershipGuard] No listId in route params');
-    router.navigateByUrl('/');
+    router.navigateByUrl('/watchlists');
     return false;
   }
 
@@ -45,16 +45,15 @@ export const membershipGuard: CanActivateFn = async (route: ActivatedRouteSnapsh
     }
 
     if (!data) {
-      // User is not a member of this watchlist
       console.warn('[membershipGuard] User is not a member of this watchlist', { listId, userId: user.id });
-      router.navigateByUrl('/');
+      router.navigateByUrl('/watchlists');
       return false;
     }
 
     return true;
   } catch (err) {
     console.error('[membershipGuard] Error checking membership:', err);
-    router.navigateByUrl('/');
+    router.navigateByUrl('/watchlists');
     return false;
   }
 };

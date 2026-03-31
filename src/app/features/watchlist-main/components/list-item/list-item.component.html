@@ -22,16 +22,7 @@
 
   <div *ngIf="isLoading() && sorted().length === 0" class="loading">Chargement...</div>
 
-  <div class="tiny-screen-hint" role="status" aria-live="polite">
-    Mini ecran detecte: mode ultra compact active. Pour plus de confort, agrandis la fenetre.
-  </div>
-
   <div class="list-scroll">
-    <div class="seen-hud" aria-label="Statistiques de visionnage">
-      <span class="seen-hud-value">{{ seenCount() }} / {{ totalCount() }}</span>
-      <span class="seen-hud-label">vus</span>
-    </div>
-
     <ul class="list">
       <li
         *ngFor="let item of sorted()"
@@ -56,7 +47,7 @@
               <button
                 class="poster-ctrl-btn poster-ctrl-btn--seen"
                 [class.poster-ctrl-btn--active]="item.seen"
-                (click)="toggle(item); $event.stopPropagation()"
+                (click)="requestSeenToggle(item); $event.stopPropagation()"
                 [attr.aria-label]="item.seen ? 'Marquer comme non vu' : 'Marquer comme vu'"
               >
                 <span class="poster-ctrl-icon--seen" aria-hidden="true">✓</span>
@@ -116,6 +107,10 @@
               <span
                 class="genre-pill"
                 *ngFor="let genre of getVisibleGenres(item.genre)"
+                [matTooltip]="genre"
+                matTooltipPosition="above"
+                matTooltipClass="synopsis-tooltip"
+                [matTooltipShowDelay]="120"
               >
                 {{ genre }}
               </span>
@@ -149,7 +144,7 @@
               class="item-card-toggle"
               [checked]="item.seen"
               (click)="$event.stopPropagation()"
-              (change)="toggle(item)"
+              (change)="requestSeenToggle(item)"
               color="secondary"
             >
               <span>Vu ?</span>
@@ -183,5 +178,15 @@
     cancelLabel="Annuler"
     (cancelled)="cancelDelete()"
     (confirmed)="executeDelete()"
+  ></app-confirm-dialog>
+
+  <app-confirm-dialog
+    [open]="!!confirmUnseeItem()"
+    [title]="'Marquer « ' + (confirmUnseeItem()?.title ?? '') + ' » comme non vu ?'"
+    message="Voulez-vous supprimer la date de visionnage ?"
+    confirmLabel="Confirmer"
+    cancelLabel="Annuler"
+    (cancelled)="cancelUnsee()"
+    (confirmed)="executeUnsee()"
   ></app-confirm-dialog>
 </div>

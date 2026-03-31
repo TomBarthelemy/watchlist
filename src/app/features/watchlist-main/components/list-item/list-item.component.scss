@@ -15,6 +15,7 @@
   min-width: 0;
 }
 
+.filter,
 .sort {
   min-width: 170px;
 }
@@ -30,11 +31,7 @@
 }
 
 .seen-hud {
-  position: sticky;
-  top: 0;
-  z-index: 6;
   margin-left: auto;
-  margin-bottom: 8px;
   width: fit-content;
   display: inline-flex;
   align-items: center;
@@ -45,8 +42,6 @@
   background: color-mix(in oklab, var(--surface-2) 78%, var(--primary-weak) 22%);
   color: var(--text);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 
 .seen-hud-value {
@@ -434,18 +429,6 @@
 
 .loading {
   opacity: 0.7;
-}
-
-.tiny-screen-hint {
-  display: none;
-  font-size: 0.76rem;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--text);
-  padding: 8px 10px;
-  border-radius: var(--radius-md);
-  border: 1px solid color-mix(in oklab, var(--primary) 28%, transparent 72%);
-  background: color-mix(in oklab, var(--surface-2) 72%, var(--primary-weak) 28%);
 }
 
 .poster-overlay-controls {
@@ -857,7 +840,7 @@
   /* ---- Toolbar ---- */
   .toolbar {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     gap: 6px;
     align-items: center;
   }
@@ -865,14 +848,15 @@
   .toolbar .filter,
   .toolbar .sort {
     min-width: 0;
-    height: 40px;
+    height: 38px;
   }
 
   .seen-hud {
-    top: 0;
-    margin-bottom: 6px;
+    margin-left: 0;
     padding: 3px 7px;
     gap: 4px;
+    justify-self: end;
+    align-self: center;
   }
 
   .seen-hud-value {
@@ -1206,10 +1190,6 @@
 }
 
 @media (max-width: 329px) {
-  .tiny-screen-hint {
-    display: block;
-  }
-
   .toolbar {
     grid-template-columns: 1fr;
     gap: 6px;

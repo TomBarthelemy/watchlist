@@ -5,6 +5,7 @@ export interface WatchlistMember {
   user_id: string;
   user_name: string;
   user_email: string;
+  user_avatar_url: string | null;
   role: string;
 }
 
@@ -21,7 +22,8 @@ export class WatchlistMembersService {
         role,
         users!inner (
           username,
-          email
+          email,
+          avatar_url
         )
       `)
       .eq('list_id', watchlistId)
@@ -36,6 +38,7 @@ export class WatchlistMembersService {
           user_id: m.user_id,
           user_name: userInfo?.username || 'Unknown User',
           user_email: userInfo?.email || '',
+          user_avatar_url: userInfo?.avatar_url || null,
           role: m.role,
         };
       }) || []
@@ -51,7 +54,8 @@ export class WatchlistMembersService {
         role,
         users!inner (
           username,
-          email
+          email,
+          avatar_url
         )
       `)
       .eq('list_id', watchlistId)
@@ -69,6 +73,7 @@ export class WatchlistMembersService {
       user_id: data.user_id,
       user_name: userInfo?.username || 'Unknown User',
       user_email: userInfo?.email || '',
+      user_avatar_url: userInfo?.avatar_url || null,
       role: data.role,
     };
   }

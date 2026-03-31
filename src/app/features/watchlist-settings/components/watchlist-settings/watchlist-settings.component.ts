@@ -102,9 +102,9 @@ export class WatchlistSettingsComponent implements OnInit {
 
     try {
       const name = this.form.controls.name.getRawValue();
-      await this.settingsService.renameWatchlist(listId, name);
+      const confirmedName = await this.settingsService.renameWatchlist(listId, name);
+      this.form.patchValue({ name: confirmedName }, { emitEvent: false });
       this.success.set('Nom de la watchlist mis a jour.');
-      await this.loadSettings(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erreur de mise a jour';
       this.error.set(message);
@@ -120,6 +120,12 @@ export class WatchlistSettingsComponent implements OnInit {
 
   cancelDeleteDialog() {
     this.deleteDialogOpen.set(false);
+  }
+
+  protected deleteDialogMessage(): string {
+    const rawName = this.form.controls.name.getRawValue().trim();
+    const name = rawName || 'cette watchlist';
+    return `Cette action est irreversible et supprimera definitivement \"${name}\" ainsi que toutes les donnees associees.`;
   }
 
   async confirmDeleteWatchlist() {

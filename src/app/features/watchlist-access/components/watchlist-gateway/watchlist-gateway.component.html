@@ -52,7 +52,10 @@
             (keydown.enter)="selectWatchlist(list.id)"
             (keydown.space)="onItemSpace($event, list.id)"
           >
-            <span class="watchlist-gateway__item-title">{{ list.name }}</span>
+            <div class="watchlist-gateway__item-main">
+              <span class="watchlist-gateway__item-title">{{ list.name }}</span>
+              <span class="watchlist-gateway__item-progress">{{ getProgressLabel(list.id) }}</span>
+            </div>
             <div class="watchlist-gateway__item-actions" role="group" aria-label="Actions de watchlist">
               <a
                 class="watchlist-gateway__item-action"
@@ -96,7 +99,7 @@
           <input
             type="text"
             formControlName="name"
-            placeholder="Ex. Watchlist Tom & Roo"
+            placeholder="Ex. Soirée cinéma"
             maxlength="60"
             class="watchlist-gateway__input"
           />
@@ -128,6 +131,6 @@
     </section>
   </ng-template>
 
-  <!-- Display main watchlist view or gateway depending on state -->
-  <app-watchlist *ngIf="access.postLoginState() === 'watchlist'; else watchlistGate" />
+  <!-- Always show the watchlist gate (select / create); navigation handles the rest -->
+  <ng-container *ngTemplateOutlet="watchlistGate"></ng-container>
 </ng-template>

@@ -3,5 +3,6 @@
   "supaAnon": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwcnNjY3lwcmVnaHp3YXFib25kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE0OTA1ODQsImV4cCI6MjA3NzA2NjU4NH0.GjZvY9lyDbVoaSt8K5xDWsqbUQOWrU3yq28dTSmwVyc",
   "listId": "ba1af54b-8a98-49a1-9b4a-e3783006081f",
   "redirectUrl": "https://tombarthelemy.github.io/watchlist",
-  "tmdbApiKey": "da827ccb81c2dc7afc43dad8f4db16ed"
+  "tmdbApiKey": "da827ccb81c2dc7afc43dad8f4db16ed",
+  "avatarBucket": "avatars"
 }

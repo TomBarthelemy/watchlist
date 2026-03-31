@@ -1,0 +1,65 @@
+<section class="profile-editor card">
+  <header class="profile-editor__header">
+    <div class="profile-editor__title-row">
+      <button class="profile-editor__back" type="button" (click)="goBack()" aria-label="Retour">
+        <span class="profile-editor__back-icon" aria-hidden="true"></span>
+      </button>
+      <h2 class="profile-editor__title">Mon profil</h2>
+    </div>
+    <p class="profile-editor__subtitle">Modifie ton pseudo et ta photo pour personnaliser ton compte.</p>
+  </header>
+
+  <ng-container *ngIf="loading(); else profileContent">
+    <p class="profile-editor__placeholder">Chargement du profil...</p>
+  </ng-container>
+
+  <ng-template #profileContent>
+    <div class="profile-editor__content">
+      <p *ngIf="error()" class="profile-editor__feedback profile-editor__feedback--error">{{ error() }}</p>
+      <p *ngIf="warning()" class="profile-editor__feedback profile-editor__feedback--warning">{{ warning() }}</p>
+      <p *ngIf="success()" class="profile-editor__feedback profile-editor__feedback--success">{{ success() }}</p>
+
+      <div class="profile-editor__hero card">
+        <div class="profile-editor__avatar-shell">
+          <img *ngIf="currentAvatarUrl(); else avatarFallback" class="profile-editor__avatar-image" [src]="currentAvatarUrl()!" alt="Photo de profil" />
+          <ng-template #avatarFallback>
+            <div class="profile-editor__avatar-fallback" aria-hidden="true">{{ initials() }}</div>
+          </ng-template>
+        </div>
+
+        <div class="profile-editor__hero-copy">
+          <p class="profile-editor__hero-label">Photo de profil</p>
+          <p class="profile-editor__hero-help">PNG, JPG ou WEBP, jusqu a 3 Mo.</p>
+          <div class="profile-editor__hero-actions">
+            <label class="btn btn--secondary profile-editor__file-button">
+              <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onAvatarSelected($event)" />
+              Choisir une image
+            </label>
+            <button class="btn btn--ghost" type="button" (click)="clearSelectedAvatar()" [disabled]="!selectedFile() && !previewUrl()">
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <form class="profile-editor__form card" [formGroup]="form" (ngSubmit)="save()">
+        <label class="profile-editor__field">
+          <span class="profile-editor__label">Pseudo</span>
+          <input type="text" formControlName="username" maxlength="40" placeholder="Ex. Camille" />
+        </label>
+
+        <p class="profile-editor__helper">Ce pseudo sera visible dans la presence en ligne et les espaces collaboratifs.</p>
+
+        <p class="profile-editor__validation" *ngIf="form.controls.username.invalid && (form.controls.username.touched || form.controls.username.dirty)">
+          Le pseudo doit contenir entre 2 et 40 caracteres.
+        </p>
+
+        <div class="profile-editor__actions">
+          <button class="btn btn--primary" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</section>

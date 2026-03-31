@@ -97,6 +97,30 @@ export class WatchlistMembersComponent implements OnInit {
     return roleLabels[role] || role;
   }
 
+  protected initials(name: string): string {
+    return name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? '')
+      .join('') || '?';
+  }
+
+  protected avatarSrc(url: string | null): string | null {
+    if (!url) return null;
+
+    let next = url;
+    next = next.replace(/=s\d+-c(?:-k)?$/i, '=s160-c');
+    next = next.replace(/([?&](?:s|sz|size)=)\d+/gi, '$1160');
+
+    if (/gravatar\.com/i.test(next) && !/[?&](?:s|sz|size)=\d+/i.test(next)) {
+      next += (next.includes('?') ? '&' : '?') + 's=160';
+    }
+
+    return next;
+  }
+
   /**
    * Check if current user can remove a member
    */
