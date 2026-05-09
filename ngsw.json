@@ -1,0 +1,131 @@
+{
+  "configVersion": 1,
+  "timestamp": 1778366753475,
+  "index": "/watchlist/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/watchlist/chunk-NPJLHOA5.js",
+        "/watchlist/chunk-ODN5LVDJ.js",
+        "/watchlist/chunk-V5AAUPTP.js",
+        "/watchlist/chunk-VWE2VTL6.js",
+        "/watchlist/chunk-X5YLR3NI.js",
+        "/watchlist/favicon.ico",
+        "/watchlist/index.html",
+        "/watchlist/main-S7AADXMU.js",
+        "/watchlist/manifest.webmanifest",
+        "/watchlist/polyfills-FFHMD2TL.js",
+        "/watchlist/styles-BBCODSUK.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/watchlist/assets/icons/add.svg",
+        "/watchlist/assets/icons/arrow-left.svg",
+        "/watchlist/assets/icons/check.svg",
+        "/watchlist/assets/icons/chevron-down.svg",
+        "/watchlist/assets/icons/logout.svg",
+        "/watchlist/assets/icons/moon.svg",
+        "/watchlist/assets/icons/popcorn-back.svg",
+        "/watchlist/assets/icons/popcorn-front.svg",
+        "/watchlist/assets/icons/popcorn-icon.svg",
+        "/watchlist/assets/icons/popcorn.svg",
+        "/watchlist/assets/icons/poster-placeholder.svg",
+        "/watchlist/assets/icons/profile.svg",
+        "/watchlist/assets/icons/settings.svg",
+        "/watchlist/assets/icons/sun.svg",
+        "/watchlist/assets/icons/trash.svg",
+        "/watchlist/assets/icons/users.svg",
+        "/watchlist/assets/icons/watchlists.svg",
+        "/watchlist/assets/icons/youtube.svg",
+        "/watchlist/favicon-32.png",
+        "/watchlist/icons/apple-touch-icon.png",
+        "/watchlist/icons/icon-128x128.png",
+        "/watchlist/icons/icon-144x144.png",
+        "/watchlist/icons/icon-152x152.png",
+        "/watchlist/icons/icon-192x192.png",
+        "/watchlist/icons/icon-384x384.png",
+        "/watchlist/icons/icon-512x512.png",
+        "/watchlist/icons/icon-72x72.png",
+        "/watchlist/icons/icon-96x96.png",
+        "/watchlist/media/popcorn-RSYGPGUZ.svg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/watchlist/assets/icons/add.svg": "c14fe7b6f52effe002fc77bda87a4a5b7e4b2e86",
+    "/watchlist/assets/icons/arrow-left.svg": "2118634afa90f8e527a6503849d606c0e0f5efa9",
+    "/watchlist/assets/icons/check.svg": "c39c2c248aaa6d4159c52e9d7ddaedc6596d61ec",
+    "/watchlist/assets/icons/chevron-down.svg": "77190cda2702a58ca9c382c1d3fa0292ee287c22",
+    "/watchlist/assets/icons/logout.svg": "9557d9477a8d2b02e16a1701756cf24aa60c3005",
+    "/watchlist/assets/icons/moon.svg": "123b1d25db58b696bba4b0d57499b27764619c06",
+    "/watchlist/assets/icons/popcorn-back.svg": "2e8c5d97b1718f21d6d142fe0172ad673c8e99be",
+    "/watchlist/assets/icons/popcorn-front.svg": "06751d9ebfda6ce872772a0bb05892bac920a722",
+    "/watchlist/assets/icons/popcorn-icon.svg": "da5653649b36ee7ec2c6b5d2b6244e60594ebace",
+    "/watchlist/assets/icons/popcorn.svg": "85a1c420ffeee4ca221043d64ea91458f8ea4dde",
+    "/watchlist/assets/icons/poster-placeholder.svg": "7f4f9ee697430cb6654729cc67f4813f88564ee0",
+    "/watchlist/assets/icons/profile.svg": "81410862aaa23b78e683428ab6e7a5b396429919",
+    "/watchlist/assets/icons/settings.svg": "5437308b22be5fcaa2642b858845877013462b4b",
+    "/watchlist/assets/icons/sun.svg": "2b1b1f3131803b181d4c8bc94e55f62fab39029c",
+    "/watchlist/assets/icons/trash.svg": "e5aab494b651f8dc9631225a35abca206eced18e",
+    "/watchlist/assets/icons/users.svg": "00dbf9a5b5555e1111d5c768d34711dc4ad65095",
+    "/watchlist/assets/icons/watchlists.svg": "caed6e65f2ad5fd19a501e7617a8870b635d64de",
+    "/watchlist/assets/icons/youtube.svg": "3dfc2c1452d1c45ef5587f7dcd90e3c8d14f70db",
+    "/watchlist/chunk-NPJLHOA5.js": "e6cc472015493735250808a2cef022b775c0c716",
+    "/watchlist/chunk-ODN5LVDJ.js": "626a459409709868c6f2a3483b3f521d513887da",
+    "/watchlist/chunk-V5AAUPTP.js": "0246ecf9f9488df0234acda84240293661a7aeeb",
+    "/watchlist/chunk-VWE2VTL6.js": "1f196553c4591d257f9a778113a4d0dad173521a",
+    "/watchlist/chunk-X5YLR3NI.js": "57e1ca8dfddc6905958dc157e5f8bac6fb329f8f",
+    "/watchlist/favicon-32.png": "c87a44ee3a4b01e585fdd5a5f71517e331cfaaf6",
+    "/watchlist/favicon.ico": "2b00b37ec94fe76719d9101fc813f6e30e4fe6e3",
+    "/watchlist/icons/apple-touch-icon.png": "8733db1a8c09e2050877d24c65ce2d4c0a2c2ce0",
+    "/watchlist/icons/icon-128x128.png": "2b14d027591e01b967e76c2aa74b357509431ab5",
+    "/watchlist/icons/icon-144x144.png": "1aba1f53f20ff63185ec706ff53e618fe7bf2db0",
+    "/watchlist/icons/icon-152x152.png": "414a42d893f55006c0a20e240177887e3120618f",
+    "/watchlist/icons/icon-192x192.png": "24049cb713c0c99fc3d6a34b4cd9058defa64cd1",
+    "/watchlist/icons/icon-384x384.png": "d4c35110e6e97591ac4fa6924a411d36bb2c02d9",
+    "/watchlist/icons/icon-512x512.png": "9acc7ee5457223eb6e40efdfc7cbc54a23a77a57",
+    "/watchlist/icons/icon-72x72.png": "e37b5bb8132233220ac236f329954f4caa9feca1",
+    "/watchlist/icons/icon-96x96.png": "e41efc7e22007ee9dd7b79e7c9c9822449462ab8",
+    "/watchlist/index.html": "1cd8eecff6cf2f456c7c841b985666c6595f50fc",
+    "/watchlist/main-S7AADXMU.js": "d3f859687251fce412adaec2596c856105f09e34",
+    "/watchlist/manifest.webmanifest": "723905f19006b2fc55cb6644f5dd4872d3741abc",
+    "/watchlist/media/popcorn-RSYGPGUZ.svg": "85a1c420ffeee4ca221043d64ea91458f8ea4dde",
+    "/watchlist/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/watchlist/styles-BBCODSUK.css": "1107ccb34f96ba7d025673ca02908c89e9d037e2"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
