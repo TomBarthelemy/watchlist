@@ -11,6 +11,34 @@
     </p>
   </header>
 
+  <section class="watchlist-members__invite" *ngIf="canManageInvites()">
+    <div class="watchlist-members__invite-copy">
+      <h3>Ajouter quelqu’un</h3>
+      <p>
+        UX préparée pour les deux cas : sélection d’un ami existant ou invitation par email.
+      </p>
+    </div>
+
+    <div class="watchlist-members__invite-grid">
+      <app-friend-selector
+        [friends]="inviteableFriends()"
+        [label]="'Ajouter un ami à la playlist'"
+        [buttonLabel]="'Préparer l’invitation'"
+        (submitted)="inviteFriend($event)"
+      ></app-friend-selector>
+
+      <app-invitation-email-field
+        [label]="'Inviter une personne hors cercle d’amis'"
+        [buttonLabel]="'Préparer l’email'"
+        (submitted)="inviteEmail($event)"
+      ></app-invitation-email-field>
+    </div>
+
+    <p class="watchlist-members__invite-feedback" *ngIf="inviteFeedback()">
+      {{ inviteFeedback() }}
+    </p>
+  </section>
+
   <!-- Loading state -->
   <ng-container *ngIf="loading()">
     <div class="watchlist-members__skeleton">

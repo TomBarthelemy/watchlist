@@ -6,6 +6,12 @@
       <img class="brand-icon" src="assets/icons/popcorn-icon.svg" alt="Popcorn icon" />
     </button>
 
+    <nav class="header__nav" *ngIf="isAuthenticated() && !isOnLoginPage()" aria-label="Navigation principale">
+      <a class="header__nav-link" routerLink="/watchlists" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Watchlists</a>
+      <a class="header__nav-link" routerLink="/friends" routerLinkActive="is-active">Amis</a>
+      <a class="header__nav-link" routerLink="/invitations" routerLinkActive="is-active">Invitations</a>
+    </nav>
+
     <div class="header__actions" [class.header__actions--with-mobile-menu]="shouldShowHamburger()">
       <!-- Online user presence indicator -->
       <div class="presence" *ngIf="shouldShowPresence()">
@@ -86,6 +92,14 @@
         <button class="mobile-menu__link" type="button" (click)="goHome()">
           <span class="mobile-menu__icon mobile-menu__icon--watchlists" aria-hidden="true"></span>
           <span class="mobile-menu__text">Mes watchlists</span>
+        </button>
+        <button class="mobile-menu__link" type="button" (click)="goToFriends()">
+          <span class="mobile-menu__icon mobile-menu__icon--users" aria-hidden="true"></span>
+          <span class="mobile-menu__text">Amis</span>
+        </button>
+        <button class="mobile-menu__link" type="button" (click)="goToInvitations()">
+          <span class="mobile-menu__icon mobile-menu__icon--invite" aria-hidden="true"></span>
+          <span class="mobile-menu__text">Invitations</span>
         </button>
       </div>
 

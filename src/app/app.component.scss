@@ -183,6 +183,35 @@
   }
 }
 
+.header__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 14%, var(--surface-2) 86%);
+  background: color-mix(in oklab, var(--surface) 90%, var(--primary-weak) 10%);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  &.is-active {
+    color: var(--primary);
+    border-color: color-mix(in oklab, var(--primary) 34%, var(--surface-2) 66%);
+    background: color-mix(in oklab, var(--primary) 12%, var(--surface) 88%);
+  }
+}
+
 .header__menu-button {
   display: inline-flex;
   flex-direction: column;
@@ -387,6 +416,12 @@
   -webkit-mask: url('/assets/icons/profile.svg') center/contain no-repeat;
 }
 
+.mobile-menu__icon--invite {
+  background: currentColor;
+  mask: url('/assets/icons/add.svg') center/contain no-repeat;
+  -webkit-mask: url('/assets/icons/add.svg') center/contain no-repeat;
+}
+
 /* Profile avatar in drawer (photo or icon fallback) */
 .mobile-menu__profile-avatar {
   inline-size: 20px;
@@ -581,6 +616,10 @@
 
 /* Tablettes & mobiles (≤768px) — hamburger activé */
 @media (max-width: 768px) {
+  .header__nav {
+    display: none;
+  }
+
   .container {
     padding: 10px 12px 24px;
   }

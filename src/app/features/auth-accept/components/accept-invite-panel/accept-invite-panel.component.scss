@@ -1,0 +1,21 @@
+.accept-invite-panel {
+  width: min(100%, 560px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.accept-invite-panel h2,
+.accept-invite-panel p {
+  margin: 0;
+}
+
+.accept-invite-panel__hint {
+  color: var(--muted);
+}
+
+.accept-invite-panel__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}

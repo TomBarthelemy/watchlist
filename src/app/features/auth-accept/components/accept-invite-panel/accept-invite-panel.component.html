@@ -1,0 +1,21 @@
+<section class="accept-invite-panel card">
+  <ng-container *ngIf="preview; else noToken">
+    <h2>Invitation à rejoindre une watchlist</h2>
+    <p>
+      <strong>{{ preview.inviterName }}</strong> t’invite sur <strong>{{ preview.listName }}</strong>
+      avec le rôle <strong>{{ preview.role }}</strong>.
+    </p>
+    <p class="accept-invite-panel__hint">
+      Écran de destination figé pour brancher ensuite l’auth, la création de compte et l’acceptation finale.
+    </p>
+    <div class="accept-invite-panel__actions">
+      <a class="btn btn--primary" routerLink="/login">Se connecter</a>
+      <a class="btn btn--ghost" routerLink="/auth/reset-password">Mot de passe oublié</a>
+    </div>
+  </ng-container>
+
+  <ng-template #noToken>
+    <h2>Lien d’invitation incomplet</h2>
+    <p>Le token n’est pas présent dans l’URL. Cet écran est prêt pour la suite du flux.</p>
+  </ng-template>
+</section>

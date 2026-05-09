@@ -65,6 +65,44 @@
   margin: 0;
 }
 
+.watchlist-members__invite {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--surface) 88%, var(--surface-2) 12%);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 72%, var(--bg-end) 28%);
+}
+
+.watchlist-members__invite-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h3,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+}
+
+.watchlist-members__invite-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.watchlist-members__invite-feedback {
+  margin: 0;
+  color: var(--primary);
+  font-size: var(--fs-sm);
+}
+
 // Skeleton loading
 .watchlist-members__skeleton {
   display: flex;
@@ -189,7 +227,7 @@
     color: var(--primary);
   }
 
-  &.role--member {
+  &.role--editor {
     background: color-mix(in oklab, var(--surface-2) 90%, var(--bg-end) 10%);
     color: var(--muted);
   }
@@ -211,6 +249,10 @@
   .watchlist-members__item {
     gap: 10px;
     padding: 10px 12px;
+  }
+
+  .watchlist-members__invite-grid {
+    grid-template-columns: 1fr;
   }
 
   .watchlist-members__header {

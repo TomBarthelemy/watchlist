@@ -1,0 +1,21 @@
+.social-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  background: var(--surface-gradient-weak);
+}
+
+.social-empty-state__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.social-empty-state__message {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+}

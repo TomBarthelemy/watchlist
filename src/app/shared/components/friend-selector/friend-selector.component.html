@@ -1,0 +1,28 @@
+<div class="friend-selector">
+  <label class="friend-selector__label">{{ label() }}</label>
+
+  <div class="friend-selector__row">
+    <input
+      type="text"
+      class="friend-selector__input"
+      [value]="query()"
+      (input)="query.set(($any($event.target).value ?? '').toString())"
+      [attr.list]="datalistId"
+      [placeholder]="placeholder()"
+      autocomplete="off"
+    />
+
+    <button class="btn btn--primary" type="button" (click)="submit()">
+      {{ buttonLabel() }}
+    </button>
+  </div>
+
+  <datalist [id]="datalistId">
+    <option *ngFor="let friend of options()" [value]="optionLabel(friend)"></option>
+  </datalist>
+
+  <p class="friend-selector__hint" *ngIf="options().length">
+    Seuls les amis déjà validés apparaissent ici.
+  </p>
+  <p class="friend-selector__error" *ngIf="error()">{{ error() }}</p>
+</div>

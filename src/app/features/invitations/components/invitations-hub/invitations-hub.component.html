@@ -1,0 +1,50 @@
+<section class="invitations-hub card">
+  <header class="invitations-hub__header">
+    <div>
+      <h2 class="invitations-hub__title">Invitations</h2>
+      <p class="invitations-hub__subtitle">
+        Vue dédiée pour distinguer invitations reçues, envoyées et futurs états d’acceptation.
+      </p>
+    </div>
+  </header>
+
+  <div class="invitations-hub__columns">
+    <section class="invitations-hub__panel">
+      <h3>Reçues</h3>
+      <ng-container *ngIf="received().length; else noReceived">
+        <ul class="invitations-hub__list">
+          <li *ngFor="let invitation of received(); trackBy: trackByInvitation">
+            <strong>{{ invitation.listName }}</strong>
+            <span>de {{ invitation.inviterName }}</span>
+            <span>{{ formatDate(invitation.createdAt) }}</span>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #noReceived>
+        <app-social-empty-state
+          [title]="'Rien à traiter'"
+          [message]="'Les invitations entrantes apparaîtront ici avant l’écran d’acceptation final.'"
+        ></app-social-empty-state>
+      </ng-template>
+    </section>
+
+    <section class="invitations-hub__panel">
+      <h3>Envoyées</h3>
+      <ng-container *ngIf="sent().length; else noSent">
+        <ul class="invitations-hub__list">
+          <li *ngFor="let invitation of sent(); trackBy: trackByInvitation">
+            <strong>{{ invitation.listName }}</strong>
+            <span>vers {{ invitation.inviteeLabel }}</span>
+            <span>{{ invitation.status }}</span>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #noSent>
+        <app-social-empty-state
+          [title]="'Aucun envoi pour l’instant'"
+          [message]="'Cette colonne servira aussi de suivi pour les invitations email déjà parties.'"
+        ></app-social-empty-state>
+      </ng-template>
+    </section>
+  </div>
+</section>

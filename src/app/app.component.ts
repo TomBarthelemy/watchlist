@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { SupaService } from './core/services/supa.service';
 import { ThemeService } from './core/services/theme.service';
@@ -9,7 +9,7 @@ import { WatchlistAccessService } from './features/watchlist-access/services/wat
 import { ActiveWatchlistService } from './core/services/active-watchlist.service';
 import { OnlinePresenceComponent } from './shared/components/online-presence/online-presence.component';
 import { UserProfileService } from './core/services/user-profile.service';
-import { WatchlistMember, WatchlistMembersService } from './features/watchlist-members/services/watchlist-members.service';
+import { PlaylistMember, PlaylistMembersService } from './features/watchlist-members/services/playlist-members.service';
 
 type PresenceMember = {
   id: string;
@@ -37,7 +37,7 @@ type PresenceMember = {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, OnlinePresenceComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, OnlinePresenceComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
@@ -46,11 +46,11 @@ export class AppComponent {
   supa = inject(SupaService);
   activeWatchlist = inject(ActiveWatchlistService);
   profile = inject(UserProfileService);
-  private membersService = inject(WatchlistMembersService);
+  private membersService = inject(PlaylistMembersService);
   private router = inject(Router);
   private watchlistAccess = inject(WatchlistAccessService);
   private membersLoadRequestId = 0;
-  private readonly watchlistMembers = signal<WatchlistMember[]>([]);
+  private readonly watchlistMembers = signal<PlaylistMember[]>([]);
 
   currentListId = computed(() => this.activeWatchlist.activeListId());
   hasActiveWatchlist = computed(() => !!this.currentListId());
@@ -191,6 +191,16 @@ export class AppComponent {
   async goToProfile() {
     this.closeMobileMenu();
     await this.router.navigateByUrl('/profile');
+  }
+
+  async goToFriends() {
+    this.closeMobileMenu();
+    await this.router.navigateByUrl('/friends');
+  }
+
+  async goToInvitations() {
+    this.closeMobileMenu();
+    await this.router.navigateByUrl('/invitations');
   }
 }
 

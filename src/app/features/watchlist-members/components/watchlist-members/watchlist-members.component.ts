@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  WatchlistMember,
-  WatchlistMembersService,
-} from '../../services/watchlist-members.service';
+  PlaylistMember,
+  PlaylistMembersService,
+} from '../../services/playlist-members.service';
 import { WatchlistAccessService } from '@app/features/watchlist-access/services/watchlist-access.service';
+import { FriendSummary } from '@app/features/friends/services/friend.service';
+import { FriendSelectorComponent } from '@app/shared/components/friend-selector/friend-selector.component';
+import { InvitationEmailFieldComponent } from '@app/shared/components/invitation-email-field/invitation-email-field.component';
 
 /**
  * WatchlistMembersComponent
@@ -31,22 +34,25 @@ import { WatchlistAccessService } from '@app/features/watchlist-access/services/
 @Component({
   selector: 'app-watchlist-members',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FriendSelectorComponent, InvitationEmailFieldComponent],
   templateUrl: './watchlist-members.component.html',
   styleUrls: ['./watchlist-members.component.scss'],
 })
 export class WatchlistMembersComponent implements OnInit {
   watchlistId = input<string>('');
 
-  private membersService = inject(WatchlistMembersService);
+  private membersService = inject(PlaylistMembersService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private watchlistAccess = inject(WatchlistAccessService);
 
-  protected members = signal<WatchlistMember[]>([]);
+  protected members = signal<PlaylistMember[]>([]);
   protected loading = signal(false);
   protected error = signal<string | null>(null);
   protected currentUserRole = signal<string | null>(null);
+  protected canManageInvites = signal(false);
+  protected inviteableFriends = signal<FriendSummary[]>([]);
+  protected inviteFeedback = signal<string | null>(null);
   protected resolvedWatchlistId = signal('');
   protected returnTo = signal<'watchlist' | 'gateway'>('watchlist');
 
@@ -70,12 +76,16 @@ export class WatchlistMembersComponent implements OnInit {
       if (!listId) {
         throw new Error('Identifiant de watchlist manquant');
       }
-      const [membersList, userRole] = await Promise.all([
+      const [membersList, userRole, canManageInvites, inviteableFriends] = await Promise.all([
         this.membersService.getMembers(listId),
         this.membersService.getCurrentUserRole(listId),
+        this.membersService.canEditMembers(listId),
+        this.membersService.getInviteableFriends(listId),
       ]);
       this.members.set(membersList);
       this.currentUserRole.set(userRole);
+      this.canManageInvites.set(canManageInvites);
+      this.inviteableFriends.set(inviteableFriends);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load members';
       this.error.set(message);
@@ -92,7 +102,6 @@ export class WatchlistMembersComponent implements OnInit {
     const roleLabels: Record<string, string> = {
       owner: 'Propriétaire',
       editor: 'Éditeur',
-      viewer: 'Spectateur',
     };
     return roleLabels[role] || role;
   }
@@ -126,6 +135,22 @@ export class WatchlistMembersComponent implements OnInit {
    */
   canRemoveMember(_memberRole: string): boolean {
     return this.currentUserRole() === 'owner';
+  }
+
+  protected async inviteFriend(friendUserId: string): Promise<void> {
+    const listId = this.resolvedWatchlistId();
+    if (!listId) return;
+
+    await this.membersService.inviteFriendToPlaylist(listId, friendUserId);
+    this.inviteFeedback.set('Invitation ami prête : brancher ensuite la vraie Edge Function.');
+  }
+
+  protected async inviteEmail(email: string): Promise<void> {
+    const listId = this.resolvedWatchlistId();
+    if (!listId) return;
+
+    await this.membersService.inviteEmailToPlaylist(listId, email);
+    this.inviteFeedback.set('Invitation email prête : la vraie logique Supabase viendra ensuite.');
   }
 
   /**

@@ -1,0 +1,41 @@
+.invitation-email-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invitation-email-field__label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.invitation-email-field__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.invitation-email-field__input {
+  width: 100%;
+}
+
+.invitation-email-field__hint,
+.invitation-email-field__error {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.invitation-email-field__hint {
+  color: var(--muted);
+}
+
+.invitation-email-field__error {
+  color: var(--danger);
+}
+
+@media (max-width: 640px) {
+  .invitation-email-field__row {
+    grid-template-columns: 1fr;
+  }
+}

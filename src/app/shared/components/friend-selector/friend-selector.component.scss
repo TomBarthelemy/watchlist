@@ -1,0 +1,41 @@
+.friend-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friend-selector__label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.friend-selector__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.friend-selector__input {
+  width: 100%;
+}
+
+.friend-selector__hint,
+.friend-selector__error {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.friend-selector__hint {
+  color: var(--muted);
+}
+
+.friend-selector__error {
+  color: var(--danger);
+}
+
+@media (max-width: 640px) {
+  .friend-selector__row {
+    grid-template-columns: 1fr;
+  }
+}

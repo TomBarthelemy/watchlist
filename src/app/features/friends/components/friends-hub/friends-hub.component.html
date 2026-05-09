@@ -1,0 +1,62 @@
+<section class="friends-hub card">
+  <header class="friends-hub__header">
+    <div>
+      <h2 class="friends-hub__title">Amis</h2>
+      <p class="friends-hub__subtitle">
+        Prépare le cercle privé de l’application avant de brancher la logique Supabase finale.
+      </p>
+    </div>
+    <span class="friends-hub__summary">{{ friends().length }} amis validés</span>
+  </header>
+
+  <ng-container *ngIf="friends().length; else noFriends">
+    <section class="friends-hub__section">
+      <h3 class="friends-hub__section-title">Cercle validé</h3>
+      <ul class="friends-hub__list">
+        <li class="friends-hub__item" *ngFor="let friend of friends(); trackBy: trackByFriend">
+          <span class="friends-hub__avatar" aria-hidden="true">{{ initials(friend.username) }}</span>
+          <div class="friends-hub__identity">
+            <strong>{{ friend.username }}</strong>
+            <span>{{ friend.email }}</span>
+          </div>
+          <span class="friends-hub__meta">{{ friend.mutualWatchlists }} watchlists partagées</span>
+        </li>
+      </ul>
+    </section>
+  </ng-container>
+
+  <ng-template #noFriends>
+    <app-social-empty-state
+      [title]="'Aucun ami pour l’instant'"
+      [message]="'Le sélecteur d’amis utilisera cette liste validée. Pour l’instant, on fige l’écran et la navigation.'"
+    ></app-social-empty-state>
+  </ng-template>
+
+  <div class="friends-hub__columns">
+    <section class="friends-hub__section friends-hub__section--compact">
+      <h3 class="friends-hub__section-title">Demandes reçues</h3>
+      <ul class="friends-hub__mini-list" *ngIf="incoming().length; else noIncoming">
+        <li *ngFor="let friend of incoming(); trackBy: trackByFriend">
+          <span>{{ friend.username }}</span>
+          <span>{{ friend.email }}</span>
+        </li>
+      </ul>
+      <ng-template #noIncoming>
+        <p class="friends-hub__placeholder">Aucune demande reçue.</p>
+      </ng-template>
+    </section>
+
+    <section class="friends-hub__section friends-hub__section--compact">
+      <h3 class="friends-hub__section-title">Demandes envoyées</h3>
+      <ul class="friends-hub__mini-list" *ngIf="outgoing().length; else noOutgoing">
+        <li *ngFor="let friend of outgoing(); trackBy: trackByFriend">
+          <span>{{ friend.username }}</span>
+          <span>{{ friend.email }}</span>
+        </li>
+      </ul>
+      <ng-template #noOutgoing>
+        <p class="friends-hub__placeholder">Aucune demande en attente.</p>
+      </ng-template>
+    </section>
+  </div>
+</section>

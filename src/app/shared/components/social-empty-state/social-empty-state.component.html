@@ -1,0 +1,8 @@
+<section class="social-empty-state card">
+  <h3 class="social-empty-state__title">{{ title() }}</h3>
+  <p class="social-empty-state__message">{{ message() }}</p>
+
+  <button *ngIf="ctaLabel()" class="btn btn--ghost" type="button" (click)="action.emit()">
+    {{ ctaLabel() }}
+  </button>
+</section>

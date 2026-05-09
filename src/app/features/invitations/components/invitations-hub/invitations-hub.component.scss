@@ -1,0 +1,62 @@
+.invitations-hub {
+  width: min(100%, 860px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.invitations-hub__title,
+.invitations-hub__panel h3 {
+  margin: 0;
+}
+
+.invitations-hub__subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.invitations-hub__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.invitations-hub__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--surface) 88%, var(--surface-2) 12%);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 72%, var(--bg-end) 28%);
+}
+
+.invitations-hub__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.invitations-hub__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--surface-gradient-weak);
+  border: 1px solid color-mix(in oklab, var(--surface-2) 72%, var(--bg-end) 28%);
+}
+
+.invitations-hub__list span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 720px) {
+  .invitations-hub__columns {
+    grid-template-columns: 1fr;
+  }
+}

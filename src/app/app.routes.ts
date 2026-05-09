@@ -5,6 +5,10 @@ import { WatchlistMainPageComponent } from './features/watchlist-main/watchlist-
 import { WatchlistMembersPageComponent } from './features/watchlist-members/watchlist-members-page.component';
 import { WatchlistSettingsPageComponent } from './features/watchlist-settings/watchlist-settings-page.component';
 import { ProfilePageComponent } from './features/profile/profile-page.component';
+import { FriendsPageComponent } from './features/friends/friends-page.component';
+import { InvitationsPageComponent } from './features/invitations/invitations-page.component';
+import { ResetPasswordPageComponent } from './features/auth-reset/reset-password-page.component';
+import { AcceptInvitePageComponent } from './features/auth-accept/accept-invite-page.component';
 import { authGuard, guestGuard, membershipGuard } from './core/guards';
 
 /**
@@ -42,6 +46,24 @@ export const routes: Routes = [
     path: 'profile',
     component: ProfilePageComponent,
     canActivate: [authGuard],
+  },
+  {
+    path: 'friends',
+    component: FriendsPageComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'invitations',
+    component: InvitationsPageComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'auth/reset-password',
+    component: ResetPasswordPageComponent,
+  },
+  {
+    path: 'auth/accept-invite',
+    component: AcceptInvitePageComponent,
   },
   {
     path: 'watchlist/:id',

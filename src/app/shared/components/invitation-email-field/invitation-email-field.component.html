@@ -1,0 +1,23 @@
+<div class="invitation-email-field">
+  <label class="invitation-email-field__label">{{ label() }}</label>
+
+  <div class="invitation-email-field__row">
+    <input
+      type="email"
+      class="invitation-email-field__input"
+      [value]="email()"
+      (input)="email.set(($any($event.target).value ?? '').toString())"
+      [placeholder]="placeholder()"
+      autocomplete="email"
+    />
+
+    <button class="btn btn--secondary" type="button" (click)="submit()">
+      {{ buttonLabel() }}
+    </button>
+  </div>
+
+  <p class="invitation-email-field__hint">
+    Le flux final distinguera compte existant, ami et nouvel invité côté serveur.
+  </p>
+  <p class="invitation-email-field__error" *ngIf="error()">{{ error() }}</p>
+</div>
